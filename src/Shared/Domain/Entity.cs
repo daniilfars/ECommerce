@@ -1,4 +1,4 @@
-﻿namespace Shop.Shared.Domain;
+﻿namespace Shared.Domain;
 
 public abstract class Entity<TId> : IEquatable<Entity<TId>>
     where TId : notnull

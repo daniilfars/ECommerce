@@ -1,4 +1,4 @@
-﻿using Shop.Shared.Domain;
+﻿using Shared.Domain;
 
 namespace Modules.Identity.Domain.Events;
 

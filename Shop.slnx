@@ -1,19 +1,19 @@
 <Solution>
   <Folder Name="/src/">
-    <Project Path="Host/Host.csproj" />
-    <Project Path="Shared/Shared.csproj" />
+    <Project Path="src/Host/Host.csproj" />
+    <Project Path="src/Shared/Shared.csproj" />
   </Folder>
   <Folder Name="/src/Modules/" />
   <Folder Name="/src/Modules/Catalog/">
-    <Project Path="Application/Modules.Catalog.Application.csproj" />
-    <Project Path="Domain/Modules.Catalog.Domain.csproj" />
-    <Project Path="Infrastructure/Modules.Catalog.Infrastructure.csproj" />
-    <Project Path="Shop.Modules.Catalog.Api/Modules.Catalog.Api.csproj" Id="f85a0612-c563-4a17-82dd-6b6a4049dccf" />
+    <Project Path="src/Modules/Catalog/Modules.Catalog.Api/Modules.Catalog.Api.csproj" />
+    <Project Path="src/Modules/Catalog/Modules.Catalog.Application/Modules.Catalog.Application.csproj" />
+    <Project Path="src/Modules/Catalog/Modules.Catalog.Domain/Modules.Catalog.Domain.csproj" />
+    <Project Path="src/Modules/Catalog/Modules.Catalog.Infrastructure/Modules.Catalog.Infrastructure.csproj" />
   </Folder>
   <Folder Name="/src/Modules/Identity/">
-    <Project Path="Shop.Modules.Identity.Api/Modules.Identity.Api.csproj" Id="a4b006c9-994d-4da5-8f14-3de3913910f8" />
-    <Project Path="Shop.Modules.Identity.Application/Modules.Identity.Application.csproj" Id="1e3fd752-3454-4750-b8fd-bc6a8226bda4" />
-    <Project Path="Shop.Modules.Identity.Domain/Modules.Identity.Domain.csproj" Id="0bbb85cb-a32d-457f-81d7-54440e2a4be1" />
-    <Project Path="Shop.Modules.Identity.Infrastructure/Modules.Identity.Infrastructure.csproj" Id="c1e45994-dfcf-4894-a727-565b2e7ee6d9" />
+    <Project Path="src/Modules/Identity/Shop.Modules.Identity.Api/Modules.Identity.Api.csproj" />
+    <Project Path="src/Modules/Identity/Shop.Modules.Identity.Application/Modules.Identity.Application.csproj" />
+    <Project Path="src/Modules/Identity/Shop.Modules.Identity.Domain/Modules.Identity.Domain.csproj" />
+    <Project Path="src/Modules/Identity/Shop.Modules.Identity.Infrastructure/Modules.Identity.Infrastructure.csproj" />
   </Folder>
 </Solution>

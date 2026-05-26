@@ -1,4 +1,4 @@
-﻿namespace Shop.Shared.Domain;
+﻿namespace Shared.Domain;
 
 public interface IDomainEvent
 {

@@ -1,7 +1,6 @@
 ﻿using Microsoft.AspNetCore.Identity;
 using Modules.Identity.Domain.Events;
 using Shared.Domain;
-using Shop.Shared.Domain;
 
 namespace Modules.Identity.Domain;
 
