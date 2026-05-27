@@ -9,8 +9,9 @@ namespace Modules.Identity.Infrastructure.Data;
 
 public class AppIdentityDbContext : IdentityDbContext<User, IdentityRole<Guid>, Guid>, IAppIdentityDbContext
 {
-    public override DbSet<User> Users => base.Users;
+    public new DbSet<User> Users { get; set; }
 
+    public AppIdentityDbContext() { }
     public AppIdentityDbContext(DbContextOptions<AppIdentityDbContext> options) : base(options) { }
 
     protected override void OnModelCreating(ModelBuilder builder)

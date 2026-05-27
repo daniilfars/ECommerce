@@ -11,9 +11,9 @@
     <Project Path="src/Modules/Catalog/Modules.Catalog.Infrastructure/Modules.Catalog.Infrastructure.csproj" />
   </Folder>
   <Folder Name="/src/Modules/Identity/">
-    <Project Path="src/Modules/Identity/Shop.Modules.Identity.Api/Modules.Identity.Api.csproj" />
-    <Project Path="src/Modules/Identity/Shop.Modules.Identity.Application/Modules.Identity.Application.csproj" />
-    <Project Path="src/Modules/Identity/Shop.Modules.Identity.Domain/Modules.Identity.Domain.csproj" />
-    <Project Path="src/Modules/Identity/Shop.Modules.Identity.Infrastructure/Modules.Identity.Infrastructure.csproj" />
+    <Project Path="src/Modules/Identity/Modules.Identity.Api/Modules.Identity.Api.csproj" />
+    <Project Path="src/Modules/Identity/Modules.Identity.Application/Modules.Identity.Application.csproj" />
+    <Project Path="src/Modules/Identity/Modules.Identity.Domain/Modules.Identity.Domain.csproj" />
+    <Project Path="src/Modules/Identity/Modules.Identity.Infrastructure/Modules.Identity.Infrastructure.csproj" />
   </Folder>
 </Solution>

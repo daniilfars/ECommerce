@@ -1,17 +1,35 @@
-<Project Sdk="Microsoft.NET.Sdk.Web">
+﻿<Project Sdk="Microsoft.NET.Sdk.Web">
 
   <PropertyGroup>
     <TargetFramework>net10.0</TargetFramework>
     <Nullable>enable</Nullable>
     <ImplicitUsings>enable</ImplicitUsings>
+    <UserSecretsId>9128800e-2585-42e4-90e5-59e5c216e414</UserSecretsId>
   </PropertyGroup>
 
   <ItemGroup>
+    <PackageReference Include="Microsoft.EntityFrameworkCore.Design" Version="10.0.8">
+      <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+      <PrivateAssets>all</PrivateAssets>
+    </PackageReference>
+    <PackageReference Include="Microsoft.AspNetCore.Authentication.JwtBearer" Version="10.0.8" />
     <PackageReference Include="Microsoft.AspNetCore.OpenApi" Version="10.0.8" />
+    <PackageReference Include="Microsoft.EntityFrameworkCore.Tools" Version="9.0.2">
+      <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+      <PrivateAssets>all</PrivateAssets>
+    </PackageReference>
+    <PackageReference Include="Swashbuckle.AspNetCore.Swagger" Version="10.1.7" />
+    <PackageReference Include="Swashbuckle.AspNetCore.SwaggerGen" Version="10.1.7" />
+    <PackageReference Include="Swashbuckle.AspNetCore.SwaggerUI" Version="10.1.7" />
   </ItemGroup>
 
   <ItemGroup>
     <Folder Include="Controllers\" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\Modules\Identity\Modules.Identity.Api\Modules.Identity.Api.csproj" />
+    <ProjectReference Include="..\Modules\Identity\Modules.Identity.Infrastructure\Modules.Identity.Infrastructure.csproj" />
   </ItemGroup>
 
 </Project>
