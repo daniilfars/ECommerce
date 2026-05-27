@@ -4,6 +4,7 @@ using Modules.Identity.Api;
 using Modules.Identity.Application;
 using Modules.Identity.Infrastructure;
 using Modules.Identity.Infrastructure.Configurations;
+using Modules.Catalog.Infrastructure;
 using System.Text;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -12,6 +13,9 @@ var builder = WebApplication.CreateBuilder(args);
 builder.Services.AddIdentityInfrastructure(builder.Configuration);
 builder.Services.AddIdentityApplication();
 builder.Services.AddIdentityApi();
+
+// Подрубаем настройки от модуля catalog
+builder.Services.AddCatalogInfrastructure(builder.Configuration);
 
 // Authentication
 var jwtSettings = builder.Configuration.GetSection("JwtSettings").Get<JwtSettings>()!;

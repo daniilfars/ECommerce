@@ -2,7 +2,7 @@
 using Microsoft.EntityFrameworkCore.Design;
 using Modules.Identity.Infrastructure.Data;
 
-public class DesignTimeDbContextFactory : IDesignTimeDbContextFactory<AppIdentityDbContext>
+public class IdentityDesignTimeDbContextFactory : IDesignTimeDbContextFactory<AppIdentityDbContext>
 {
     public AppIdentityDbContext CreateDbContext(string[] args)
     {

@@ -28,6 +28,8 @@
   </ItemGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\Modules\Catalog\Modules.Catalog.Api\Modules.Catalog.Api.csproj" />
+    <ProjectReference Include="..\Modules\Catalog\Modules.Catalog.Infrastructure\Modules.Catalog.Infrastructure.csproj" />
     <ProjectReference Include="..\Modules\Identity\Modules.Identity.Api\Modules.Identity.Api.csproj" />
     <ProjectReference Include="..\Modules\Identity\Modules.Identity.Infrastructure\Modules.Identity.Infrastructure.csproj" />
   </ItemGroup>
