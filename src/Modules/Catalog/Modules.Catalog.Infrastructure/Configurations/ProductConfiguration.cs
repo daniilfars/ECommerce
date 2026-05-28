@@ -8,22 +8,25 @@ public class ProductConfiguration : IEntityTypeConfiguration<Product>
 {
     public void Configure(EntityTypeBuilder<Product> builder)
     {
-        builder.HasKey(p => p.Id);
-        builder.Property(p => p.Id).HasConversion(
-            id => id.Value,
-            value => ProductId.From(value)
-        );
+        builder.Property(p => p._id)
+            .HasColumnName("Id")
+            .ValueGeneratedOnAdd()
+            .IsRequired();
+
+        builder.HasKey(p => p._id);
 
         builder.Property(p => p.Name).IsRequired().HasMaxLength(200);
 
         builder.Property(p => p.PriceAmount)
             .HasPrecision(18, 2)
             .IsRequired();
+
         builder.Property(p => p.PriceCurrency)
             .HasMaxLength(3)
             .IsRequired();
 
-        builder.Ignore(p => p.DomainEvents);
+        builder.Ignore(p => p.Id);
         builder.Ignore(p => p.Price);
+        builder.Ignore(p => p.DomainEvents);
     }
 }

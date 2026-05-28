@@ -5,7 +5,7 @@ namespace Modules.Identity.Application.Interfaces;
 
 public interface ITokenService
 {
-    string GenerateToken(User user);
+    Task<string> GenerateTokenAsync(User user);
     string GenerateRefreshToken();
     ClaimsPrincipal GetPrincipalFromExpiredToken(string token);
 }

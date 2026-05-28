@@ -1,10 +1,14 @@
 using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.IdentityModel.Tokens;
+using Modules.Catalog.Api;
+using Modules.Catalog.Application;
+using Modules.Catalog.Infrastructure;
 using Modules.Identity.Api;
 using Modules.Identity.Application;
+using Modules.Identity.Domain;
 using Modules.Identity.Infrastructure;
 using Modules.Identity.Infrastructure.Configurations;
-using Modules.Catalog.Infrastructure;
 using System.Text;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -16,6 +20,14 @@ builder.Services.AddIdentityApi();
 
 // Подрубаем настройки от модуля catalog
 builder.Services.AddCatalogInfrastructure(builder.Configuration);
+builder.Services.AddCatalogApplication();
+builder.Services.AddCatalogApi();
+
+// MediatR
+builder.Services.AddMediatR(cfg => cfg.RegisterServicesFromAssemblies(
+    typeof(Modules.Identity.Application.Commands.Register.RegisterUserHandler).Assembly,
+    typeof(Modules.Catalog.Application.Commands.CreateProduct.CreateProductCommand).Assembly
+));
 
 // Authentication
 var jwtSettings = builder.Configuration.GetSection("JwtSettings").Get<JwtSettings>()!;
@@ -62,4 +74,25 @@ app.UseAuthorization();
 
 app.MapControllers();
 
+await AddAdminAsync(app);
+
 app.Run();
+
+async Task AddAdminAsync(WebApplication app)
+{
+    using var scope = app.Services.CreateScope();
+    var roleManager = scope.ServiceProvider.GetRequiredService<RoleManager<IdentityRole<Guid>>>();
+    var userManager = scope.ServiceProvider.GetRequiredService<UserManager<User>>();
+
+    if (!await roleManager.RoleExistsAsync("Admin"))
+        await roleManager.CreateAsync(new IdentityRole<Guid>("Admin"));
+
+    var adminEmail = "admin@shop.com";
+    var adminUser = await userManager.FindByEmailAsync(adminEmail);
+    if (adminUser is null)
+    {
+        var admin = User.Create("Admin", "Admin", adminEmail).Value!;
+        await userManager.CreateAsync(admin, "Admin123!");
+        await userManager.AddToRoleAsync(admin, "Admin");
+    }
+}

@@ -35,7 +35,7 @@ public sealed class LoginUserHandler : IRequestHandler<LoginUserCommand, Result<
         if (!signInResult.Succeeded)
             return Result<LoginUserResponse>.Failure("Неверный email или пароль");
 
-        string token = _tokenService.GenerateToken(user);
+        string token = await _tokenService.GenerateTokenAsync(user);
         string refreshToken = _tokenService.GenerateRefreshToken();
 
         user.SetRefreshToken(refreshToken, DateTime.UtcNow.AddDays(7));

@@ -23,8 +23,12 @@ namespace Modules.Catalog.Infrastructure.Migrations
 
             modelBuilder.Entity("Modules.Catalog.Domain.Product", b =>
                 {
-                    b.Property<int>("Id")
-                        .HasColumnType("integer");
+                    b.Property<int>("_id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("integer")
+                        .HasColumnName("Id");
+
+                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("_id"));
 
                     b.Property<string>("Name")
                         .IsRequired()
@@ -40,7 +44,7 @@ namespace Modules.Catalog.Infrastructure.Migrations
                         .HasMaxLength(3)
                         .HasColumnType("character varying(3)");
 
-                    b.HasKey("Id");
+                    b.HasKey("_id");
 
                     b.ToTable("Products");
                 });

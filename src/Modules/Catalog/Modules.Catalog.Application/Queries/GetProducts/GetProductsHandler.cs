@@ -1,0 +1,31 @@
+﻿using MediatR;
+using Microsoft.EntityFrameworkCore;
+using Modules.Catalog.Application.Interfaces;
+using Shared.Domain;
+
+namespace Modules.Catalog.Application.Queries.GetProducts;
+
+public class GetProductsHandler : IRequestHandler<GetProductsQuery, Result<GetProductsResponse>>
+{
+    private readonly ICatalogDbContext _context;
+
+    public GetProductsHandler(ICatalogDbContext context)
+    {
+        _context = context;
+    }
+
+    public async Task<Result<GetProductsResponse>> Handle(GetProductsQuery request, CancellationToken cancellationToken)
+    {
+        var totalCount = await _context.Products.CountAsync(cancellationToken);
+
+        var products = await _context.Products
+            .AsNoTracking()
+            .OrderBy(p => p._id)
+            .Skip((request.Page - 1) * request.PageSize)
+            .Take(request.PageSize)
+            .Select(p => new ProductDto(p._id, p.Name, p.PriceAmount, p.PriceCurrency))
+            .ToListAsync(cancellationToken);
+
+        return Result<GetProductsResponse>.Success(new GetProductsResponse(products, totalCount, request.Page, request.PageSize));
+    }
+}

@@ -1,10 +1,10 @@
 ﻿using Microsoft.Extensions.DependencyInjection;
 
-namespace Modules.Identity.Application;
+namespace Modules.Catalog.Application;
 
 public static class DependencyInjection
 {
-    public static IServiceCollection AddIdentityApplication(this IServiceCollection services)
+    public static IServiceCollection AddCatalogApplication(this IServiceCollection services)
     {
         // Пока пусто, MediatR добавляется в самом Host
 

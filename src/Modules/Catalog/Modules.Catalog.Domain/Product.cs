@@ -5,6 +5,9 @@ namespace Modules.Catalog.Domain;
 
 public class Product : AggregateRoot<ProductId>
 {
+    public int _id;
+    public ProductId Id => ProductId.From(_id);
+
     public string Name { get; private set; }
     public decimal PriceAmount { get; private set; }
     public string PriceCurrency { get; private set; } = string.Empty;
@@ -13,7 +16,6 @@ public class Product : AggregateRoot<ProductId>
     private Product() { } // Для EF Core
     private Product(ProductId id, string name, Money price)
     {
-        Id = id;
         Name = name;
         PriceAmount = price.Amount;
         PriceCurrency = price.Currency;

@@ -60,7 +60,7 @@ public class RefreshUserHandler : IRequestHandler<RefreshUserCommand, Result<Ref
 
     private async Task<Result<RefreshUserResponse>> RotateTokens(User user, CancellationToken cancellationToken)
     {
-        var newAccessToken = _tokenService.GenerateToken(user);
+        var newAccessToken = await _tokenService.GenerateTokenAsync(user);
         var newRefreshToken = _tokenService.GenerateRefreshToken();
 
         user.SetRefreshToken(newRefreshToken, DateTime.UtcNow.AddDays(7));
