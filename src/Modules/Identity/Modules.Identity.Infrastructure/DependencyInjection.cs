@@ -24,7 +24,7 @@ public static class DependencyInjection
             {
                 SecretKey = "A_Very_Long_Secret_Key_For_Testing_Purposes_32_Chars_Minimum",
                 Issuer = "Shop.Api",
-                Audience = "Shop.Api",
+                Audience = "Shop.Client",
                 ExpiryMinutes = 15
             };
         }
@@ -40,25 +40,6 @@ public static class DependencyInjection
         services.AddIdentity<User, IdentityRole<Guid>>()
         .AddEntityFrameworkStores<AppIdentityDbContext>()
         .AddDefaultTokenProviders();
-
-        services.ConfigureApplicationCookie(options =>
-        {
-            options.Cookie.Name = ".AspNetCore.Identity.Application";
-            options.Cookie.HttpOnly = true;
-            options.Cookie.SecurePolicy = CookieSecurePolicy.Always;
-            options.Cookie.SameSite = SameSiteMode.Strict;
-
-            options.Events.OnRedirectToLogin = context =>
-            {
-                context.Response.StatusCode = 401;
-                return Task.CompletedTask;
-            };
-            options.Events.OnRedirectToAccessDenied = context =>
-            {
-                context.Response.StatusCode = 403;
-                return Task.CompletedTask;
-            };
-        });
 
         services.AddScoped<ITokenService, TokenService>();
 

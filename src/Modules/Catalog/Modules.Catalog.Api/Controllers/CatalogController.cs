@@ -20,8 +20,27 @@ public class CatalogController : ControllerBase
         _mediator = mediator;
     }
 
+    [HttpGet("debug")]
+    public IActionResult Debug()
+    {
+        var authHeader = Request.Headers["Authorization"].ToString();
+        var claims = User.Claims.Select(c => new { c.Type, c.Value }).ToList();
+        var isAuthenticated = User.Identity?.IsAuthenticated;
+        var identityType = User.Identity?.GetType().Name;
+
+        return Ok(new
+        {
+            authHeaderPresent = !string.IsNullOrEmpty(authHeader),
+            authHeaderPreview = authHeader.Length > 20 ? authHeader[..20] + "..." : authHeader,
+            isAuthenticated,
+            identityType,
+            claimsCount = claims.Count,
+            claims
+        });
+    }
+
     // POST: api/catalog
-    //[Authorize(Roles = "Admin")]
+    [Authorize(Roles = "Admin")]
     [HttpPost]
     public async Task<ActionResult<CreateProductResponse>> Create(CreateProductCommand command)
     {
@@ -59,7 +78,7 @@ public class CatalogController : ControllerBase
     }
 
     // PUT: api/catalog/{id}
-    //[Authorize(Roles = "Admin")]
+    [Authorize(Roles = "Admin")]
     [HttpPut("{id}")]
     public async Task<ActionResult<UpdateProductResponse>> Update(int id, UpdateProductCommand command)
     {
@@ -75,7 +94,7 @@ public class CatalogController : ControllerBase
     }
 
     // DELETE: api/catalog/{id}
-    //[Authorize(Roles = "Admin")]
+    [Authorize(Roles = "Admin")]
     [HttpDelete("{id}")]
     public async Task<ActionResult> Delete(int id)
     {
