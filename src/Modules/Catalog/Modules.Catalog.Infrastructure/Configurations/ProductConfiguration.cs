@@ -8,12 +8,8 @@ public class ProductConfiguration : IEntityTypeConfiguration<Product>
 {
     public void Configure(EntityTypeBuilder<Product> builder)
     {
-        builder.Property(p => p._id)
-            .HasColumnName("Id")
-            .ValueGeneratedOnAdd()
-            .IsRequired();
-
-        builder.HasKey(p => p._id);
+        builder.HasKey(p => p.Id);
+        //builder.Property(p => p.Id).ValueGeneratedOnAdd();
 
         builder.Property(p => p.Name).IsRequired().HasMaxLength(200);
 
@@ -25,7 +21,6 @@ public class ProductConfiguration : IEntityTypeConfiguration<Product>
             .HasMaxLength(3)
             .IsRequired();
 
-        builder.Ignore(p => p.Id);
         builder.Ignore(p => p.Price);
         builder.Ignore(p => p.DomainEvents);
     }

@@ -3,18 +3,15 @@ using Shared.Domain;
 
 namespace Modules.Catalog.Domain;
 
-public class Product : AggregateRoot<ProductId>
+public class Product : AggregateRoot<int>
 {
-    public int _id;
-    public ProductId Id => ProductId.From(_id);
-
     public string Name { get; private set; }
     public decimal PriceAmount { get; private set; }
     public string PriceCurrency { get; private set; } = string.Empty;
     public Money Price => Money.Create(PriceAmount, PriceCurrency).Value!;
 
     private Product() { } // Для EF Core
-    private Product(ProductId id, string name, Money price)
+    private Product(string name, Money price)
     {
         Name = name;
         PriceAmount = price.Amount;
@@ -26,7 +23,7 @@ public class Product : AggregateRoot<ProductId>
         if (string.IsNullOrWhiteSpace(name))
             return Result<Product>.Failure("Название товара не может быть пустым");
 
-        var product = new Product(ProductId.New(), name, price);
+        var product = new Product(name, price);
 
         product.RaiseDomainEvent(new ProductCreatedDomainEvent(product.Id, name));
 

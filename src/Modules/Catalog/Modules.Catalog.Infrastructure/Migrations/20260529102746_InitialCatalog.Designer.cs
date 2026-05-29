@@ -11,7 +11,7 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace Modules.Catalog.Infrastructure.Migrations
 {
     [DbContext(typeof(CatalogDbContext))]
-    [Migration("20260528152929_InitialCatalog")]
+    [Migration("20260529102746_InitialCatalog")]
     partial class InitialCatalog
     {
         /// <inheritdoc />
@@ -26,12 +26,11 @@ namespace Modules.Catalog.Infrastructure.Migrations
 
             modelBuilder.Entity("Modules.Catalog.Domain.Product", b =>
                 {
-                    b.Property<int>("_id")
+                    b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("integer")
-                        .HasColumnName("Id");
+                        .HasColumnType("integer");
 
-                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("_id"));
+                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
 
                     b.Property<string>("Name")
                         .IsRequired()
@@ -47,7 +46,7 @@ namespace Modules.Catalog.Infrastructure.Migrations
                         .HasMaxLength(3)
                         .HasColumnType("character varying(3)");
 
-                    b.HasKey("_id");
+                    b.HasKey("Id");
 
                     b.ToTable("Products");
                 });

@@ -17,8 +17,7 @@ public class UpdateProductHandler : IRequestHandler<UpdateProductCommand, Result
 
     public async Task<Result<UpdateProductResponse>> Handle(UpdateProductCommand request, CancellationToken cancellationToken)
     {
-        //var productId = ProductId.From(request.Id);
-        var product = await _context.Products.FirstOrDefaultAsync(p => p._id == request.Id, cancellationToken);
+        var product = await _context.Products.FirstOrDefaultAsync(p => p.Id == request.Id, cancellationToken);
         if (product is null)
             return Result<UpdateProductResponse>.Failure("Товар не найден");
 
@@ -43,6 +42,6 @@ public class UpdateProductHandler : IRequestHandler<UpdateProductCommand, Result
 
         await _context.SaveChangesAsync(cancellationToken);
 
-        return Result<UpdateProductResponse>.Success(new UpdateProductResponse(product.Id.Value, product.Name, product.PriceAmount, product.PriceCurrency));
+        return Result<UpdateProductResponse>.Success(new UpdateProductResponse(product.Id, product.Name, product.PriceAmount, product.PriceCurrency));
     }
 }

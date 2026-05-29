@@ -17,8 +17,7 @@ public class DeleteProductHandler : IRequestHandler<DeleteProductCommand, Result
 
     public async Task<Result> Handle(DeleteProductCommand request, CancellationToken cancellationToken)
     {
-        //var productId = ProductId.From(request.Id);
-        var product = await _context.Products.FirstOrDefaultAsync(p => p._id == request.Id, cancellationToken);
+        var product = await _context.Products.FirstOrDefaultAsync(p => p.Id == request.Id, cancellationToken);
 
         if (product is null)
             return Result.Failure("Товар не найден");

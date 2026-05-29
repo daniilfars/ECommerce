@@ -17,11 +17,10 @@ public class GetProductByIdHandler : IRequestHandler<GetProductByIdQuery, Result
 
     public async Task<Result<GetProductByIdResponse>> Handle(GetProductByIdQuery request, CancellationToken cancellationToken)
     {
-        //var productId = ProductId.From(request.Id);
-        var product = await _context.Products.AsNoTracking().FirstOrDefaultAsync(p => p._id == request.Id, cancellationToken);
+        var product = await _context.Products.AsNoTracking().FirstOrDefaultAsync(p => p.Id == request.Id, cancellationToken);
         if (product is null)
             return Result<GetProductByIdResponse>.Failure("Товар не найден");
 
-        return Result<GetProductByIdResponse>.Success(new GetProductByIdResponse(product.Id.Value, product.Name, product.PriceAmount, product.PriceCurrency));
+        return Result<GetProductByIdResponse>.Success(new GetProductByIdResponse(product.Id, product.Name, product.PriceAmount, product.PriceCurrency));
     }
 }

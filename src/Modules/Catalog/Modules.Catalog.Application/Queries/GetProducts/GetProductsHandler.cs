@@ -20,10 +20,10 @@ public class GetProductsHandler : IRequestHandler<GetProductsQuery, Result<GetPr
 
         var products = await _context.Products
             .AsNoTracking()
-            .OrderBy(p => p._id)
+            .OrderBy(p => p.Id)
             .Skip((request.Page - 1) * request.PageSize)
             .Take(request.PageSize)
-            .Select(p => new ProductDto(p._id, p.Name, p.PriceAmount, p.PriceCurrency))
+            .Select(p => new ProductDto(p.Id, p.Name, p.PriceAmount, p.PriceCurrency))
             .ToListAsync(cancellationToken);
 
         return Result<GetProductsResponse>.Success(new GetProductsResponse(products, totalCount, request.Page, request.PageSize));
