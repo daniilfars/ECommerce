@@ -7,7 +7,7 @@ public class Product : AggregateRoot<int>
 {
     public string Name { get; private set; }
     public decimal PriceAmount { get; private set; }
-    public string PriceCurrency { get; private set; } = string.Empty;
+    public string PriceCurrency { get; private set; }
     public Money Price => Money.Create(PriceAmount, PriceCurrency).Value!;
 
     private Product() { } // Для EF Core

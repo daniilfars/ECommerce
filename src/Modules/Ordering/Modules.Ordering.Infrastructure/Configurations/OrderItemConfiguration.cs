@@ -1,0 +1,21 @@
+﻿using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Metadata.Builders;
+using Modules.Ordering.Domain;
+
+namespace Modules.Ordering.Infrastructure.Configurations;
+
+public class OrderItemConfiguration : IEntityTypeConfiguration<OrderItem>
+{
+    public void Configure(EntityTypeBuilder<OrderItem> builder)
+    {
+        builder.HasKey(i => i.Id);
+
+        builder.Property(i => i.ProductId).IsRequired();
+        builder.Property(i => i.ProductName).IsRequired().HasMaxLength(200);
+        builder.Property(i => i.Quantity).IsRequired();
+        builder.Property(i => i.PriceAmount).HasPrecision(18, 2).IsRequired();
+        builder.Property(i => i.PriceCurrency).HasMaxLength(3).IsRequired();
+
+        builder.Ignore(i => i.TotalPrice);
+    }
+}
