@@ -28,10 +28,16 @@
   </ItemGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\Modules\Basket\Modules.Basket.Api\Modules.Basket.Api.csproj" />
+    <ProjectReference Include="..\Modules\Basket\Modules.Basket.Application\Modules.Basket.Application.csproj" />
+    <ProjectReference Include="..\Modules\Basket\Modules.Basket.Infrastructure\Modules.Basket.Infrastructure.csproj" />
     <ProjectReference Include="..\Modules\Catalog\Modules.Catalog.Api\Modules.Catalog.Api.csproj" />
     <ProjectReference Include="..\Modules\Catalog\Modules.Catalog.Infrastructure\Modules.Catalog.Infrastructure.csproj" />
     <ProjectReference Include="..\Modules\Identity\Modules.Identity.Api\Modules.Identity.Api.csproj" />
     <ProjectReference Include="..\Modules\Identity\Modules.Identity.Infrastructure\Modules.Identity.Infrastructure.csproj" />
+    <ProjectReference Include="..\Modules\Ordering\Modules.Ordering.Api\Modules.Ordering.Api.csproj" />
+    <ProjectReference Include="..\Modules\Ordering\Modules.Ordering.Application\Modules.Ordering.Application.csproj" />
+    <ProjectReference Include="..\Modules\Ordering\Modules.Ordering.Infrastructure\Modules.Ordering.Infrastructure.csproj" />
   </ItemGroup>
 
 </Project>

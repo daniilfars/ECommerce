@@ -1,6 +1,9 @@
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.IdentityModel.Tokens;
+using Modules.Basket.Api;
+using Modules.Basket.Application;
+using Modules.Basket.Infrastructure;
 using Modules.Catalog.Api;
 using Modules.Catalog.Application;
 using Modules.Catalog.Infrastructure;
@@ -9,12 +12,11 @@ using Modules.Identity.Application;
 using Modules.Identity.Domain;
 using Modules.Identity.Infrastructure;
 using Modules.Identity.Infrastructure.Configurations;
-using System.IdentityModel.Tokens.Jwt;
+using Modules.Ordering.Api;
+using Modules.Ordering.Infrastructure;
+using Modules.Ordering.Application;
 using System.Security.Claims;
 using System.Text;
-
-/*JwtSecurityTokenHandler.DefaultInboundClaimTypeMap.Clear();
-JwtSecurityTokenHandler.DefaultOutboundClaimTypeMap.Clear();*/
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -28,10 +30,22 @@ builder.Services.AddCatalogInfrastructure(builder.Configuration);
 builder.Services.AddCatalogApplication();
 builder.Services.AddCatalogApi();
 
+// Подрубаем настройки от модуля basket
+builder.Services.AddBasketInfrastructure(builder.Configuration);
+builder.Services.AddBasketApplication();
+builder.Services.AddBasketApi();
+
+// Подрубаем настройки от модуля ordering
+builder.Services.AddOrderingApplication();
+builder.Services.AddOrderingInfrastructure(builder.Configuration);
+builder.Services.AddOrderingApi();
+
 // MediatR
 builder.Services.AddMediatR(cfg => cfg.RegisterServicesFromAssemblies(
     typeof(Modules.Identity.Application.Commands.Register.RegisterUserHandler).Assembly,
-    typeof(Modules.Catalog.Application.Commands.CreateProduct.CreateProductCommand).Assembly
+    typeof(Modules.Catalog.Application.Commands.CreateProduct.CreateProductHandler).Assembly,
+    typeof(Modules.Basket.Application.Commands.AddItemToBasket.AddItemToBasketHandler).Assembly,
+    typeof(Modules.Ordering.Application.Commands.CreateOrder.CreateOrderHandler).Assembly
 ));
 
 // Authentication

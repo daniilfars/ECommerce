@@ -7,13 +7,13 @@ public class Order : AggregateRoot<int>
 {
     private readonly List<OrderItem> _items = [];
     public IReadOnlyCollection<OrderItem> Items => _items.AsReadOnly();
-    public int UserId { get; private set; }
+    public Guid UserId { get; private set; }
     public OrderStatus Status { get; private set; }
     public string ShippingAddress { get; private set; }
     public decimal TotalAmount { get; private set; }
 
     private Order() { }// Для EF Core
-    private Order(int userId, string shippingAddress)
+    private Order(Guid userId, string shippingAddress)
     {
         UserId = userId;
         ShippingAddress = shippingAddress;
@@ -21,7 +21,7 @@ public class Order : AggregateRoot<int>
         TotalAmount = 0;
     }
 
-    public static Result<Order> Create(int userId, string shippingAddress)
+    public static Result<Order> Create(Guid userId, string shippingAddress)
     {
         if (string.IsNullOrWhiteSpace(shippingAddress))
             return Result<Order>.Failure("Адрес не может быть пустым");
