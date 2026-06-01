@@ -15,8 +15,4 @@
     <ProjectReference Include="..\Modules.Ordering.Domain\Modules.Ordering.Domain.csproj" />
   </ItemGroup>
 
-  <ItemGroup>
-    <Folder Include="Queries\" />
-  </ItemGroup>
-
 </Project>

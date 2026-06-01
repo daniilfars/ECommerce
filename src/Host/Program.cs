@@ -36,8 +36,8 @@ builder.Services.AddBasketApplication();
 builder.Services.AddBasketApi();
 
 // Подрубаем настройки от модуля ordering
-builder.Services.AddOrderingApplication();
 builder.Services.AddOrderingInfrastructure(builder.Configuration);
+builder.Services.AddOrderingApplication();
 builder.Services.AddOrderingApi();
 
 // MediatR

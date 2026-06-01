@@ -58,6 +58,9 @@ public class Order : AggregateRoot<int>
 
     public Result Cancel()
     {
+        if (Status == OrderStatus.Cancelled)
+            return Result.Failure("Заказ уже отменён");
+
         if (Status == OrderStatus.Shipped || Status == OrderStatus.Delivered)
             return Result.Failure("Нельзя отменить доставленный заказ");
 
