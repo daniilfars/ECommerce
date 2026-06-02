@@ -17,8 +17,19 @@ using Modules.Ordering.Infrastructure;
 using Modules.Ordering.Application;
 using System.Security.Claims;
 using System.Text;
+using Serilog;
+using Serilog.Events;
+using Serilog.Formatting.Compact;
+using Serilog.Sinks.Seq;
 
 var builder = WebApplication.CreateBuilder(args);
+
+builder.Host.UseSerilog((ctx, lc) => lc
+    .WriteTo.Console()
+    .WriteTo.Seq("http://localhost:5341")
+    .MinimumLevel.Information()
+    .MinimumLevel.Override("Microsoft.AspNetCore", LogEventLevel.Warning)
+    .MinimumLevel.Override("Microsoft.EntityFrameworkCore", LogEventLevel.Warning)); // Для SQL логов LogEventLevel.Information
 
 // Подрубаем настройки от модуля identity
 builder.Services.AddIdentityInfrastructure(builder.Configuration);
@@ -90,6 +101,8 @@ if (app.Environment.IsDevelopment())
     app.UseSwagger();
     app.UseSwaggerUI();
 }
+
+app.UseSerilogRequestLogging();
 
 app.UseHttpsRedirection();
 
