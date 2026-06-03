@@ -1,5 +1,6 @@
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Identity;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
 using Modules.Basket.Api;
 using Modules.Basket.Application;
@@ -7,20 +8,21 @@ using Modules.Basket.Infrastructure;
 using Modules.Catalog.Api;
 using Modules.Catalog.Application;
 using Modules.Catalog.Infrastructure;
+using Modules.Catalog.Infrastructure.Data;
 using Modules.Identity.Api;
 using Modules.Identity.Application;
 using Modules.Identity.Domain;
 using Modules.Identity.Infrastructure;
 using Modules.Identity.Infrastructure.Configurations;
+using Modules.Identity.Infrastructure.Data;
 using Modules.Ordering.Api;
-using Modules.Ordering.Infrastructure;
 using Modules.Ordering.Application;
-using System.Security.Claims;
-using System.Text;
+using Modules.Ordering.Infrastructure;
+using Modules.Ordering.Infrastructure.Data;
 using Serilog;
 using Serilog.Events;
-using Serilog.Formatting.Compact;
-using Serilog.Sinks.Seq;
+using System.Security.Claims;
+using System.Text;
 
 var builder = WebApplication.CreateBuilder(args);
 

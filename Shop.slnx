@@ -28,4 +28,11 @@
     <Project Path="src/Modules/Ordering/Modules.Ordering.Domain/Modules.Ordering.Domain.csproj" />
     <Project Path="src/Modules/Ordering/Modules.Ordering.Infrastructure/Modules.Ordering.Infrastructure.csproj" />
   </Folder>
+  <Folder Name="/Элементы решения/">
+    <File Path=".env" />
+    <File Path=".env.example" />
+  </Folder>
+  <Project Path="docker-compose.dcproj">
+    <Build />
+  </Project>
 </Solution>
