@@ -113,7 +113,7 @@ app.UseAuthorization();
 
 app.MapControllers();
 
-using (var scope = app.Services.CreateScope())
+using (var scope = app.Services.CreateScope()) //Применение миграций для докера
 {
     try
     {

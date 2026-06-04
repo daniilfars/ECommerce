@@ -21,6 +21,12 @@ public class UploadProductImageHandler : IRequestHandler<UploadProductImageComma
         if (product is null)
             return Result<UploadProductImageResponse>.Failure("Товар не найден");
 
+        if(product.ImageUrl != null)
+        {
+            var deleteObjectName = _service.GetObjectNameFromUrl(product.ImageUrl);
+            await _service.DeleteAsync(deleteObjectName, cancellationToken);
+        }
+
         var extension = request.ContentType switch
         {
             "image/jpeg" => ".jpg",

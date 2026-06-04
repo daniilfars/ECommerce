@@ -51,4 +51,10 @@ public class ImageStorageService : IImageStorageService
 
         return GetPublicUrl(objectName);
     }
+
+    public string GetObjectNameFromUrl(string url)
+    {
+        var prefix = $"{_endpoint}/{_bucketName}/";
+        return url.Replace(prefix, "");
+    }
 }

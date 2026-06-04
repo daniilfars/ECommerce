@@ -17,6 +17,8 @@ services:
       - ConnectionStrings__Redis=redis:6379
       - Minio__Endpoint=minio:9000
     #restart: on-failure
+    ports:
+      - "8080:8080"
     depends_on:
       db:
         condition: service_healthy
