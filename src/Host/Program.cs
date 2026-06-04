@@ -113,6 +113,48 @@ app.UseAuthorization();
 
 app.MapControllers();
 
+using (var scope = app.Services.CreateScope())
+{
+    try
+    {
+        app.Logger.LogInformation("Starting Identity migration...");
+        var identityContext = scope.ServiceProvider.GetRequiredService<AppIdentityDbContext>();
+        identityContext.Database.Migrate();
+        app.Logger.LogInformation("Identity migration completed.");
+    }
+    catch (Exception ex)
+    {
+        app.Logger.LogError(ex, "Identity migration failed");
+        throw;
+    }
+
+    try
+    {
+        app.Logger.LogInformation("Starting Catalog migration...");
+        var catalogContext = scope.ServiceProvider.GetRequiredService<CatalogDbContext>();
+        catalogContext.Database.Migrate();
+        app.Logger.LogInformation("Catalog migration completed.");
+    }
+    catch (Exception ex)
+    {
+        app.Logger.LogError(ex, "Catalog migration failed");
+        throw;
+    }
+
+    try
+    {
+        app.Logger.LogInformation("Starting Ordering migration...");
+        var orderingContext = scope.ServiceProvider.GetRequiredService<OrderingDbContext>();
+        orderingContext.Database.Migrate();
+        app.Logger.LogInformation("Ordering migration completed.");
+    }
+    catch (Exception ex)
+    {
+        app.Logger.LogError(ex, "Ordering migration failed");
+        throw;
+    }
+}
+
 await AddAdminAsync(app);
 
 app.Run();
