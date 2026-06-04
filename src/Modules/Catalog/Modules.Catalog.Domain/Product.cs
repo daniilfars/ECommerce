@@ -9,6 +9,7 @@ public class Product : AggregateRoot<int>
     public decimal PriceAmount { get; private set; }
     public string PriceCurrency { get; private set; }
     public Money Price => Money.Create(PriceAmount, PriceCurrency).Value!;
+    public string? ImageUrl { get; private set; }
 
     private Product() { } // Для EF Core
     private Product(string name, Money price)
@@ -16,6 +17,7 @@ public class Product : AggregateRoot<int>
         Name = name;
         PriceAmount = price.Amount;
         PriceCurrency = price.Currency;
+        ImageUrl = null;
     }
 
     public static Result<Product> Create(string name, Money price)
@@ -44,5 +46,10 @@ public class Product : AggregateRoot<int>
         PriceAmount = price.Amount;
         PriceCurrency = price.Currency;
         return Result.Success();
+    }
+
+    public void SetImageUrl(string url)
+    {
+        ImageUrl = url;
     }
 }

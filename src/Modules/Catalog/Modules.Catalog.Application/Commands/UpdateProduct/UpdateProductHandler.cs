@@ -42,6 +42,6 @@ public class UpdateProductHandler : IRequestHandler<UpdateProductCommand, Result
 
         await _context.SaveChangesAsync(cancellationToken);
 
-        return Result<UpdateProductResponse>.Success(new UpdateProductResponse(product.Id, product.Name, product.PriceAmount, product.PriceCurrency));
+        return Result<UpdateProductResponse>.Success(new UpdateProductResponse(product.Id, product.Name, product.PriceAmount, product.PriceCurrency, product.ImageUrl));
     }
 }

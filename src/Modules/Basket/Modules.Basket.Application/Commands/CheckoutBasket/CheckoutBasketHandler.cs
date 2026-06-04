@@ -29,7 +29,8 @@ public class CheckoutBasketHandler : IRequestHandler<CheckoutBasketCommand, Resu
                 i.ProductName,
                 i.PriceAmount,
                 i.PriceCurrency,
-                i.Quantity
+                i.Quantity,
+                i.ImageUrl
             )).ToList()
         );
 

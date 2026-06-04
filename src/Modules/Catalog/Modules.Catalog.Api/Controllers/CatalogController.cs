@@ -1,9 +1,11 @@
 ﻿using MediatR;
 using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Modules.Catalog.Application.Commands.CreateProduct;
 using Modules.Catalog.Application.Commands.DeleteProduct;
 using Modules.Catalog.Application.Commands.UpdateProduct;
+using Modules.Catalog.Application.Commands.UploadProductImage;
 using Modules.Catalog.Application.Queries.GetProductById;
 using Modules.Catalog.Application.Queries.GetProducts;
 
@@ -86,5 +88,25 @@ public class CatalogController : ControllerBase
             return NotFound(result.Error);
 
         return NoContent();
+    }
+
+    // POST: api/catalog/{id}/upload-image
+    //[Authorize(Roles = "Admin")]
+    [HttpPost("{id}/upload-image")]
+    public async Task<ActionResult<UploadProductImageResponse>> UploadImage(int id, IFormFile file)
+    {
+        if (file is null || file.Length == 0)
+            return BadRequest("Файл не выбран или пустой");
+
+        if (file.Length > 5 * 1024 * 1024)
+            return BadRequest("Размер файла не должен превышать 5 МБ");
+
+        await using var stream = file.OpenReadStream();
+        var result = await _mediator.Send(new UploadProductImageCommand(id, stream, file.ContentType));
+
+        if (result.IsFailure)
+            return BadRequest(result.Error!);
+
+        return Ok(result.Value);
     }
 }

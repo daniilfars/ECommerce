@@ -19,6 +19,6 @@ public class GetBasketHandler : IRequestHandler<GetBasketQuery, Result<GetBasket
         if (basket == null)
             return Result<GetBasketResponse>.Success(new GetBasketResponse(request.UserId, new List<BasketItemDto>(), 0));
 
-        return Result<GetBasketResponse>.Success(new GetBasketResponse(request.UserId, basket.Items.Select(i => new BasketItemDto(i.ProductId, i.ProductName, i.PriceAmount, i.PriceCurrency, i.Quantity, i.TotalPrice)).ToList(), basket.TotalAmount));
+        return Result<GetBasketResponse>.Success(new GetBasketResponse(request.UserId, basket.Items.Select(i => new BasketItemDto(i.ProductId, i.ProductName, i.PriceAmount, i.PriceCurrency, i.Quantity, i.TotalPrice, i.ImageUrl)).ToList(), basket.TotalAmount));
     }
 }

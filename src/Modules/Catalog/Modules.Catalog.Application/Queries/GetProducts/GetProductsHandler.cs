@@ -23,7 +23,7 @@ public class GetProductsHandler : IRequestHandler<GetProductsQuery, Result<GetPr
             .OrderBy(p => p.Id)
             .Skip((request.Page - 1) * request.PageSize)
             .Take(request.PageSize)
-            .Select(p => new ProductDto(p.Id, p.Name, p.PriceAmount, p.PriceCurrency))
+            .Select(p => new ProductDto(p.Id, p.Name, p.PriceAmount, p.PriceCurrency, p.ImageUrl))
             .ToListAsync(cancellationToken);
 
         return Result<GetProductsResponse>.Success(new GetProductsResponse(products, totalCount, request.Page, request.PageSize));
