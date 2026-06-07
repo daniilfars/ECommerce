@@ -1,0 +1,6 @@
+<svg viewBox="0 0 18 18" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" width="18.000000" height="18.000000" fill="none" customFrame="#000000">
+	<rect id="shopping-cart" width="18.000000" height="18.000000" x="0.000000" y="0.000000" />
+	<circle id="Эллипс 2" cx="6" cy="15.75" r="0.75" stroke="rgb(255,255,255)" stroke-linecap="round" stroke-linejoin="round" stroke-width="1.500000" />
+	<circle id="Эллипс 3" cx="14.25" cy="15.75" r="0.75" stroke="rgb(255,255,255)" stroke-linecap="round" stroke-linejoin="round" stroke-width="1.500000" />
+	<path id="Вектор 3" d="M1.53748 1.53751L3.03748 1.53751L5.03248 10.8525C5.08099 11.0787 5.18116 11.2906 5.32514 11.4716C5.46913 11.6526 5.65303 11.7979 5.86247 11.8961C6.07191 11.9942 6.30122 12.0427 6.53248 12.0375L13.8675 12.0375C14.0938 12.0371 14.3172 11.9855 14.5208 11.8866C14.7244 11.7876 14.903 11.6439 15.0431 11.4661C15.1832 11.2883 15.2813 11.0811 15.33 10.86L16.5675 5.28751L3.83998 5.28751" fill-rule="nonzero" stroke="rgb(255,255,255)" stroke-linecap="round" stroke-linejoin="round" stroke-width="1.500000" />
+</svg>

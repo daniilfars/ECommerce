@@ -1,4 +1,21 @@
-.counter {
+.container {
+  max-width: 1700px;
+  margin-right: auto;
+  margin-left: auto;
+  padding-left: 16px;
+  padding-right: 16px;
+}
+
+button:hover {
+  cursor: pointer;
+}
+
+a {
+  text-decoration: none;
+  color: #000;
+}
+
+/*.counter {
   font-size: 16px;
   padding: 5px 10px;
   border-radius: 5px;
@@ -181,4 +198,4 @@
     right: 0;
     border-right-color: var(--border);
   }
-}
+}*/

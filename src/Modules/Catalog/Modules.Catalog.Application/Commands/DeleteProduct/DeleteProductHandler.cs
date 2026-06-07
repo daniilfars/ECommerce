@@ -1,17 +1,18 @@
 ﻿using MediatR;
 using Microsoft.EntityFrameworkCore;
 using Modules.Catalog.Application.Interfaces;
-using Modules.Catalog.Domain;
 using Shared.Domain;
 
 namespace Modules.Catalog.Application.Commands.DeleteProduct;
 
 public class DeleteProductHandler : IRequestHandler<DeleteProductCommand, Result>
 {
+    private readonly IImageStorageService _service;
     private readonly ICatalogDbContext _context;
 
-    public DeleteProductHandler(ICatalogDbContext context)
+    public DeleteProductHandler(IImageStorageService service, ICatalogDbContext context)
     {
+        _service = service;
         _context = context;
     }
 
@@ -21,6 +22,12 @@ public class DeleteProductHandler : IRequestHandler<DeleteProductCommand, Result
 
         if (product is null)
             return Result.Failure("Товар не найден");
+
+        if (product.ImageUrl != null)
+        {
+            var objectName = _service.GetObjectNameFromUrl(product.ImageUrl);
+            await _service.DeleteAsync(objectName, cancellationToken);
+        }
 
         _context.Products.Remove(product);
         await _context.SaveChangesAsync(cancellationToken);

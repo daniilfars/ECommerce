@@ -26,7 +26,7 @@ public class ImageStorageService : IImageStorageService
 
     public string GetPublicUrl(string objectName)
     {
-        return $"{_endpoint}/{_bucketName}/{objectName}";
+        return $"http://{_endpoint}/{_bucketName}/{objectName}";
     }
 
     public async Task<string> UploadAsync(string objectName, Stream data, string contentType, CancellationToken cancellationToken = default)
@@ -54,7 +54,7 @@ public class ImageStorageService : IImageStorageService
 
     public string GetObjectNameFromUrl(string url)
     {
-        var prefix = $"{_endpoint}/{_bucketName}/";
+        var prefix = $"http://{_endpoint}/{_bucketName}/";
         return url.Replace(prefix, "");
     }
 }
