@@ -7,6 +7,7 @@
     align-items: center;
     justify-content: space-between;
     flex-wrap: wrap;
+    margin-bottom: 16px;
 }
 
 .header-item {
@@ -22,17 +23,17 @@
     gap: 4px;
 }
 
-.header-logo-p {
+.header-logo-text {
     font-size: 22px;
     font-weight: 800;
 }
 
-.header-p {
+.header-link {
     color: rgb(113, 113, 122);
     font-size: 17px;
 }
 
-.active .header-p {
+.header-link.active {
     font-weight: 500;
     color: #000;
 }
@@ -51,7 +52,7 @@
     border-radius: 20px;
 }
 
-.header-item-basket p {
+.header-link-text {
     color: #fff
 }
 

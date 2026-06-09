@@ -91,7 +91,7 @@ public class CatalogController : ControllerBase
     }
 
     // POST: api/catalog/{id}/upload-image
-    //[Authorize(Roles = "Admin")]
+    [Authorize(Roles = "Admin")]
     [HttpPost("{id}/upload-image")]
     public async Task<ActionResult<UploadProductImageResponse>> UploadImage(int id, IFormFile file)
     {

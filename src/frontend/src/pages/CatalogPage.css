@@ -8,13 +8,13 @@
 }
 
 .catalog-count {
-    font-family: 'Inter', sans-serif;
+    font-family: "Outfit", sans-serif;
     font-size: 18px;
     font-weight: 700;
     text-align: center;
 }
 
-.products-grid {
+.catalog-main-grid {
     margin-top: 36.5px;
     display: grid;
     grid-template-columns: repeat(4, 240px);
@@ -22,7 +22,19 @@
     gap: 20px;
 }
 
-.pagination {
+.catalog-loading {
+    margin-top: 36.5px;
+    text-align: center;
+    font-family: 'Inter', sans-serif;
+    font-size: 16px;
+    color: #627b93;
+    min-height: 300px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.catalog-pagination {
     display: flex;
     align-items: center;
     justify-content: center;
@@ -30,7 +42,7 @@
     margin-top: 32px;
 }
 
-.pagination button {
+.catalog-pagination button {
     width: 40px;
     height: 40px;
     border-radius: 10px;
@@ -40,13 +52,19 @@
     font-size: 16px;
 }
 
-.pagination button:disabled {
+.catalog-pagination button:disabled {
     opacity: 0.5;
     cursor: not-allowed;
 }
 
+.catalog-pagination-info {
+    font-family: 'Inter', sans-serif;
+    font-size: 14px;
+    color: #1c1c1e;
+}
+
 @media screen and (max-width: 1050px) {
-    .products-grid {
+    .catalog-main-grid {
         grid-template-columns: repeat(3, 240px);
         justify-content: center;
         gap: 20px; 
@@ -54,13 +72,13 @@
 }
 
 @media screen and (max-width: 820px) {
-    .products-grid {
+    .catalog-main-grid {
         grid-template-columns: repeat(2, 240px);
     }
 }
 
 @media screen and (max-width: 540px) {
-    .products-grid {
+    .catalog-main-grid {
         grid-template-columns: repeat(1, 240px);
     }
 }

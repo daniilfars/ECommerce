@@ -2,6 +2,7 @@ const API_BASE = import.meta.env.VITE_API_URL || 'http://localhost:5087/api';
 
 async function request(endpoint, options = {}) {
     const url = `${API_BASE}${endpoint}`;
+    const token = localStorage.getItem('accessToken');
 
     const config = {
         ...options,
@@ -11,13 +12,17 @@ async function request(endpoint, options = {}) {
         },
     };
 
+    if (token) {
+        config.headers['Authorization'] = `Bearer ${token}`;
+    }
+
     if (!(options.body instanceof FormData)) {
         config.headers['Content-Type'] = 'application/json';
     }
 
-    const response = await fetch(url, config)
+    let response = await fetch(url, config);
 
-    // Автоматическое обновление access токена
+    // Автообновление токена при 401
     if (response.status === 401) {
         const refreshResponse = await fetch(`${API_BASE}/Identity/refresh`, {
             method: 'POST',
@@ -26,10 +31,17 @@ async function request(endpoint, options = {}) {
 
         if (refreshResponse.ok) {
             const data = await refreshResponse.json();
-            localStorage.setItem('accessToken', data.accessToken);
+            const newToken = data.accessToken || data.value?.accessToken;
             
-            config.headers.Authorization = `Bearer ${data.accessToken}`; // Повторяем запрос с уже новым токеном
-            response = await fetch(url, config);
+            if (newToken) {
+                localStorage.setItem('accessToken', newToken);
+                config.headers['Authorization'] = `Bearer ${newToken}`;
+                response = await fetch(url, config);
+            } else {
+                localStorage.removeItem('accessToken');
+                window.location.href = '/login';
+                throw new Error('Не удалось обновить токен');
+            }
         } else {
             localStorage.removeItem('accessToken');
             window.location.href = '/login';
@@ -37,14 +49,13 @@ async function request(endpoint, options = {}) {
         }
     }
 
-    if(!response.ok)
-    {
+    if (!response.ok) {
         const error = await response.text();
         throw new Error(error || `Ошибка ${response.status}`);
     }
 
     const contentType = response.headers.get('content-type');
-    if(contentType && contentType.includes('application/json')){
+    if (contentType && contentType.includes('application/json')) {
         return response.json();
     }
     return null;
