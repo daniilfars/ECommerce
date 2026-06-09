@@ -146,6 +146,11 @@
     transition: transform 0.1s ease, opacity 0.2s ease;
 }
 
+.product-button-add.added {
+    background: #10b981;
+    cursor: default;
+}
+
 .product-cartIcon {
     margin-right: 10px;
 }

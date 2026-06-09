@@ -10,6 +10,7 @@ export default function ProductPage() {
     const [product, setProduct] = useState(null);
     const { id } = useParams();
     const [quantity, setQuantity] = useState(1);
+    const [isAdded, setIsAdded] = useState(false);
 
     const loadProduct = async () => {
         try {
@@ -24,16 +25,27 @@ export default function ProductPage() {
         loadProduct();
     }, [id]);
 
+    useEffect(() => {
+        if (!isAdded) return;
+        const timer = setTimeout(() => setIsAdded(false), 2000);
+        return () => clearTimeout(timer);
+    }, [isAdded]);
+
+    const handlerAdd = async () => {
+        try {
+            await basketAPI.addProduct(id, quantity);
+            setIsAdded(true);
+        } catch (err) {
+            console.error('Ошибка добавления в корзину:', err);
+        }
+    };
+
     const handleIncrement = () => {
         setQuantity(prev => prev + 1);
     };
 
     const handleDecrement = () => {
         setQuantity(prev => (prev > 1 ? prev - 1 : 1));
-    };
-
-    const handlerAdd = () => {
-        basketAPI.addProduct(id, quantity);
     };
 
     if (!product) {
@@ -90,9 +102,15 @@ export default function ProductPage() {
                                 </button>
                             </div>
 
-                            <button className="product-button-add" onClick={handlerAdd}>
-                                <img src={cartIcon} alt="" className="product-cartIcon" aria-hidden="true" />
-                                <span>Добавить в корзину</span>
+                            <button className={`product-button-add${isAdded ? " added" : ""}`} onClick={handlerAdd} disabled={isAdded}>
+                                {isAdded ? (
+                                    <span>✓ Добавлено</span>
+                                ) : (
+                                    <>
+                                        <img src={cartIcon} alt="" className="product-cartIcon" aria-hidden="true" />
+                                        <span>Добавить в корзину</span>
+                                    </>
+                                )}
                             </button>
                         </div>
 
