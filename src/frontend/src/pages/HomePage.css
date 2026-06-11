@@ -1,0 +1,113 @@
+.home-section {
+    display: flex;
+    flex-direction: row;
+    min-height: 520px;
+    width: 100%;
+    margin-top: 16px;
+}
+
+.home-item {
+    flex: 1; 
+    min-height: 520px;
+}
+
+.home-section > .home-item:first-child {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    background: linear-gradient(225.00deg, rgba(248, 247, 255, 1) 14.645%, rgba(255, 255, 255, 1) 85.355%);
+}
+
+.home-item-container {
+}
+
+.home-section > .home-item:nth-child(2) {
+    background: linear-gradient(0.00deg, rgba(108, 99, 255, 0.27) 0%, rgba(192, 132, 252, 0.27) 100%);
+}
+
+.home-span {
+    width: 162px;
+    height: 30px;
+    padding: 12px 7.5px;
+    border-radius: 15px;
+    background: rgba(237, 233, 254, 1);
+    color: rgba(124, 58, 237, 1);
+    font-family: 'Inter', sans-serif;
+    font-size: 12px;
+    font-weight: 600;
+}
+
+.home-title {
+    margin-top: 24px;
+    font-family: 'Outfit', 'Inter';
+    font-size: 52px;
+    font-weight: 800;
+    margin-bottom: 24px;
+}
+
+.home-p {
+    color: rgba(113, 113, 122, 1);
+    font-family: 'Inter', 'Outfit';
+    font-size: 17px;
+    font-weight: 400;
+    margin-bottom: 48px;
+}
+
+.home-navlink {
+    padding: 16px 28px;
+    text-align: center;
+    border-radius: 26px;
+    background: linear-gradient(0.00deg, rgba(108, 99, 255, 1) 0%,rgba(192, 132, 252, 1) 100%);
+    color: rgba(255, 255, 255, 1);
+    font-family: 'Inter', 'Outfit';
+    font-size: 16px;
+    font-weight: 600;
+}
+
+.home-list {
+    margin-top: 48px;
+    display: flex;
+    flex-direction: row;
+    gap: 40px;
+}
+
+.home-list-item {
+    display: flex;
+    flex-direction: column;
+}
+
+.home-list-item > strong {
+    font-family: 'Outfit', 'Inter';
+    font-size: 22px;
+    font-weight: 800;
+    margin-bottom: 2px;
+}
+
+.home-list-item > span {
+    color: rgba(113, 113, 122, 1);
+    font-family: 'Inter', 'Outfit';
+    font-size: 13px;
+    font-weight: 400;
+}
+
+@media screen and (max-width: 768px) {
+    .home-section {
+        flex-direction: column;
+    }
+
+    .home-item {
+        min-height: 350px;
+    }
+
+    .home-section > .home-item:first-child {
+        padding: 40px 0px;
+    }
+
+    .home-title {
+        font-size: 42px;
+    }
+
+    .home-p {
+        
+    }
+}

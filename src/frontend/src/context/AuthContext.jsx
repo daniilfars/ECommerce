@@ -20,6 +20,22 @@ export function AuthProvider({ children }) {
         }
     }
 
+    const updateUserFromToken = useCallback(() => {
+        const token = localStorage.getItem('accessToken');
+        if (token) {
+            const parsed = parseToken(token);
+            setUser(parsed);
+        } else {
+            setUser(null);
+        }
+    }, []);
+
+    useEffect(() => {
+        const handleTokenUpdate = () => updateUserFromToken();
+        window.addEventListener('tokenUpdated', handleTokenUpdate);
+        return () => window.removeEventListener('tokenUpdated', handleTokenUpdate);
+    }, []);
+
     useEffect(() => {
         const token = localStorage.getItem('accessToken');
         if (token){
@@ -53,9 +69,7 @@ export function AuthProvider({ children }) {
     };
 
     return (
-        <AuthContext.Provider
-            value={{ user, loading, login, logout, register }}
-        >
+        <AuthContext.Provider value={{ user, loading, login, logout, register }}>
             {children}
         </AuthContext.Provider>
     );

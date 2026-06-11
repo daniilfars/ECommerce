@@ -57,9 +57,7 @@ export default function CatalogPage() {
                     <span className="catalog-pagination-info" aria-live="polite">
                         Страница {page} из {totalPages}
                     </span>
-                    <button onClick={handleNext} disabled={page === totalPages} aria-label="Следующая страница">
-                        &gt;
-                    </button>
+                    <button onClick={handleNext} disabled={page === totalPages} aria-label="Следующая страница">&gt;</button>
                 </nav>
             )}
         </div>

@@ -44,9 +44,9 @@ public class IdentityController : ControllerBase
 
     // POST: api/identity/refresh
     [HttpPost("refresh")]
-    public async Task<ActionResult<RefreshUserResponse>> Refresh(RefreshUserCommand refresh)
+    public async Task<ActionResult<RefreshUserResponse>> Refresh()
     {
-        var res = await mediator.Send(refresh);
+        var res = await mediator.Send(new RefreshUserCommand());
 
         if (res.IsFailure)
             return Unauthorized(res.Error);

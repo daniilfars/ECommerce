@@ -1,0 +1,90 @@
+.basket-container {
+    padding-top: 32px;
+    padding-bottom: 120px;
+}
+
+.basket-main {
+    margin-bottom: 24px;
+}
+
+.basket-list {
+    list-style: none;
+    padding: 0;
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+}
+
+.basket-checkout-button {
+    position: fixed;
+    bottom: 24px;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 100%;
+    max-width: 600px;
+    height: 56px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 0 28px;
+    border-radius: 28px;
+    background: linear-gradient(0deg, rgba(108, 99, 255, 1) 0%, rgba(192, 132, 252, 1) 100%);
+    color: #fff;
+    font-family: 'Outfit', sans-serif;
+    font-size: 16px;
+    font-weight: 700;
+    text-decoration: none;
+    box-shadow: 0 4px 20px rgba(108, 99, 255, 0.3);
+    transition: transform 0.15s ease, box-shadow 0.15s ease;
+    z-index: 100;
+}
+
+.basket-checkout-button:hover {
+    transform: translateX(-50%) scale(1.02);
+    box-shadow: 0 6px 24px rgba(108, 99, 255, 0.4);
+}
+
+.basket-checkout-button:active {
+    transform: translateX(-50%) scale(0.98);
+}
+
+.basket-empty {
+    text-align: center;
+    padding: 80px 20px;
+    color: #71717a;
+    font-family: 'Outfit', sans-serif;
+}
+
+.basket-empty h2 {
+    font-size: 24px;
+    font-weight: 600;
+    color: #18181b;
+    margin-bottom: 8px;
+}
+
+.basket-empty p {
+    font-size: 16px;
+    margin-bottom: 24px;
+}
+
+.basket-empty-link {
+    display: inline-block;
+    padding: 14px 32px;
+    background: linear-gradient(0deg, rgba(108, 99, 255, 1) 0%, rgba(192, 132, 252, 1) 100%);
+    color: #fff;
+    border-radius: 26px;
+    text-decoration: none;
+    font-weight: 600;
+    font-family: 'Outfit', sans-serif;
+}
+
+
+@media screen and (max-width: 640px) {
+    .basket-checkout-button {
+        max-width: calc(100% - 32px);
+        bottom: 16px;
+        height: 52px;
+        font-size: 15px;
+        padding: 0 20px;
+    }
+}

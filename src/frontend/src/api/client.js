@@ -27,6 +27,10 @@ async function request(endpoint, options = {}) {
         const refreshResponse = await fetch(`${API_BASE}/Identity/refresh`, {
             method: 'POST',
             credentials: 'include',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({}),
         });
 
         if (refreshResponse.ok) {
@@ -35,6 +39,7 @@ async function request(endpoint, options = {}) {
             
             if (newToken) {
                 localStorage.setItem('accessToken', newToken);
+                window.dispatchEvent(new Event('tokenUpdated')); // Для AuthContext, чтоб обновил компоненты
                 config.headers['Authorization'] = `Bearer ${newToken}`;
                 response = await fetch(url, config);
             } else {

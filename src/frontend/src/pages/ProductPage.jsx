@@ -86,20 +86,9 @@ export default function ProductPage() {
 
                         <div className="product-button-container">
                             <div className="product-quantity-controls">
-                                <button 
-                                    onClick={handleDecrement} 
-                                    disabled={quantity <= 1}
-                                    aria-label="Уменьшить количество"
-                                >
-                                    -
-                                </button>
+                                <button onClick={handleDecrement} disabled={quantity <= 1} aria-label="Уменьшить количество">-</button>
                                 <span className="product-quantity-value">{quantity}</span>
-                                <button 
-                                    onClick={handleIncrement}
-                                    aria-label="Увеличить количество"
-                                >
-                                    +
-                                </button>
+                                <button onClick={handleIncrement} aria-label="Увеличить количество">+</button>
                             </div>
 
                             <button className={`product-button-add${isAdded ? " added" : ""}`} onClick={handlerAdd} disabled={isAdded}>
