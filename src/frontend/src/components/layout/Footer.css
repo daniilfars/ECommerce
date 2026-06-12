@@ -1,0 +1,172 @@
+.footer {
+    margin-top: 50px;
+}
+
+.footer-info {
+    padding: 48px 0px;
+    background: linear-gradient(0.00deg, rgba(108, 99, 255, 1) 0%,rgba(192, 132, 252, 1) 50%,rgba(249, 168, 212, 1) 100%);
+}
+
+.footer-list {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    align-items: center;
+    gap: 24px;
+    flex-wrap: wrap;
+    list-style: none;
+}
+
+.footer-list-item {
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-start;
+    align-items: center;
+    gap: 10px;
+}
+
+.footer-image-container {
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    align-items: center;
+    width: 52px;
+    height: 52px;
+    border-radius: 26px;
+    background: rgba(255, 255, 255, 0.13);
+}
+
+.footer-image {
+    
+}
+
+.footer-h3 {
+    color: #fff;
+    font-family: 'Outfit', 'Inter';
+    font-size: 16px;
+    font-weight: 600;
+}
+
+.footer-p {
+    color: rgba(255, 255, 255, 0.73);
+    font-family: 'Inter', 'Outfit';
+    font-size: 13px;
+    font-weight: 400;
+}
+
+@media screen and (max-width: 683px) {
+    .footer-list {
+        justify-content: center;
+        gap: 55px;
+    }
+}
+
+.footer-bottom {
+    padding-top: 48px;
+    padding-bottom: 32px;
+    background: rgb(0, 0, 0);
+}
+
+.footer-bottom-container {
+    display: flex;
+    flex-direction: row;
+    flex-wrap: wrap;
+}
+
+.footer-brand {
+    max-width: 240px;
+}
+
+.footer-brand-link {
+    display: flex;
+    align-items: center;
+    gap: 4px;
+}
+
+.footer-logo {
+    font-family: 'Outfit', 'Inter';
+    font-size: 20px;
+    font-weight: 800;
+    color: #fff;
+}
+
+.footer-brand-p {
+    margin-top: 16px;
+    color: rgb(113, 113, 122);
+    font-family: 'Inter', 'Outfit';
+    font-size: 14px;
+    font-weight: 400;
+}
+
+.footer-nav {
+    margin-left: 60px;
+    width: 60%;
+    display: flex;
+    flex-direction: row;
+    flex-wrap: wrap;
+    justify-content: space-between;
+    gap: 40px;
+}
+
+.footer-nav-column {
+    
+}
+
+.footer-title {
+    color: #fff;
+    font-family: 'Outfit', 'Inter';
+    font-size: 14px;
+    font-weight: 700;
+    margin-bottom: 12px;
+}
+
+.footer-nav-list {
+    list-style: none;
+}
+
+.footer-nav-item {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+}
+
+.footer-link {
+    color: rgb(113, 113, 122);
+    font-family: 'Inter', 'Outfit';
+    font-size: 14px;
+    font-weight: 400;
+}
+
+@media screen and (max-width: 782px) {
+    .footer-bottom-container {
+        justify-content: center;
+        gap: 40px;
+    }
+
+    .footer-brand {
+        justify-content: center;
+        text-align: center;
+    }
+
+    .footer-brand-link {
+        justify-content: center;
+    }
+
+    .footer-nav {
+        width: 100%;
+    }
+}
+
+@media screen and (max-width: 409px) {
+    .footer-nav {
+        gap: 40px;
+        justify-content: space-around;
+        margin-right: 40px;
+    }
+}
+
+@media screen and (max-width: 338px) {
+    .footer-nav {
+        margin-right: 22px;
+    }
+}

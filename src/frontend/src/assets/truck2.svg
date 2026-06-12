@@ -1,0 +1,8 @@
+<svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" width="24.000000" height="24.000000" fill="none" customFrame="#000000">
+	<rect id="truck" width="24.000000" height="24.000000" x="0.000000" y="0.000000" />
+	<path id="Вектор 36" d="M14 18L14 6C14 5.64893 13.9076 5.30404 13.7321 5C13.5565 4.69596 13.304 4.44349 13 4.26795C12.696 4.09241 12.3511 4 12 4L4 4C3.64893 4 3.30404 4.09241 3 4.26795C2.69596 4.44349 2.44349 4.69596 2.26795 5C2.09241 5.30404 2 5.64893 2 6L2 17C2 17.1755 2.04621 17.348 2.13397 17.5C2.22174 17.652 2.34798 17.7783 2.5 17.866C2.65202 17.9538 2.82446 18 3 18L5 18" fill-rule="nonzero" stroke="rgb(255,255,255)" stroke-linecap="round" stroke-linejoin="round" stroke-width="2.000000" />
+	<path id="Вектор 37" d="M15 18L9 18" stroke="rgb(255,255,255)" stroke-linecap="round" stroke-linejoin="round" stroke-width="2.000000" />
+	<path id="Вектор 38" d="M19 18L21 18C21.1755 18 21.348 17.9538 21.5 17.866C21.652 17.7783 21.7783 17.652 21.866 17.5C21.9538 17.348 22 17.1755 22 17L22 13.35C21.9998 13.2373 21.9806 13.1255 21.9431 13.0193C21.9056 12.913 21.8505 12.8139 21.78 12.726L18.3 8.376C18.2065 8.25888 18.0878 8.16428 17.9528 8.0992C17.8178 8.03412 17.6699 8.00021 17.52 8L14 8" fill-rule="nonzero" stroke="rgb(255,255,255)" stroke-linecap="round" stroke-linejoin="round" stroke-width="2.000000" />
+	<circle id="Эллипс 4" cx="17" cy="18" r="2" stroke="rgb(255,255,255)" stroke-linecap="round" stroke-linejoin="round" stroke-width="2.000000" />
+	<circle id="Эллипс 5" cx="7" cy="18" r="2" stroke="rgb(255,255,255)" stroke-linecap="round" stroke-linejoin="round" stroke-width="2.000000" />
+</svg>
