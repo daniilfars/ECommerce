@@ -1,6 +1,6 @@
 import { useParams, NavLink } from "react-router-dom";
 import { useEffect, useState } from "react";
-import { basketAPI, catalogAPI } from "../api/client";
+import { basketAPI, catalogAPI } from "../../api/client";
 import cartIcon from "../assets/shopping-cart.svg";
 import truck from "../assets/truck.svg";
 import check from "../assets/shield-check.svg";

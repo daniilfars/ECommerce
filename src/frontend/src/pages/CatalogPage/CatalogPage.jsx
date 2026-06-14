@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
-import { catalogAPI } from "../api/client";
-import ProductCard from "../components/product/ProductCard";
+import { catalogAPI } from "../../api/client";
+import ProductCard from "../../components/product/ProductCard";
 import "./CatalogPage.css";
 
 export default function CatalogPage() {

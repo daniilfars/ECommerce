@@ -1,0 +1,112 @@
+.order-detail-header {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  margin: 28px 0 20px;
+}
+
+.order-detail-title {
+  font-family: "Outfit", sans-serif;
+  font-size: 28px;
+  font-weight: 700;
+}
+
+.order-status {
+  color: #fff;
+  padding: 4px 14px;
+  border-radius: 20px;
+  font-size: 13px;
+  font-weight: 600;
+  font-family: "Outfit", sans-serif;
+}
+
+.order-detail-info {
+  background: #fafafa;
+  border-radius: 14px;
+  padding: 20px 24px;
+  margin-bottom: 28px;
+  font-family: "Outfit", sans-serif;
+  font-size: 15px;
+  line-height: 1.7;
+}
+
+.order-detail-subtitle {
+  font-family: "Outfit", sans-serif;
+  font-size: 20px;
+  font-weight: 700;
+  margin-bottom: 16px;
+}
+
+.order-detail-items {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  margin-bottom: 28px;
+}
+
+.order-detail-item {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  background: #fff;
+  border-radius: 14px;
+  padding: 16px 20px;
+  box-shadow: 0 2px 12px rgba(0, 0, 0, 0.04);
+}
+
+.order-detail-item-image {
+  width: 72px;
+  height: 72px;
+  border-radius: 10px;
+  overflow: hidden;
+  flex-shrink: 0;
+  background: #f5f3ff;
+}
+
+.order-detail-item-image img {
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+}
+
+.order-detail-item-info {
+  flex: 1;
+}
+
+.order-detail-item-name {
+  font-family: "Outfit", sans-serif;
+  font-weight: 600;
+  margin-bottom: 4px;
+}
+
+.order-detail-item-qty {
+  color: #71717a;
+  font-size: 14px;
+}
+
+.order-detail-item-price {
+  font-weight: 700;
+  font-family: "Outfit", sans-serif;
+  white-space: nowrap;
+}
+
+.order-detail-back {
+  display: inline-block;
+  color: #6c63ff;
+  font-family: "Outfit", sans-serif;
+  font-weight: 600;
+  text-decoration: none;
+  margin-top: 16px;
+}
+
+.order-detail-back:hover {
+  text-decoration: underline;
+}
+
+.order-detail-loading {
+  text-align: center;
+  padding: 80px 20px;
+  font-family: "Outfit", sans-serif;
+  font-size: 18px;
+  color: #71717a;
+}

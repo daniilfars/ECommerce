@@ -1,0 +1,111 @@
+.orders-container {
+  padding: 32px 0;
+}
+
+.orders-title {
+  font-family: "Outfit", sans-serif;
+  font-size: 28px;
+  font-weight: 700;
+  margin-bottom: 24px;
+}
+
+.orders-list {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.order-card {
+    background: #fff;
+    border-radius: 14px;
+    padding: 20px 24px;
+    transition: box-shadow 0.2s ease, transform 0.2s ease;
+    cursor: pointer;
+}
+
+.order-card:hover {
+    box-shadow: 0 6px 24px rgba(0, 0, 0, 0.1);
+    transform: translateY(-2px);
+}
+
+.order-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 12px;
+}
+
+.order-id {
+  font-weight: 600;
+  font-family: "Outfit", sans-serif;
+  margin-right: 12px;
+}
+
+.order-status {
+  color: #fff;
+  padding: 4px 12px;
+  border-radius: 20px;
+  font-size: 13px;
+  font-weight: 600;
+  font-family: "Outfit", sans-serif;
+}
+
+.order-total {
+  font-weight: 700;
+  font-size: 18px;
+  font-family: "Outfit", sans-serif;
+}
+
+.order-body {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  color: #71717a;
+  font-size: 14px;
+}
+
+.order-details-link {
+  color: #6c63ff;
+  text-decoration: none;
+  font-weight: 600;
+}
+
+.order-details-link:hover {
+  text-decoration: underline;
+}
+
+/* Пустые заказы */
+.orders-empty {
+  text-align: center;
+  padding: 80px 20px;
+  font-family: "Outfit", sans-serif;
+}
+
+.orders-empty h2 {
+  font-size: 22px;
+  margin-bottom: 16px;
+}
+
+.orders-empty-link {
+  color: #6c63ff;
+  font-weight: 600;
+}
+
+.orders-loading {
+  text-align: center;
+  padding: 80px 20px;
+  font-family: "Outfit", sans-serif;
+  font-size: 18px;
+  color: #71717a;
+}
+
+@media screen and (max-width: 600px) {
+  .order-card {
+    padding: 16px;
+  }
+  .order-header {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 8px;
+  }
+}

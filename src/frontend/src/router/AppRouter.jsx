@@ -8,6 +8,7 @@ import BasketPage from '../pages/BasketPage.jsx';
 import CheckoutPage from '../pages/CheckoutPage.jsx';
 import OrdersPage from '../pages/OrdersPage.jsx';
 import ProtectedRoute from './ProtectedRoute.jsx';
+import OrderDetailPage from '../pages/OrderDetailPage.jsx';
 
 function AppRouter() {
     return (
@@ -30,6 +31,11 @@ function AppRouter() {
             <Route path="/orders" element={
                 <ProtectedRoute>
                     <OrdersPage  />
+                </ProtectedRoute>
+            } />
+            <Route path="/orders/:id" element={
+                <ProtectedRoute>
+                    <OrderDetailPage />
                 </ProtectedRoute>
             } />
         </Routes>

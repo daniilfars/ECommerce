@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { useAuth } from '../context/AuthContext';
+import { useAuth } from '../../context/AuthContext';
 import { Link, useNavigate } from 'react-router-dom';
 import "./Auth.css";
 
@@ -19,7 +19,7 @@ export default function RegisterPage() {
         setLoading(true);
         try {
             await register(firstName, lastName, email, password);
-            navigate(-1);
+            navigate('/');
         } catch (err) {
             setError(err.message || 'Ошибка регистрации');
         } finally {

@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
-import { basketAPI } from "../api/client";
-import BasketItemCard from "../components/basket/BasketItemCard";
+import { basketAPI } from "../../api/client";
+import BasketItemCard from "../../components/basket/BasketItemCard";
 import { NavLink } from "react-router-dom";
 import './BasketPage.css';
 

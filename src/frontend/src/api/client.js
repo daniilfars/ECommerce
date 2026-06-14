@@ -141,9 +141,10 @@ export const basketAPI = {
             body: JSON.stringify({productId, quantity})
         }),
     
-    checkout: () =>
+    checkout: (shippingAddress) =>
         request('/Basket/checkout', {
             method: 'POST',
+            body: JSON.stringify({ shippingAddress }),
         }),
 
     deleteProduct: (productId) =>
