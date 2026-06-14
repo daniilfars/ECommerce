@@ -1,14 +1,16 @@
 import { Routes, Route } from 'react-router-dom';
-import HomePage from '../pages/HomePage.jsx';
-import CatalogPage from '../pages/CatalogPage.jsx';
-import ProductPage from '../pages/ProductPage.jsx';
-import LoginPage from '../pages/LoginPage.jsx';
-import RegisterPage from '../pages/RegisterPage.jsx';
-import BasketPage from '../pages/BasketPage.jsx';
-import CheckoutPage from '../pages/CheckoutPage.jsx';
-import OrdersPage from '../pages/OrdersPage.jsx';
+import HomePage from '../pages/HomePage/HomePage.jsx';
+import CatalogPage from '../pages/CatalogPage/CatalogPage.jsx';
+import ProductPage from '../pages/ProductPage/ProductPage.jsx';
+import LoginPage from '../pages/Auth/LoginPage.jsx';
+import RegisterPage from '../pages/Auth/RegisterPage.jsx';
+import BasketPage from '../pages/BasketPage/BasketPage.jsx';
+import CheckoutPage from '../pages/CheckoutPage/CheckoutPage.jsx';
+import OrdersPage from '../pages/OrdersPage/OrdersPage.jsx';
+import OrderDetailPage from '../pages/OrderDetailPage/OrderDetailPage.jsx';
+import AdminPage from '../pages/Admin/AdminPage.jsx';
+import AdminProducts from '../pages/Admin/AdminProducts.jsx';
 import ProtectedRoute from './ProtectedRoute.jsx';
-import OrderDetailPage from '../pages/OrderDetailPage.jsx';
 
 function AppRouter() {
     return (
@@ -38,6 +40,15 @@ function AppRouter() {
                     <OrderDetailPage />
                 </ProtectedRoute>
             } />
+            <Route path="/admin" element={
+                <ProtectedRoute requiredRole="Admin">
+                    <AdminPage />
+                </ProtectedRoute>
+            }>
+                <Route index element={<AdminProducts />} />
+                <Route path="products" element={<AdminProducts />} />
+                <Route path="orders" element={<div className="admin-loading">Управление заказами — скоро</div>} />
+            </Route>
         </Routes>
     )
 }
