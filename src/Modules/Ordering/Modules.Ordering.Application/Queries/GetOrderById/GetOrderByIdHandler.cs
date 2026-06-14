@@ -20,7 +20,7 @@ public class GetOrderByIdHandler : IRequestHandler<GetOrderByIdQuery, Result<Get
         if (order is null)
             return Result<GetOrderByIdResponse>.Failure("Заказ не найден");
 
-        if(order.UserId != request.UserId)
+        if (!request.IsAdmin && order.UserId != request.UserId)
             return Result<GetOrderByIdResponse>.Failure("Нет доступа к заказу");
 
         var items = new List<OrderItemDto>(order.Items.Select(i => new OrderItemDto(i.Id, i.ProductId, i.ProductName, i.PriceAmount, i.PriceCurrency, i.Quantity, i.TotalPrice, i.ImageUrl)));

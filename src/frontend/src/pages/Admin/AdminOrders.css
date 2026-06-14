@@ -1,0 +1,94 @@
+.admin-orders-table {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.admin-order-card {
+  background: #fff;
+  border-radius: 14px;
+  box-shadow: 0 2px 12px rgba(0, 0, 0, 0.04);
+  overflow: hidden;
+  transition: box-shadow 0.2s ease;
+}
+
+.admin-order-card:hover {
+  box-shadow: 0 6px 24px rgba(0, 0, 0, 0.08);
+}
+
+.admin-order-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 16px 20px;
+  cursor: pointer;
+  user-select: none;
+}
+
+.admin-order-header-left {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+}
+
+.admin-order-id {
+  font-family: "Outfit", sans-serif;
+  font-weight: 700;
+  font-size: 16px;
+}
+
+.admin-order-header-right {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+}
+
+.admin-order-total {
+  font-family: "Outfit", sans-serif;
+  font-weight: 700;
+  font-size: 17px;
+}
+
+.admin-order-expand {
+  font-size: 12px;
+  color: #a1a1aa;
+}
+
+.admin-order-details {
+  padding: 0 20px 20px;
+  border-top: 1px solid #f4f4f5;
+  padding-top: 16px;
+}
+
+.admin-order-meta {
+  font-family: "Outfit", sans-serif;
+  font-size: 14px;
+  line-height: 1.7;
+  color: #52525b;
+  margin-bottom: 16px;
+}
+
+.admin-order-meta p {
+  margin: 0;
+}
+
+.admin-order-actions {
+  display: flex;
+  gap: 10px;
+  flex-wrap: wrap;
+}
+
+.admin-btn-sm {
+  padding: 8px 16px;
+  font-size: 13px;
+  border-radius: 20px;
+}
+
+.admin-btn-cancel {
+  background: #f4f4f5;
+  color: #52525b;
+}
+
+.admin-btn-cancel:hover {
+  background: #e4e4e7;
+}

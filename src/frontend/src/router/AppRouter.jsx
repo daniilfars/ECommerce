@@ -10,6 +10,7 @@ import OrdersPage from '../pages/OrdersPage/OrdersPage.jsx';
 import OrderDetailPage from '../pages/OrderDetailPage/OrderDetailPage.jsx';
 import AdminPage from '../pages/Admin/AdminPage.jsx';
 import AdminProducts from '../pages/Admin/AdminProducts.jsx';
+import AdminOrders from '../pages/Admin/AdminOrders.jsx';
 import ProtectedRoute from './ProtectedRoute.jsx';
 
 function AppRouter() {
@@ -47,7 +48,7 @@ function AppRouter() {
             }>
                 <Route index element={<AdminProducts />} />
                 <Route path="products" element={<AdminProducts />} />
-                <Route path="orders" element={<div className="admin-loading">Управление заказами — скоро</div>} />
+                <Route path="orders" element={<AdminOrders />} />
             </Route>
         </Routes>
     )

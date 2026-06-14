@@ -1,0 +1,72 @@
+.admin-container {
+  padding: 28px 0 48px;
+}
+
+.admin-title {
+  font-family: "Outfit", sans-serif;
+  font-size: 28px;
+  font-weight: 700;
+  margin-bottom: 28px;
+}
+
+.admin-layout {
+  display: grid;
+  grid-template-columns: 220px 1fr;
+  gap: 32px;
+  align-items: start;
+}
+
+.admin-sidebar {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  background: #fafafa;
+  border-radius: 14px;
+  padding: 12px;
+}
+
+.admin-link {
+  display: block;
+  padding: 12px 16px;
+  border-radius: 10px;
+  text-decoration: none;
+  font-family: "Outfit", sans-serif;
+  font-size: 15px;
+  font-weight: 500;
+  color: #52525b;
+  transition: background 0.15s;
+}
+
+.admin-link:hover {
+  background: #f4f4f5;
+}
+
+.admin-link-active {
+  background: linear-gradient(0deg, #6c63ff 0%, #c084fc 100%);
+  color: #fff;
+}
+
+.admin-link-active:hover {
+  background: linear-gradient(0deg, #5a52e0 0%, #a86de0 100%);
+}
+
+.admin-content {
+  min-height: 400px;
+}
+
+@media screen and (max-width: 768px) {
+  .admin-layout {
+    grid-template-columns: 1fr;
+  }
+
+  .admin-sidebar {
+    flex-direction: row;
+    gap: 8px;
+    padding: 8px;
+  }
+
+  .admin-link {
+    padding: 10px 14px;
+    font-size: 14px;
+  }
+}

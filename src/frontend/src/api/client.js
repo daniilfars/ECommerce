@@ -164,6 +164,11 @@ export const orderingAPI = {
         request(`/Ordering?page=${page}&pageSize=${pageSize}`, {
            method: 'GET', 
         }),
+
+    getAllOrders: (page = 1, pageSize = 50) =>
+        request(`/Ordering/all?page=${page}&pageSize=${pageSize}`, {
+            method: 'GET',
+        }),
     
     getById: (orderId) =>
         request(`/Ordering/${orderId}`, {

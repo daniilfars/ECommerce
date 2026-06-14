@@ -16,11 +16,14 @@ public class GetOrdersHandler : IRequestHandler<GetOrdersQuery, Result<GetOrders
 
     public async Task<Result<GetOrdersResponse>> Handle(GetOrdersQuery request, CancellationToken cancellationToken)
     {
-        var totalCount = await _context.Orders.Where(o => o.UserId == request.UserId).CountAsync(cancellationToken);
+        var query = _context.Orders.AsQueryable();
 
-        var orders = await _context.Orders
+        if (!request.All)
+            query = query.Where(o => o.UserId == request.UserId);
+
+        var totalCount = await query.CountAsync(cancellationToken);
+        var orders = await query
             .AsNoTracking()
-            .Where(o => o.UserId == request.UserId)
             .OrderByDescending(o => o.Id)
             .Skip((request.Page - 1) * request.PageSize)
             .Take(request.PageSize)

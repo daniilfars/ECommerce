@@ -20,7 +20,7 @@ public class CancelOrderHandler : IRequestHandler<CancelOrderCommand, Result>
         if (order is null)
             return Result.Failure("Заказ не найден");
 
-        if(order.UserId != request.UserId)
+        if(!request.IsAdmin && order.UserId != request.UserId)
             return Result.Failure("Нет доступа к заказу");
 
         var result = order.Cancel();

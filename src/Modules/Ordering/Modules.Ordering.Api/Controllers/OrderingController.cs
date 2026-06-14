@@ -25,17 +25,6 @@ public class OrderingController : ControllerBase
         _mediator = mediator;
     }
 
-    // GET: api/ordering/{orderId}
-    [HttpGet("{orderId}")]
-    public async Task<ActionResult<GetOrderByIdResponse>> GetOrderById(int orderId)
-    {
-        var result = await _mediator.Send(new GetOrderByIdQuery(orderId, UserId));
-        if (result.IsFailure)
-            return BadRequest(result.Error!);
-
-        return Ok(result.Value!);
-    }
-
     // GET: /api/ordering?page=1&pageSize=10
     [HttpGet]
     public async Task<ActionResult<GetOrdersResponse>> GetOrders([FromQuery] int page = 1, [FromQuery] int pageSize = 10)
@@ -47,11 +36,35 @@ public class OrderingController : ControllerBase
         return Ok(result.Value);
     }
 
+    [HttpGet("all")]
+    [Authorize(Roles = "Admin")]
+    public async Task<ActionResult<GetOrdersResponse>> GetAllOrders([FromQuery] int page = 1, [FromQuery] int pageSize = 10)
+    {
+        var result = await _mediator.Send(new GetOrdersQuery(UserId, page, pageSize, All: true));
+        if (result.IsFailure)
+            return BadRequest(result.Error!);
+        return Ok(result.Value);
+    }
+
+    // GET: api/ordering/{orderId}
+    [HttpGet("{orderId}")]
+    public async Task<ActionResult<GetOrderByIdResponse>> GetOrderById(int orderId)
+    {
+        var isAdmin = User.IsInRole("Admin");
+        var result = await _mediator.Send(new GetOrderByIdQuery(orderId, isAdmin ? Guid.Empty : UserId, isAdmin));
+
+        if (result.IsFailure)
+            return BadRequest(result.Error!);
+
+        return Ok(result.Value!);
+    }
+
     // POST: /api/ordering/{orderId}/cancel
     [HttpPost("{orderId}/cancel")]
     public async Task<IActionResult> CancelOrder(int orderId)
     {
-        var result = await _mediator.Send(new CancelOrderCommand(orderId, UserId));
+        var isAdmin = User.IsInRole("Admin");
+        var result = await _mediator.Send(new CancelOrderCommand(orderId, isAdmin ? Guid.Empty : UserId, isAdmin));
         if (result.IsFailure)
             return BadRequest(result.Error!);
 
@@ -62,7 +75,8 @@ public class OrderingController : ControllerBase
     [HttpPost("{orderId}/pay")]
     public async Task<IActionResult> PayOrder(int orderId)
     {
-        var result = await _mediator.Send(new PayOrderCommand(orderId, UserId));
+        var isAdmin = User.IsInRole("Admin");
+        var result = await _mediator.Send(new PayOrderCommand(orderId, isAdmin ? Guid.Empty : UserId, isAdmin));
         if (result.IsFailure)
             return BadRequest(result.Error!);
 
