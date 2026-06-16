@@ -37,6 +37,40 @@ services:
       timeout: 5s
       retries: 5
 
+  identity-api:
+    build:
+      context: .
+      dockerfile: Identity/Identity.Api/Dockerfile
+    ports:
+      - "8082:8080"
+    environment:
+      - ASPNETCORE_ENVIRONMENT=Development
+      - ConnectionStrings__DefaultConnection=Host=identity-db;Port=5432;Database=IdentityDb;Username=postgres;Password=${POSTGRES_PASSWORD}
+      - JwtSettings__SecretKey=${JWT_SECRET_KEY}
+      - JwtSettings__Issuer=Shop.Api
+      - JwtSettings__Audience=Shop.Client
+    depends_on:
+      identity-db:
+        condition: service_healthy
+      minio:
+        condition: service_started
+
+  identity-db:
+    image: postgres:15
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
+      POSTGRES_DB: IdentityDb
+    ports:
+      - "5435:5432"
+    volumes:
+      - identity_db_data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U postgres"]
+      interval: 5s
+      timeout: 5s
+      retries: 5
+
   minio:
     image: minio/minio:latest
     command: server /data --console-address ":9001"
@@ -51,4 +85,5 @@ services:
 
 volumes:
   catalog_db_data:
+  identity_db_data:
   minio_data:

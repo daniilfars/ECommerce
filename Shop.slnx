@@ -10,6 +10,12 @@
     <Project Path="Microservices/Catalog/Catalog.Domain/Catalog.Domain.csproj" />
     <Project Path="Microservices/Catalog/Catalog.Infrastructure/Catalog.Infrastructure.csproj" />
   </Folder>
+  <Folder Name="/Microservices/Identity/">
+    <Project Path="Microservices/Identity/Identity.Api/Identity.Api.csproj" />
+    <Project Path="Microservices/Identity/Identity.Application/Identity.Application.csproj" />
+    <Project Path="Microservices/Identity/Identity.Domain/Identity.Domain.csproj" />
+    <Project Path="Microservices/Identity/Identity.Infrastructure/Identity.Infrastructure.csproj" />
+  </Folder>
   <Folder Name="/src/">
     <Project Path="src/frontend/frontend.esproj">
       <Build />
