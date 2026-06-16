@@ -1,0 +1,6 @@
+﻿using MediatR;
+using Shared.Domain;
+
+namespace Catalog.Application.Queries.GetProducts;
+
+public sealed record GetProductsQuery(int Page = 1, int PageSize = 10) : IRequest<Result<GetProductsResponse>>;
