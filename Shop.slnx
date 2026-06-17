@@ -5,6 +5,7 @@
     <Project Path="Microservices/Shared/Shared.csproj" />
   </Folder>
   <Folder Name="/Microservices/Catalog/">
+    <Project Path="../Catalog.Domain.Tests/Catalog.Domain.Tests.csproj" Id="9329f34d-4f60-4f88-9198-8d510e365049" />
     <Project Path="Microservices/Catalog/Catalog.Api/Catalog.Api.csproj" />
     <Project Path="Microservices/Catalog/Catalog.Application/Catalog.Application.csproj" />
     <Project Path="Microservices/Catalog/Catalog.Domain/Catalog.Domain.csproj" />
