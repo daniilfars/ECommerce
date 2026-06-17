@@ -1,0 +1,1 @@
+﻿global using BasketEntity = Basket.Domain.Basket;

@@ -11,7 +11,7 @@ public class MoneyTests
 
         result.IsSuccess.Should().BeTrue();
         result.Value!.Amount.Should().Be(100.50m);
-        result.Value.Currency.Should().Be("RUB");
+        result.Value.Currency.Should().Be("RUB"); 
     }
 
     [Fact]

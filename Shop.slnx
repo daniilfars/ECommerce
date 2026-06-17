@@ -4,6 +4,12 @@
     <File Path="Microservices/docker-compose.yml" />
     <Project Path="Microservices/Shared/Shared.csproj" />
   </Folder>
+  <Folder Name="/Microservices/Basket/">
+    <Project Path="Microservices/Basket/Basket.Api/Basket.Api.csproj" Id="ba24c0d5-6bdb-4096-925e-0ab65fa3ec1a" />
+    <Project Path="Microservices/Basket/Basket.Application/Basket.Application.csproj" Id="91f2022e-2578-4b50-a801-7d54097065ad" />
+    <Project Path="Microservices/Basket/Basket.Domain/Basket.Domain.csproj" Id="d1466af1-32e3-4a23-b363-66cf27167c48" />
+    <Project Path="Microservices/Basket/Basket.Infrastructure/Basket.Infrastructure.csproj" />
+  </Folder>
   <Folder Name="/Microservices/Catalog/">
     <Project Path="Microservices/Catalog/Catalog.Api/Catalog.Api.csproj" />
     <Project Path="Microservices/Catalog/Catalog.Application/Catalog.Application.csproj" />
