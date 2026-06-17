@@ -5,15 +5,16 @@
     <Project Path="Microservices/Shared/Shared.csproj" />
   </Folder>
   <Folder Name="/Microservices/Catalog/">
-    <Project Path="../Catalog.Domain.Tests/Catalog.Domain.Tests.csproj" Id="9329f34d-4f60-4f88-9198-8d510e365049" />
     <Project Path="Microservices/Catalog/Catalog.Api/Catalog.Api.csproj" />
     <Project Path="Microservices/Catalog/Catalog.Application/Catalog.Application.csproj" />
+    <Project Path="Microservices/Catalog/Catalog.Domain.Tests/Catalog.Domain.Tests.csproj" />
     <Project Path="Microservices/Catalog/Catalog.Domain/Catalog.Domain.csproj" />
     <Project Path="Microservices/Catalog/Catalog.Infrastructure/Catalog.Infrastructure.csproj" />
   </Folder>
   <Folder Name="/Microservices/Identity/">
     <Project Path="Microservices/Identity/Identity.Api/Identity.Api.csproj" />
     <Project Path="Microservices/Identity/Identity.Application/Identity.Application.csproj" />
+    <Project Path="Microservices/Identity/Identity.Domain.Tests/Identity.Domain.Tests.csproj" Id="9af2db86-7476-4c8d-a3fd-9a5b73ad1736" />
     <Project Path="Microservices/Identity/Identity.Domain/Identity.Domain.csproj" />
     <Project Path="Microservices/Identity/Identity.Infrastructure/Identity.Infrastructure.csproj" />
   </Folder>
