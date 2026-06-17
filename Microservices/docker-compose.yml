@@ -52,8 +52,6 @@ services:
     depends_on:
       identity-db:
         condition: service_healthy
-      minio:
-        condition: service_started
 
   identity-db:
     image: postgres:15
@@ -87,6 +85,38 @@ services:
       redis:
         condition: service_started
 
+  ordering-api:
+    build:
+      context: .
+      dockerfile: Ordering/Ordering.Api/Dockerfile
+    ports:
+      - "8084:8080"
+    environment:
+      - ASPNETCORE_ENVIRONMENT=Development
+      - ConnectionStrings__DefaultConnection=Host=ordering-db;Port=5432;Database=OrderingDb;Username=postgres;Password=${POSTGRES_PASSWORD}
+      - JwtSettings__SecretKey=${JWT_SECRET_KEY}
+      - JwtSettings__Issuer=Shop.Api
+      - JwtSettings__Audience=Shop.Client
+    depends_on:
+      ordering-db:
+        condition: service_healthy
+
+  ordering-db:
+    image: postgres:15
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
+      POSTGRES_DB: OrderingDb
+    ports:
+      - "5436:5432"
+    volumes:
+      - ordering_db_data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U postgres"]
+      interval: 5s
+      timeout: 5s
+      retries: 5
+
   redis:
     image: redis:7-alpine
     container_name: new-shop-redis
@@ -110,5 +140,6 @@ services:
 volumes:
   catalog_db_data:
   identity_db_data:
+  ordering_db_data:
   new_shop_redis_data:
   minio_data:

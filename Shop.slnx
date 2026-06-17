@@ -24,6 +24,12 @@
     <Project Path="Microservices/Identity/Identity.Domain/Identity.Domain.csproj" />
     <Project Path="Microservices/Identity/Identity.Infrastructure/Identity.Infrastructure.csproj" />
   </Folder>
+  <Folder Name="/Microservices/Ordering/">
+    <Project Path="Microservices/Ordering/Ordering.Api/Ordering.Api.csproj" Id="24b48259-6e11-46d7-b42a-2cdc03b013c1" />
+    <Project Path="Microservices/Ordering/Ordering.Application/Ordering.Application.csproj" Id="38577fd3-1ce5-49a1-8f91-20556332b215" />
+    <Project Path="Microservices/Ordering/Ordering.Domain/Ordering.Domain.csproj" Id="87d560ff-bb08-4a4d-9834-05d7ad26a8c9" />
+    <Project Path="Microservices/Ordering/Ordering.Infrastructure/Ordering.Infrastructure.csproj" Id="ad796315-f439-4b35-a178-b8b97f4df928" />
+  </Folder>
   <Folder Name="/src/">
     <Project Path="src/frontend/frontend.esproj">
       <Build />

@@ -1,8 +1,10 @@
-﻿using MediatR;
-using System.Net.Http.Json;
+﻿using Basket.Application.Models;
 using Basket.Domain;
+using MediatR;
 using Shared.Domain;
-using Basket.Application.Models;
+using System.Net.Http.Headers;
+using System.Net.Http.Json;
+using Microsoft.AspNetCore.Http;
 
 namespace Basket.Application.Commands.CheckoutBasket;
 
@@ -10,11 +12,13 @@ public class CheckoutBasketHandler : IRequestHandler<CheckoutBasketCommand, Resu
 {
     private readonly IBasketRepository _basketRepository;
     private readonly IHttpClientFactory _httpClientFactory;
+    private readonly IHttpContextAccessor _httpContextAccessor;
 
-    public CheckoutBasketHandler(IBasketRepository basketRepository, IHttpClientFactory httpClientFactory)
+    public CheckoutBasketHandler(IBasketRepository basketRepository, IHttpClientFactory httpClientFactory, IHttpContextAccessor httpContextAccessor)
     {
         _basketRepository = basketRepository;
         _httpClientFactory = httpClientFactory;
+        _httpContextAccessor = httpContextAccessor;
     }
 
     public async Task<Result> Handle(CheckoutBasketCommand request, CancellationToken cancellationToken)
@@ -34,8 +38,12 @@ public class CheckoutBasketHandler : IRequestHandler<CheckoutBasketCommand, Resu
             )).ToList()
         );
 
+        var token = _httpContextAccessor.HttpContext!.Request.Headers["Authorization"].ToString();
+
         var client = _httpClientFactory.CreateClient();
-        var response = await client.PostAsJsonAsync("http://ordering-api/api/Ordering/create", createOrderCommand, cancellationToken);
+        client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", token.Replace("Bearer ", ""));
+
+        var response = await client.PostAsJsonAsync("http://ordering-api:8080/api/Ordering/create", createOrderCommand, cancellationToken);
 
         if (!response.IsSuccessStatusCode)
         {

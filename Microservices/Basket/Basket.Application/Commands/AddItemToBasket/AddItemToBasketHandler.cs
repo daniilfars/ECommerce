@@ -21,7 +21,7 @@ public class AddItemToBasketHandler : IRequestHandler<AddItemToBasketCommand, Re
     public async Task<Result<GetBasketResponse>> Handle(AddItemToBasketCommand request, CancellationToken cancellationToken)
     {
         var client = _httpClientFactory.CreateClient();
-        var response = await client.GetAsync($"http://catalog-api/api/Catalog/{request.ProductId}");
+        var response = await client.GetAsync($"http://catalog-api:8080/api/Catalog/{request.ProductId}");
 
         if (!response.IsSuccessStatusCode)
             return Result<GetBasketResponse>.Failure("Товар не найден");

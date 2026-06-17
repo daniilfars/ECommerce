@@ -12,23 +12,23 @@ EXPOSE 8081
 FROM mcr.microsoft.com/dotnet/sdk:10.0 AS build
 ARG BUILD_CONFIGURATION=Release
 WORKDIR /src
-COPY ["Basket/Basket.Api/Basket.Api.csproj", "Basket/Basket.Api/"]
-COPY ["Basket/Basket.Application/Basket.Application.csproj", "Basket/Basket.Application/"]
+COPY ["Ordering/Ordering.Api/Ordering.Api.csproj", "Ordering/Ordering.Api/"]
+COPY ["Ordering/Ordering.Application/Ordering.Application.csproj", "Ordering/Ordering.Application/"]
 COPY ["Shared/Shared.csproj", "Shared/"]
-COPY ["Basket/Basket.Domain/Basket.Domain.csproj", "Basket/Basket.Domain/"]
-COPY ["Basket/Basket.Infrastructure/Basket.Infrastructure.csproj", "Basket/Basket.Infrastructure/"]
-RUN dotnet restore "Basket/Basket.Api/Basket.Api.csproj"
+COPY ["Ordering/Ordering.Domain/Ordering.Domain.csproj", "Ordering/Ordering.Domain/"]
+COPY ["Ordering/Ordering.Infrastructure/Ordering.Infrastructure.csproj", "Ordering/Ordering.Infrastructure/"]
+RUN dotnet restore "Ordering/Ordering.Api/Ordering.Api.csproj"
 COPY . .
-WORKDIR "/src/Basket/Basket.Api"
-RUN dotnet build "Basket.Api.csproj" -c $BUILD_CONFIGURATION -o /app/build
+WORKDIR "/src/Ordering/Ordering.Api"
+RUN dotnet build "Ordering.Api.csproj" -c $BUILD_CONFIGURATION -o /app/build
 
 # Этот этап используется для публикации проекта службы, который будет скопирован на последний этап
 FROM build AS publish
 ARG BUILD_CONFIGURATION=Release
-RUN dotnet publish "Basket.Api.csproj" -c $BUILD_CONFIGURATION -o /app/publish /p:UseAppHost=false
+RUN dotnet publish "Ordering.Api.csproj" -c $BUILD_CONFIGURATION -o /app/publish /p:UseAppHost=false
 
 # Этот этап используется в рабочей среде или при запуске из VS в обычном режиме (по умолчанию, когда конфигурация отладки не используется)
 FROM base AS final
 WORKDIR /app
 COPY --from=publish /app/publish .
-ENTRYPOINT ["dotnet", "Basket.Api.dll"]
+ENTRYPOINT ["dotnet", "Ordering.Api.dll"]

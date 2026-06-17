@@ -1,23 +1,22 @@
 using System.Security.Claims;
 using System.Text;
-using Basket.Infrastructure;
-using Basket.Application;
+using Ordering.Infrastructure;
+using Ordering.Application;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
+using Ordering.Infrastructure.Data;
 
 var builder = WebApplication.CreateBuilder(args);
 
 builder.Services.AddMediatR(cfg => cfg.RegisterServicesFromAssemblies(
-    typeof(Basket.Application.Commands.AddItemToBasket.AddItemToBasketHandler).Assembly));
+    typeof(Ordering.Application.Commands.CreateOrder.CreateOrderHandler).Assembly));
 
 builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
-builder.Services.AddBasketInfrastructure(builder.Configuration);
-builder.Services.AddBasketApplication();
-
-builder.Services.AddHttpContextAccessor();
-builder.Services.AddHttpClient();
+builder.Services.AddOrderingInfrastructure(builder.Configuration);
+builder.Services.AddOrderingApplication();
 
 builder.Services.AddAuthentication().AddJwtBearer(options =>
 {
@@ -60,5 +59,11 @@ app.UseCors("AllowFrontend");
 app.UseAuthentication();
 app.UseAuthorization();
 app.MapControllers();
+
+using (var scope = app.Services.CreateScope())
+{
+    var context = scope.ServiceProvider.GetRequiredService<OrderingDbContext>();
+    context.Database.Migrate();
+}
 
 app.Run();
