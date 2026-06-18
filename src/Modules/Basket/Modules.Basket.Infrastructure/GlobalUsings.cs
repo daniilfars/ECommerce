@@ -1,1 +1,0 @@
-﻿global using BasketEntity = Modules.Basket.Domain.Basket;
