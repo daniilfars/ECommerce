@@ -116,6 +116,18 @@ services:
       interval: 5s
       timeout: 5s
       retries: 5
+  
+  gateway:
+    build:
+      context: .
+      dockerfile: Gateway/Dockerfile
+    ports:
+      - "5000:8080"
+    depends_on:
+      - catalog-api
+      - identity-api
+      - basket-api
+      - ordering-api
 
   redis:
     image: redis:7-alpine

@@ -29,8 +29,7 @@ export default function AdminOrders() {
         setOrders(data.orders || []);
       } catch (err) {
         console.error("Ошибка загрузки заказов:", err);
-      } finally {
-        setLoading(false);
+      } finally {setLoading(false);
       }
     };
 

@@ -26,9 +26,9 @@ public class ImageStorageService : IImageStorageService
 
     public string GetPublicUrl(string objectName)
     {
-        return $"http://{_endpoint}/{_bucketName}/{objectName}";
+        return $"http://localhost:9000/{_bucketName}/{objectName}";
     }
-
+    
     public async Task<string> UploadAsync(string objectName, Stream data, string contentType, CancellationToken cancellationToken = default)
     {
         var bucketExistsArgs = new BucketExistsArgs().WithBucket(_bucketName);
