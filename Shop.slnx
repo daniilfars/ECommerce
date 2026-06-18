@@ -7,6 +7,7 @@
   <Folder Name="/Microservices/Basket/">
     <Project Path="Microservices/Basket/Basket.Api/Basket.Api.csproj" Id="ba24c0d5-6bdb-4096-925e-0ab65fa3ec1a" />
     <Project Path="Microservices/Basket/Basket.Application/Basket.Application.csproj" Id="91f2022e-2578-4b50-a801-7d54097065ad" />
+    <Project Path="Microservices/Basket/Basket.Domain.Tests/Basket.Domain.Tests.csproj" Id="93dc6532-f465-40e0-af3c-8766589fe1ef" />
     <Project Path="Microservices/Basket/Basket.Domain/Basket.Domain.csproj" Id="d1466af1-32e3-4a23-b363-66cf27167c48" />
     <Project Path="Microservices/Basket/Basket.Infrastructure/Basket.Infrastructure.csproj" />
   </Folder>
@@ -27,6 +28,7 @@
   <Folder Name="/Microservices/Ordering/">
     <Project Path="Microservices/Ordering/Ordering.Api/Ordering.Api.csproj" Id="24b48259-6e11-46d7-b42a-2cdc03b013c1" />
     <Project Path="Microservices/Ordering/Ordering.Application/Ordering.Application.csproj" Id="38577fd3-1ce5-49a1-8f91-20556332b215" />
+    <Project Path="Microservices/Ordering/Ordering.Domain.Tests/Ordering.Domain.Tests.csproj" Id="65d7a71b-16c6-4bcb-8fce-ebeb02b67ed2" />
     <Project Path="Microservices/Ordering/Ordering.Domain/Ordering.Domain.csproj" Id="87d560ff-bb08-4a4d-9834-05d7ad26a8c9" />
     <Project Path="Microservices/Ordering/Ordering.Infrastructure/Ordering.Infrastructure.csproj" Id="ad796315-f439-4b35-a178-b8b97f4df928" />
   </Folder>
