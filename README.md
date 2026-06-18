@@ -1,55 +1,35 @@
-# ECommerce - Интернет-магазин на ASP.NET Core + React
+# ECommerce - Интернет-магазин на ASP.NET Core (микросервисы)
 
-Модульный монолит на ASP.NET Core с React-фронтендом. Регистрация и вход, каталог товаров с изображениями, корзина на Redis, заказы с полным жизненным циклом, админ-панель для управления товарами и заказами.
+Микросервисная архитектура на ASP.NET Core с React-фронтендом. 4 независимых сервиса, API Gateway, своя БД у каждого, корзина на Redis, изображения в MinIO.
 
 ## Стек
 
-**Backend:** C# 14, ASP.NET Core 10, Entity Framework Core, MediatR, JWT  
-**Database:** PostgreSQL, Redis  
+**Backend:** C# 14, ASP.NET Core 10, Entity Framework Core, MediatR, JWT, YARP  
+**Database:** PostgreSQL (отдельная БД на сервис), Redis  
 **Storage:** MinIO (S3-совместимое)  
-**Frontend:** React   
+**Frontend:** React  
 **DevOps:** Docker Compose, Serilog  
 
 ## Архитектура
 
-Модульный монолит из 4 модулей с Clean Architecture внутри каждого:
+4 микросервиса + API Gateway:
 
 ```
+Microservices/
+├── Gateway/                    # YARP API Gateway (порт 5000)
+├── Catalog/                    # Товары, изображения, MinIO
+├── Identity/                   # Пользователи, JWT-токены
+├── Basket/                     # Корзина на Redis
+├── Ordering/                   # Заказы, статусы
+├── Shared/                     # Общие абстракции
+├── docker-compose.yml
+└── .env
+
 src/
-├── Host/                                    # Точка входа, Program.cs
-├── Modules/
-│   ├── Identity/                            # Пользователи, JWT, роли
-│   │   ├── Modules.Identity.Domain/
-│   │   ├── Modules.Identity.Application/
-│   │   ├── Modules.Identity.Infrastructure/
-│   │   └── Modules.Identity.Api/
-│   ├── Catalog/                             # Товары, изображения
-│   │   ├── Modules.Catalog.Domain/
-│   │   ├── Modules.Catalog.Application/
-│   │   ├── Modules.Catalog.Infrastructure/
-│   │   └── Modules.Catalog.Api/
-│   ├── Basket/                              # Корзина на Redis
-│   │   ├── Modules.Basket.Domain/
-│   │   ├── Modules.Basket.Application/
-│   │   ├── Modules.Basket.Infrastructure/
-│   │   └── Modules.Basket.Api/
-│   └── Ordering/                            # Заказы, статусы
-│       ├── Modules.Ordering.Domain/
-│       ├── Modules.Ordering.Application/
-│       ├── Modules.Ordering.Infrastructure/
-│       └── Modules.Ordering.Api/
-├── Shared/                                  # Общие абстракции
-│   └── Shared.csproj
-└── frontend/                                # React
-    ├── src/
-    │   ├── api/                             # API-клиент
-    │   ├── components/                      # UI-компоненты
-    │   ├── pages/                           # Страницы
-    │   ├── context/                         # AuthContext
-    │   └── router/                          # Роутер
-
-Межмодульное взаимодействие через MediatR (команды и запросы). При переходе на микросервисы MediatR заменяется на RabbitMQ/MassTransit без изменения бизнес-логики.
+└── frontend/                   # React SPA
 ```
+
+Взаимодействие между сервисами через HTTP с пробросом JWT-токена. В перспективе — RabbitMQ/MassTransit.
 
 ## Быстрый старт
 
@@ -68,7 +48,7 @@ git clone https://github.com/daniilfars/ECommerce
 cd Shop
 ```
 
-2. Создать файл `.env` в корне проекта:
+2. Создать файл `.env` в папке `Microservices/`:
 
 ```env
 POSTGRES_PASSWORD=your_secure_password
@@ -77,9 +57,10 @@ MINIO_ROOT_USER=minioadmin
 MINIO_ROOT_PASSWORD=minioadmin
 ```
 
-3. Запустить бэкенд через Docker Compose:
+3. Запустить все микросервисы:
 
 ```bash
+cd Microservices
 docker compose up
 ```
 
@@ -94,7 +75,11 @@ npm run dev
 5. Открыть в браузере:
 
 - Frontend: `http://localhost:5173` (Vite выведет актуальный порт в консоли при запуске)
-- Swagger API: `http://localhost:8080/swagger`
+- API Gateway: `http://localhost:5000`
+- Swagger Catalog: `http://localhost:8081/swagger`
+- Swagger Identity: `http://localhost:8082/swagger`
+- Swagger Basket: `http://localhost:8083/swagger`
+- Swagger Ordering: `http://localhost:8084/swagger`
 
 ### Учетные данные по умолчанию
 
@@ -105,7 +90,15 @@ npm run dev
 
 Обычного пользователя можно зарегистрировать через интерфейс.
 
-## Модули
+## Сервисы
+
+| Сервис | Порт | База данных |
+|--------|------|-------------|
+| API Gateway | 5000 | — |
+| Identity | 8082 | IdentityDb (PostgreSQL) |
+| Catalog | 8081 | CatalogDb (PostgreSQL) + MinIO |
+| Basket | 8083 | Redis |
+| Ordering | 8084 | OrderingDb (PostgreSQL) |
 
 ### Identity
 
@@ -147,7 +140,7 @@ npm run dev
 
 Корзина на Redis с TTL 7 дней.
 
-- Добавление товара (цена и название подтягиваются из Catalog автоматически)
+- Добавление товара (цена и название подтягиваются из Catalog через HTTP)
 - Изменение количества
 - Удаление товара
 - Очистка после оформления заказа
@@ -164,7 +157,7 @@ npm run dev
 
 Управление заказами с отслеживанием статусов.
 
-- Создание заказа из корзины (Checkout)
+- Создание заказа из корзины (Checkout, через HTTP от Basket)
 - Жизненный цикл: `Pending` -> `Paid` -> `Shipped` -> `Delivered`
 - Отмена заказа пользователем (до отправки)
 - Управление статусами администратором
@@ -190,54 +183,21 @@ npm run dev
 
 ## База данных
 
-Все модули используют единую PostgreSQL базу данных (в перспективе — отдельные базы для каждого сервиса).
+Каждый микросервис использует свою PostgreSQL базу данных. Корзина хранится в Redis.
 
 Таблицы:
 
-- `AspNetUsers`, `AspNetRoles`, `AspNetUserRoles` — Identity
-- `Products` — Catalog
-- `Orders`, `OrderItems` — Ordering
-- Корзина хранится в Redis, не в PostgreSQL
+- `AspNetUsers`, `AspNetRoles`, `AspNetUserRoles` — IdentityDb
+- `Products` — CatalogDb
+- `Orders`, `OrderItems` — OrderingDb
 
 ## Конфигурация
 
 Все настройки через переменные окружения в `docker-compose.yml`.
 
-| Переменная | Описание | По умолчанию |
-|---|---|---|
-| `POSTGRES_PASSWORD` | Пароль PostgreSQL | — |
-| `JWT_SECRET_KEY` | Секретный ключ JWT (минимум 32 символа) | — |
-| `ConnectionStrings__Redis` | Адрес Redis | `redis:6379` |
-| `Minio__Endpoint` | Адрес MinIO | `minio:9000` |
-
-## Запуск для разработки (без Docker)
-
-1. Запустить PostgreSQL, Redis и MinIO любым способом (локально или через Docker):
-
-```bash
-docker run -d --name postgres -p 5432:5432 -e POSTGRES_PASSWORD=password -e POSTGRES_DB=Shop postgres:15
-docker run -d --name redis -p 6379:6379 redis:latest
-docker run -d --name minio -p 9000:9000 -p 9001:9001 -e MINIO_ROOT_USER=minioadmin -e MINIO_ROOT_PASSWORD=minioadmin minio/minio server /data --console-address ":9001"
-```
-
-2. Настроить `appsettings.Development.json` или user-secrets:
-
-```bash
-dotnet user-secrets set "ConnectionStrings:DefaultConnection" "Host=localhost;Port=5432;Database=Shop;Username=postgres;Password=password"
-dotnet user-secrets set "JwtSettings:SecretKey" "your_secret_key_at_least_32_chars"
-```
-
-3. Запустить бэкенд:
-
-```bash
-cd src/Host
-dotnet run
-```
-
-4. Запустить фронтенд (в другом терминале):
-
-```bash
-cd src/frontend
-npm install
-npm run dev
-```
+| Переменная | Описание |
+|---|---|
+| `POSTGRES_PASSWORD` | Пароль PostgreSQL (все БД) |
+| `JWT_SECRET_KEY` | Секретный ключ JWT (минимум 32 символа) |
+| `MINIO_ROOT_USER` | Логин MinIO |
+| `MINIO_ROOT_PASSWORD` | Пароль MinIO |
