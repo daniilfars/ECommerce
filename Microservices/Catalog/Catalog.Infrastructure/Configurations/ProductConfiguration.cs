@@ -13,15 +13,19 @@ public class ProductConfiguration : IEntityTypeConfiguration<Product>
         builder.Property(p => p.Name).IsRequired().HasMaxLength(200);
         builder.Property(p => p.ImageUrl).HasMaxLength(500);
 
-        builder.Property(p => p.PriceAmount)
-            .HasPrecision(18, 2)
-            .IsRequired();
-
-        builder.Property(p => p.PriceCurrency)
-            .HasMaxLength(3)
-            .IsRequired();
-
-        builder.Ignore(p => p.Price);
         builder.Ignore(p => p.DomainEvents);
+
+        builder.ComplexProperty(p => p.Price, money =>
+        {
+            money.Property(m => m.Amount)
+                .HasColumnName("PriceAmount")
+                .HasPrecision(18, 2)
+                .IsRequired();
+
+            money.Property(m => m.Currency)
+                .HasColumnName("PriceCurrency")
+                .HasMaxLength(3)
+                .IsRequired();
+        });
     }
 }

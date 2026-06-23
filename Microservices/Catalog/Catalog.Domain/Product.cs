@@ -5,19 +5,23 @@ namespace Catalog.Domain;
 
 public class Product : AggregateRoot<int>
 {
+    private Money _price = null!;
+
     public string Name { get; private set; }
-    public decimal PriceAmount { get; private set; }
-    public string PriceCurrency { get; private set; }
-    public Money Price => Money.Create(PriceAmount, PriceCurrency).Value!;
     public string? ImageUrl { get; private set; }
 
-    private Product() { } // Для EF Core
+    public Money Price
+    {
+        get => _price;
+        private set => _price = value;
+    }
+
+    private Product() { }
+
     private Product(string name, Money price)
     {
         Name = name;
-        PriceAmount = price.Amount;
-        PriceCurrency = price.Currency;
-        ImageUrl = null;
+        _price = price;
     }
 
     public static Result<Product> Create(string name, Money price)
@@ -26,7 +30,6 @@ public class Product : AggregateRoot<int>
             return Result<Product>.Failure("Название товара не может быть пустым");
 
         var product = new Product(name, price);
-
         product.RaiseDomainEvent(new ProductCreatedDomainEvent(product.Id, name));
 
         return Result<Product>.Success(product);
@@ -41,10 +44,9 @@ public class Product : AggregateRoot<int>
         return Result.Success();
     }
 
-    public Result UpdatePrice(Money price)
+    public Result UpdatePrice(Money newPrice)
     {
-        PriceAmount = price.Amount;
-        PriceCurrency = price.Currency;
+        _price = newPrice;
         return Result.Success();
     }
 

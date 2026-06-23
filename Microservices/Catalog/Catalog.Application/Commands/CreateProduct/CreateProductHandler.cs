@@ -29,6 +29,6 @@ public sealed class CreateProductHandler : IRequestHandler<CreateProductCommand,
         _context.Products.Add(product);
         await _context.SaveChangesAsync(cancellationToken);
 
-        return Result<CreateProductResponse>.Success(new CreateProductResponse(product.Id, product.Name, product.PriceAmount, product.PriceCurrency, product.ImageUrl));
+        return Result<CreateProductResponse>.Success(new CreateProductResponse(product.Id, product.Name, product.Price.Amount, product.Price.Currency, product.ImageUrl));
     }
 }
