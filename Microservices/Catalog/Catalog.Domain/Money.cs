@@ -15,8 +15,7 @@ public class Money : ValueObject
 
     protected override IEnumerable<object> GetEqualityComponents()
     {
-        yield return Amount;
-        yield return Currency;
+        return [Amount, Currency];
     }
 
     public static Result<Money> Create(decimal amount, string currency)
