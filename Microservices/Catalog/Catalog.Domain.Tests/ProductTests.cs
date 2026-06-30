@@ -12,8 +12,8 @@ public class ProductTests
 
         result.IsSuccess.Should().BeTrue();
         result.Value!.Name.Should().Be("Bear");
-        result.Value!.PriceAmount.Should().Be(money.Value!.Amount);
-        result.Value!.PriceCurrency.Should().Be(money.Value!.Currency);
+        result.Value!.Price.Amount.Should().Be(money.Value!.Amount);
+        result.Value!.Price.Currency.Should().Be(money.Value!.Currency);
     }
 
     [Fact]
@@ -60,8 +60,8 @@ public class ProductTests
         var result = product.UpdatePrice(money2);
 
         result.IsSuccess.Should().BeTrue();
-        product.PriceCurrency.Should().Be(money2.Currency);
-        product.PriceAmount.Should().Be(money2.Amount);
+        product.Price.Currency.Should().Be(money2.Currency);
+        product.Price.Amount.Should().Be(money2.Amount);
     }
 
     [Fact]
