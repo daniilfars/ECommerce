@@ -1,35 +1,34 @@
 # ECommerce - Интернет-магазин на ASP.NET Core (микросервисы)
 
-Микросервисная архитектура на ASP.NET Core с React-фронтендом. 4 независимых сервиса, API Gateway, своя БД у каждого, корзина на Redis, изображения в MinIO.
+Микросервисная архитектура на ASP.NET Core с React-фронтендом. 4 независимых сервиса, API Gateway, своя БД у каждого, корзина на Redis, изображения в MinIO, оплата через ЮKassa.
 
 ## Стек
 
 **Backend:** C# 14, ASP.NET Core 10, Entity Framework Core, MediatR, JWT, YARP  
 **Database:** PostgreSQL (отдельная БД на сервис), Redis  
 **Storage:** MinIO (S3-совместимое)  
+**Payments:** ЮKassa  
 **Frontend:** React  
 **DevOps:** Docker Compose, Serilog  
 
 ## Архитектура
 
 4 микросервиса + API Gateway:
-
 ```
 Microservices/
 ├── Gateway/                    # YARP API Gateway (порт 5000)
 ├── Catalog/                    # Товары, изображения, MinIO
 ├── Identity/                   # Пользователи, JWT-токены
 ├── Basket/                     # Корзина на Redis
-├── Ordering/                   # Заказы, статусы
+├── Ordering/                   # Заказы, статусы, оплата через ЮKassa
 ├── Shared/                     # Общие абстракции
 ├── docker-compose.yml
 └── .env
-
 src/
 └── frontend/                   # React SPA
 ```
 
-Взаимодействие между сервисами через HTTP с пробросом JWT-токена. В перспективе — RabbitMQ/MassTransit.
+Взаимодействие между сервисами через HTTP с пробросом JWT-токена.
 
 ## Быстрый старт
 
@@ -38,6 +37,7 @@ src/
 - .NET 10 SDK
 - Node.js 18+
 - Docker Desktop
+- Аккаунт ЮKassa (тестовый магазин)
 
 ### Установка
 
@@ -55,6 +55,8 @@ POSTGRES_PASSWORD=your_secure_password
 JWT_SECRET_KEY=your_secret_key_at_least_32_characters_long
 MINIO_ROOT_USER=minioadmin
 MINIO_ROOT_PASSWORD=minioadmin
+YOOKASSA_SHOP_ID=your_shop_id
+YOOKASSA_SECRET_KEY=test_your_secret_key
 ```
 
 3. Запустить все микросервисы:
@@ -90,6 +92,10 @@ npm run dev
 
 Обычного пользователя можно зарегистрировать через интерфейс.
 
+### Оплата (ЮKassa)
+
+Для тестовой оплаты используется тестовый магазин ЮKassa. Тестовая карта: `5555 5555 5555 4477`, любой CVC, любая будущая дата.
+
 ## Сервисы
 
 | Сервис | Порт | База данных |
@@ -98,7 +104,7 @@ npm run dev
 | Identity | 8082 | IdentityDb (PostgreSQL) |
 | Catalog | 8081 | CatalogDb (PostgreSQL) + MinIO |
 | Basket | 8083 | Redis |
-| Ordering | 8084 | OrderingDb (PostgreSQL) |
+| Ordering | 8084 | OrderingDb (PostgreSQL) + ЮKassa |
 
 ### Identity
 
@@ -155,10 +161,11 @@ npm run dev
 
 ### Ordering
 
-Управление заказами с отслеживанием статусов.
+Управление заказами с отслеживанием статусов и оплатой через ЮKassa.
 
 - Создание заказа из корзины (Checkout, через HTTP от Basket)
 - Жизненный цикл: `Pending` -> `Paid` -> `Shipped` -> `Delivered`
+- Оплата через ЮKassa: создание платежа, автоматическое подтверждение
 - Отмена заказа пользователем (до отправки)
 - Управление статусами администратором
 - Цена и название товара копируются в заказ на момент оформления
@@ -168,7 +175,8 @@ npm run dev
 - `GET /api/Ordering?page=1&pageSize=10` — заказы пользователя
 - `GET /api/Ordering/all?page=1&pageSize=50` — все заказы (Admin)
 - `GET /api/Ordering/{id}` — заказ по ID
-- `POST /api/Ordering/{id}/pay` — оплатить
+- `POST /api/Ordering/{id}/pay` — создать платёж в ЮKassa
+- `POST /api/Ordering/{id}/confirm-payment` — подтвердить оплату
 - `POST /api/Ordering/{id}/cancel` — отменить
 - `POST /api/Ordering/{id}/ship` — отправить (Admin)
 - `POST /api/Ordering/{id}/deliver` — доставить (Admin)
@@ -201,3 +209,5 @@ npm run dev
 | `JWT_SECRET_KEY` | Секретный ключ JWT (минимум 32 символа) |
 | `MINIO_ROOT_USER` | Логин MinIO |
 | `MINIO_ROOT_PASSWORD` | Пароль MinIO |
+| `YOOKASSA_SHOP_ID` | ID магазина ЮKassa |
+| `YOOKASSA_SECRET_KEY` | Секретный ключ ЮKassa |
