@@ -1,5 +1,7 @@
 ﻿using FluentAssertions;
 using Identity.Domain.Events;
+using AutoFixture;
+using AutoFixture.AutoMoq;
 
 namespace Identity.Domain.Tests;
 

@@ -8,11 +8,16 @@ export default function AdminProducts() {
   const [form, setForm] = useState({ name: "", priceAmount: "", priceCurrency: "RUB" });
   const [editId, setEditId] = useState(null);
   const [message, setMessage] = useState("");
+  const [page, setPage] = useState(1);
+  const [totalCount, setTotalCount] = useState(0);
+  const pageSize = 50;
+  const totalPages = Math.ceil(totalCount / pageSize);
 
   const loadProducts = async () => {
     try {
-      const data = await catalogAPI.getAll(1, 50);
+      const data = await catalogAPI.getAll(page, pageSize);
       setProducts(data.products || []);
+      setTotalCount(data.totalCount);
     } catch (err) {
       console.error("Ошибка загрузки:", err);
     } finally {
@@ -22,7 +27,7 @@ export default function AdminProducts() {
 
   useEffect(() => {
     loadProducts();
-  }, []);
+  }, [page]);
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -63,7 +68,7 @@ export default function AdminProducts() {
 
   return (
     <div>
-      <h2 className="admin-section-title">Товары ({products.length})</h2>
+      <h2 className="admin-section-title">Товары ({totalCount})</h2>
 
       <form className="admin-form" onSubmit={handleSubmit}>
         <input
@@ -118,6 +123,14 @@ export default function AdminProducts() {
           </div>
         ))}
       </div>
+
+      {totalPages > 1 && (
+        <div className="pagination">
+          <button onClick={() => setPage(p => p - 1)} disabled={page === 1}>← Назад</button>
+          <span>{page} / {totalPages}</span>
+          <button onClick={() => setPage(p => p + 1)} disabled={page >= totalPages}>Вперёд →</button>
+        </div>
+      )}
     </div>
   );
 }

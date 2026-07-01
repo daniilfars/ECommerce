@@ -10,7 +10,9 @@ function App() {
     <BrowserRouter>
       <AuthProvider>
         <Header />
-        <AppRouter />
+        <main style={{ flex: 1 }}>
+          <AppRouter />
+        </main>
         <Footer />
       </AuthProvider>
     </BrowserRouter>

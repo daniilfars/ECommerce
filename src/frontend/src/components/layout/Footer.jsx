@@ -9,37 +9,39 @@ import logo from '../../assets/react.svg';
 export default function Footer() {
     return (
         <footer className="footer">
-            <div className="container footer-info">
-                <ul className="footer-list">
-                    <li className="footer-list-item">
-                        <div className="footer-image-container">
-                            <img src={truck} alt="Доставка" className="footer-image" />
+            <div className="footer-info">
+                <div className="container">
+                    <ul className="footer-list">
+                        <li className="footer-list-item">
+                            <div className="footer-image-container">
+                                <img src={truck} alt="Доставка" className="footer-image" />
+                                </div>
+                            <h3 className="footer-h3">Бесплатная доставка</h3>
+                            <p className="footer-p">от 3 000 р.</p>
+                        </li>
+                        <li className="footer-list-item">
+                            <div className="footer-image-container">
+                                <img src={check} alt="Гарантия" className="footer-image" />
                             </div>
-                        <h3 className="footer-h3">Бесплатная доставка</h3>
-                        <p className="footer-p">от 3 000 р.</p>
-                    </li>
-                    <li className="footer-list-item">
-                        <div className="footer-image-container">
-                            <img src={check} alt="Гарантия" className="footer-image" />
-                        </div>
-                        <h3 className="footer-h3">Гарантия качества</h3>
-                        <p className="footer-p">Только оригиналы</p>
-                    </li>
-                    <li className="footer-list-item">
-                        <div className="footer-image-container">
-                            <img src={refresh} alt="Возврат" className="footer-image" />
-                        </div>
-                        <h3 className="footer-h3">Возврат 30 дней</h3>
-                        <p className="footer-p">Без вопросов</p>
-                    </li>
-                    <li className="footer-list-item">
-                        <div className="footer-image-container">
-                            <img src={headphones} alt="Поддержка" className="footer-image" />
-                        </div>
-                        <h3 className="footer-h3">Поддержка 24/7</h3>
-                        <p className="footer-p">Всегда на связи</p>
-                    </li>
-                </ul>
+                            <h3 className="footer-h3">Гарантия качества</h3>
+                            <p className="footer-p">Только оригиналы</p>
+                        </li>
+                        <li className="footer-list-item">
+                            <div className="footer-image-container">
+                                <img src={refresh} alt="Возврат" className="footer-image" />
+                            </div>
+                            <h3 className="footer-h3">Возврат 30 дней</h3>
+                            <p className="footer-p">Без вопросов</p>
+                        </li>
+                        <li className="footer-list-item">
+                            <div className="footer-image-container">
+                                <img src={headphones} alt="Поддержка" className="footer-image" />
+                            </div>
+                            <h3 className="footer-h3">Поддержка 24/7</h3>
+                            <p className="footer-p">Всегда на связи</p>
+                        </li>
+                    </ul>
+                </div>
             </div>
 
             <div className="footer-bottom">

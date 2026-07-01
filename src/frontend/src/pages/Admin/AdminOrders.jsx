@@ -6,6 +6,10 @@ export default function AdminOrders() {
     const [orders, setOrders] = useState([]);
     const [loading, setLoading] = useState(true);
     const [expandedId, setExpandedId] = useState(null);
+    const [page, setPage] = useState(1);
+    const [totalCount, setTotalCount] = useState(0);
+    const pageSize = 50;
+    const totalPages = Math.ceil(totalCount / pageSize);
 
     const statusMap = {
       Pending: "Ожидает оплаты",
@@ -25,17 +29,19 @@ export default function AdminOrders() {
 
     const loadOrders = async () => {
       try {
-        const data = await orderingAPI.getAllOrders(1, 50);
+        const data = await orderingAPI.getAllOrders(page, pageSize);
         setOrders(data.orders || []);
+        setTotalCount(data.totalCount);
       } catch (err) {
         console.error("Ошибка загрузки заказов:", err);
-      } finally {setLoading(false);
+      } finally {
+        setLoading(false);
       }
     };
 
     useEffect(() => {
       loadOrders();
-    }, []);
+    }, [page]);
 
     const handleAction = async (orderId, action) => {
       try {
@@ -61,7 +67,7 @@ export default function AdminOrders() {
 
     return (
         <div>
-          <h2 className="admin-section-title">Заказы ({orders.length})</h2>
+          <h2 className="admin-section-title">Заказы ({totalCount})</h2>
 
           <div className="admin-orders-table">
             {orders.map((order) => (
@@ -135,6 +141,14 @@ export default function AdminOrders() {
               </div>
             ))}
           </div>
+
+          {totalPages > 1 && (
+            <div className="pagination">
+              <button onClick={() => setPage(p => p - 1)} disabled={page === 1}>← Назад</button>
+              <span>{page} / {totalPages}</span>
+              <button onClick={() => setPage(p => p + 1)} disabled={page >= totalPages}>Вперёд →</button>
+            </div>
+          )}
         </div>
-  );
+    );
 }
