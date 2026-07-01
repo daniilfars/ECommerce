@@ -34,10 +34,46 @@ export default function OrderDetailPage() {
         setLoading(false);
       }
     };
+
+    const handleConfirmPayment = async () => {
+        try {
+            await fetch(`http://localhost:5000/api/Ordering/${order.id || id}/confirm-payment`, {
+                method: 'POST',
+                headers: {
+                    'Authorization': `Bearer ${localStorage.getItem('accessToken')}`
+                }
+            });
+            loadOrder();
+        } catch (err) {
+            console.error('Ошибка подтверждения:', err);
+        }
+    };
   
     useEffect(() => {
       loadOrder();
     }, [id]);
+
+    useEffect(() => {
+        if (order && order.status === 'Pending' && order.paymentId) {
+            handleConfirmPayment();
+        }
+    }, [order]);
+
+    const handlePay = async () => {
+        try {
+            const response = await fetch(`http://localhost:5000/api/Ordering/${order.id || id}/pay`, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'Authorization': `Bearer ${localStorage.getItem('accessToken')}`
+                }
+            });
+            const data = await response.json();
+            window.location.href = data.confirmationUrl;
+        } catch (err) {
+            console.error('Ошибка оплаты:', err);
+        }
+    };
   
     if (loading) return <div className="order-detail-loading">Загрузка...</div>;
     if (!order) return <div className="order-detail-loading">Заказ не найден</div>;
@@ -95,6 +131,12 @@ export default function OrderDetailPage() {
               </div>
             ))}
           </div>
+
+          {order.status === 'Pending' && (
+            <button onClick={handlePay} className="order-pay-button">
+              💰 Оплатить {order.totalAmount} ₽
+            </button>
+          )}
 
           <NavLink to="/orders" className="order-detail-back">
             ← Назад к заказам

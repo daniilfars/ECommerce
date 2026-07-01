@@ -25,6 +25,6 @@ public class GetOrderByIdHandler : IRequestHandler<GetOrderByIdQuery, Result<Get
 
         var items = new List<OrderItemDto>(order.Items.Select(i => new OrderItemDto(i.Id, i.ProductId, i.ProductName, i.PriceAmount, i.PriceCurrency, i.Quantity, i.TotalPrice, i.ImageUrl)));
 
-        return Result<GetOrderByIdResponse>.Success(new GetOrderByIdResponse(order.UserId, order.Status.ToString(), order.ShippingAddress, order.TotalAmount, items));
+        return Result<GetOrderByIdResponse>.Success(new GetOrderByIdResponse(order.UserId, order.Status.ToString(), order.ShippingAddress, order.TotalAmount, order.PaymentId, items));
     }
 }

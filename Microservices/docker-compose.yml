@@ -97,6 +97,8 @@ services:
       - JwtSettings__SecretKey=${JWT_SECRET_KEY}
       - JwtSettings__Issuer=Shop.Api
       - JwtSettings__Audience=Shop.Client
+      - Yookassa__ShopId=${YOOKASSA_SHOP_ID}
+      - Yookassa__SecretKey=${YOOKASSA_SECRET_KEY}
     depends_on:
       ordering-db:
         condition: service_healthy

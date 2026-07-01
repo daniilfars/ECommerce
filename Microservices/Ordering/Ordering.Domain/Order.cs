@@ -11,6 +11,7 @@ public class Order : AggregateRoot<int>
     public OrderStatus Status { get; private set; }
     public string ShippingAddress { get; private set; }
     public decimal TotalAmount { get; private set; }
+    public string? PaymentId { get; private set; }
 
     private Order() { }// Для EF Core
     private Order(Guid userId, string shippingAddress)
@@ -19,6 +20,7 @@ public class Order : AggregateRoot<int>
         ShippingAddress = shippingAddress;
         Status = OrderStatus.Pending;
         TotalAmount = 0;
+        PaymentId = null;
     }
 
     public static Result<Order> Create(Guid userId, string shippingAddress)
@@ -53,6 +55,12 @@ public class Order : AggregateRoot<int>
 
         _items.Remove(item);
         RecalculateTotal();
+        return Result.Success();
+    }
+
+    public Result SetPaymentId(string paymentId)
+    {
+        PaymentId = paymentId;
         return Result.Success();
     }
 

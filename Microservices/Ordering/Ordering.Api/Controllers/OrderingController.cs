@@ -71,6 +71,19 @@ public class OrderingController : ControllerBase
         return Ok(result.Value!);
     }
 
+    // POST: /api/ordering/{orderId}/confirm-payment
+    [HttpPost("{orderId}/confirm-payment")]
+    public async Task<IActionResult> ConfirmPayment(int orderId)
+    {
+        var isAdmin = User.IsInRole("Admin");
+        var result = await _mediator.Send(new ConfirmPaymentCommand(orderId, UserId, isAdmin));
+
+        if (result.IsFailure)
+            return BadRequest(result.Error!);
+
+        return Ok();
+    }
+
     // POST: /api/ordering/{orderId}/cancel
     [HttpPost("{orderId}/cancel")]
     public async Task<IActionResult> CancelOrder(int orderId)
@@ -85,14 +98,14 @@ public class OrderingController : ControllerBase
 
     // POST: /api/ordering/{orderId}/pay
     [HttpPost("{orderId}/pay")]
-    public async Task<IActionResult> PayOrder(int orderId)
+    public async Task<ActionResult<PayOrderResponse>> PayOrder(int orderId)
     {
         var isAdmin = User.IsInRole("Admin");
         var result = await _mediator.Send(new PayOrderCommand(orderId, isAdmin ? Guid.Empty : UserId, isAdmin));
         if (result.IsFailure)
             return BadRequest(result.Error!);
 
-        return NoContent();
+        return Ok(result.Value);
     }
 
     // POST: /api/ordering/{orderId}/ship
