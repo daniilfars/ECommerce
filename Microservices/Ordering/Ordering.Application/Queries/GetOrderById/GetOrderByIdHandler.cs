@@ -23,7 +23,7 @@ public class GetOrderByIdHandler : IRequestHandler<GetOrderByIdQuery, Result<Get
         if (!request.IsAdmin && order.UserId != request.UserId)
             return Result<GetOrderByIdResponse>.Failure("Нет доступа к заказу");
 
-        var items = new List<OrderItemDto>(order.Items.Select(i => new OrderItemDto(i.Id, i.ProductId, i.ProductName, i.PriceAmount, i.PriceCurrency, i.Quantity, i.TotalPrice, i.ImageUrl)));
+        var items = new List<OrderItemDto>(order.Items.Select(i => new OrderItemDto(i.Id, i.ProductId, i.ProductName, i.Price, i.Quantity, i.TotalPrice, i.ImageUrl)));
 
         return Result<GetOrderByIdResponse>.Success(new GetOrderByIdResponse(order.UserId, order.Status.ToString(), order.ShippingAddress, order.TotalAmount, order.PaymentId, items));
     }

@@ -82,7 +82,7 @@ export default function ProductPage() {
 
                     <section className="product-info" aria-label="Информация о товаре">
                         <h1 className="product-title">{product.name}</h1>
-                        <h3 className="product-price">{product.priceAmount} {product.priceCurrency}</h3>
+                        <h3 className="product-price">{product.price} ₽</h3>
 
                         <div className="product-button-container">
                             <div className="product-quantity-controls">

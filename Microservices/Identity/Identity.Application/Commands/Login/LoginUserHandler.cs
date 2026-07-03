@@ -45,6 +45,7 @@ public sealed class LoginUserHandler : IRequestHandler<LoginUserCommand, Result<
             {
                 HttpOnly = true,
                 Secure = true,
+                Path = "/",
                 SameSite = SameSiteMode.Strict,
                 Expires = DateTime.UtcNow.AddDays(7)
             }

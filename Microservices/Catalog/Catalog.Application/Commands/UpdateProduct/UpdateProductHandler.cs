@@ -1,7 +1,6 @@
 ﻿using MediatR;
 using Microsoft.EntityFrameworkCore;
 using Catalog.Application.Interfaces;
-using Catalog.Domain;
 using Shared.Domain;
 
 namespace Catalog.Application.Commands.UpdateProduct;
@@ -28,20 +27,15 @@ public class UpdateProductHandler : IRequestHandler<UpdateProductCommand, Result
                 return Result<UpdateProductResponse>.Failure(updateResult.Error!);
         }
 
-        if (request.PriceAmount.HasValue && !string.IsNullOrWhiteSpace(request.PriceCurrency))
+        if (request.Price.HasValue)
         {
-            var price = Money.Create(request.PriceAmount.Value, request.PriceCurrency);
-            if (price.IsFailure)
-                return Result<UpdateProductResponse>.Failure(price.Error!);
-            product.UpdatePrice(price.Value!);
-        }
-        else if (request.PriceAmount.HasValue || !string.IsNullOrWhiteSpace(request.PriceCurrency))
-        {
-            return Result<UpdateProductResponse>.Failure("Для обновления цены нужны оба поля: PriceAmount и PriceCurrency");
+            var updateResult = product.UpdatePrice(request.Price.Value);
+            if(updateResult.IsFailure)
+                return Result<UpdateProductResponse>.Failure(updateResult.Error!);
         }
 
         await _context.SaveChangesAsync(cancellationToken);
 
-        return Result<UpdateProductResponse>.Success(new UpdateProductResponse(product.Id, product.Name, product.Price.Amount, product.Price.Currency, product.ImageUrl));
+        return Result<UpdateProductResponse>.Success(new UpdateProductResponse(product.Id, product.Name, product.Price, product.ImageUrl));
     }
 }

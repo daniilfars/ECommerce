@@ -31,8 +31,7 @@ public class CheckoutBasketHandler : IRequestHandler<CheckoutBasketCommand, Resu
             basket.Items.Select(i => new OrderItemDto(
                 i.ProductId,
                 i.ProductName,
-                i.PriceAmount,
-                i.PriceCurrency,
+                i.Price,
                 i.Quantity,
                 i.ImageUrl
             )).ToList()

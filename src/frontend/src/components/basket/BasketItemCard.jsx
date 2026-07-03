@@ -35,7 +35,7 @@ export default function BasketItemCard({basketItem, onUpdate}) {
 
             <div className="basket-item-info">
                 <h4 className="basket-item-title">{basketItem.productName}</h4>
-                <p className="basket-item-price">{basketItem.priceAmount * basketItem.quantity} {basketItem.priceCurrency}</p>
+                <p className="basket-item-price">{basketItem.totalPrice} ₽</p>
             </div>
 
             <div className="basket-item-actions">

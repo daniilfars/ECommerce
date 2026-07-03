@@ -21,6 +21,6 @@ public class GetProductByIdHandler : IRequestHandler<GetProductByIdQuery, Result
         if (product is null)
             return Result<GetProductByIdResponse>.Failure("Товар не найден");
 
-        return Result<GetProductByIdResponse>.Success(new GetProductByIdResponse(product.Id, product.Name, product.Price.Amount, product.Price.Currency, product.ImageUrl));
+        return Result<GetProductByIdResponse>.Success(new GetProductByIdResponse(product.Id, product.Name, product.Price, product.ImageUrl));
     }
 }

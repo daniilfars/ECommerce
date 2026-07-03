@@ -21,7 +21,7 @@ export default function ProductCard({ product }) {
                     <p className="product-name">{product.name}</p>
                     
                     <div className="product-price-container">
-                        <p className="product-price-p">{product.priceAmount} {product.priceCurrency}</p>
+                        <p className="product-price-p">{product.price} ₽</p>
                         <button onClick={handleButtonClick}><span>+</span></button>
                     </div>
                 </div>

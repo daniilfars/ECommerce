@@ -101,16 +101,16 @@ export const catalogAPI = {
             method: 'GET',
         }),
 
-    create: (name, priceAmount, priceCurrency) =>
+    create: (name, price) =>
         request('/Catalog', {
             method: 'POST',
-            body: JSON.stringify({name, priceAmount, priceCurrency})
+            body: JSON.stringify({name, price})
         }),
     
-    update: (id, name = null, priceAmount = null, priceCurrency = null) =>
+    update: (id, name = null, price = null) =>
         request(`/Catalog/${id}`, {
             method: 'PUT',
-            body: JSON.stringify({id, name, priceAmount, priceCurrency})
+            body: JSON.stringify({id, name, price})
         }),
 
     delete: (id) =>

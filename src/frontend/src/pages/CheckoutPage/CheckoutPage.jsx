@@ -73,7 +73,7 @@ export default function CheckoutPage() {
                 <p className="checkout-item-qty">{item.quantity} шт.</p>
               </div>
               <p className="checkout-item-price">
-                {item.totalPrice} {item.priceCurrency}
+                {item.totalPrice} ₽
               </p>
             </div>
           ))}

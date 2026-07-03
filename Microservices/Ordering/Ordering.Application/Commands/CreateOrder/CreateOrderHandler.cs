@@ -24,7 +24,7 @@ public class CreateOrderHandler : IRequestHandler<CreateOrderCommand, Result<Cre
 
         foreach (var itemDto in request.Items)
         {
-            var itemResult = OrderItem.Create(itemDto.ProductId, itemDto.ProductName, itemDto.PriceAmount, itemDto.PriceCurrency, itemDto.Quantity, itemDto.ImageUrl);
+            var itemResult = OrderItem.Create(itemDto.ProductId, itemDto.ProductName, itemDto.Price, itemDto.Quantity, itemDto.ImageUrl);
             if (itemResult.IsFailure)
                 return Result<CreateOrderResponse>.Failure(itemResult.Error!);
 

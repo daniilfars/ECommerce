@@ -19,7 +19,7 @@ public class BasketTests
     public void AddItem_NewProduct_AddsToItems()
     {
         var basket = Basket.Create(Guid.NewGuid());
-        var item = BasketItem.Create(1, "Phone", 999.99m, "RUB", 1, null).Value!;
+        var item = BasketItem.Create(1, "Phone", 999.99m, 1, null).Value!;
 
         basket.AddItem(item);
 
@@ -31,8 +31,8 @@ public class BasketTests
     public void AddItem_ExistingProduct_IncreasesQuantity()
     {
         var basket = Basket.Create(Guid.NewGuid());
-        var item1 = BasketItem.Create(1, "Phone", 100m, "RUB", 2, null).Value!;
-        var item2 = BasketItem.Create(1, "Phone", 100m, "RUB", 3, null).Value!;
+        var item1 = BasketItem.Create(1, "Phone", 100m, 2, null).Value!;
+        var item2 = BasketItem.Create(1, "Phone", 100m, 3, null).Value!;
 
         basket.AddItem(item1);
         basket.AddItem(item2);
@@ -46,7 +46,7 @@ public class BasketTests
     public void RemoveItem_ExistingProduct_RemovesFromItems()
     {
         var basket = Basket.Create(Guid.NewGuid());
-        var item = BasketItem.Create(1, "Phone", 100m, "RUB", 1, null).Value!;
+        var item = BasketItem.Create(1, "Phone", 100m, 1, null).Value!;
         basket.AddItem(item);
 
         var result = basket.RemoveItem(1);
@@ -70,7 +70,7 @@ public class BasketTests
     public void UpdateQuantity_ExistingProduct_UpdatesQuantity()
     {
         var basket = Basket.Create(Guid.NewGuid());
-        var item = BasketItem.Create(1, "Phone", 100m, "RUB", 2, null).Value!;
+        var item = BasketItem.Create(1, "Phone", 100m, 2, null).Value!;
         basket.AddItem(item);
 
         var result = basket.UpdateQuantity(1, 10);
@@ -94,7 +94,7 @@ public class BasketTests
     public void UpdateQuantity_ZeroQuantity_ReturnsFailure()
     {
         var basket = Basket.Create(Guid.NewGuid());
-        var item = BasketItem.Create(1, "Phone", 100m, "RUB", 2, null).Value!;
+        var item = BasketItem.Create(1, "Phone", 100m, 2, null).Value!;
         basket.AddItem(item);
 
         var result = basket.UpdateQuantity(1, 0);
@@ -107,8 +107,8 @@ public class BasketTests
     public void Clear_RemovesAllItems()
     {
         var basket = Basket.Create(Guid.NewGuid());
-        basket.AddItem(BasketItem.Create(1, "Phone", 100m, "RUB", 1, null).Value!);
-        basket.AddItem(BasketItem.Create(2, "Case", 50m, "RUB", 1, null).Value!);
+        basket.AddItem(BasketItem.Create(1, "Phone", 100m, 1, null).Value!);
+        basket.AddItem(BasketItem.Create(2, "Case", 50m, 1, null).Value!);
 
         basket.Clear();
 
@@ -120,8 +120,8 @@ public class BasketTests
     public void TotalAmount_CalculatesCorrectly()
     {
         var basket = Basket.Create(Guid.NewGuid());
-        basket.AddItem(BasketItem.Create(1, "Phone", 100m, "RUB", 2, null).Value!);
-        basket.AddItem(BasketItem.Create(2, "Case", 50m, "RUB", 1, null).Value!);
+        basket.AddItem(BasketItem.Create(1, "Phone", 100m, 2, null).Value!);
+        basket.AddItem(BasketItem.Create(2, "Case", 50m, 1, null).Value!);
 
         basket.TotalAmount.Should().Be(250m);
     }

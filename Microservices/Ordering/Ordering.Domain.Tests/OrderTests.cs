@@ -33,7 +33,7 @@ public class OrderTests
     public void AddItem_NewItem_AddsToOrderAndRecalculatesTotal()
     {
         var order = Order.Create(Guid.NewGuid(), _address).Value!;
-        var item = OrderItem.Create(1, "Phone", 100m, "RUB", 2, null).Value!;
+        var item = OrderItem.Create(1, "Phone", 100m, 2, null).Value!;
 
         order.AddItem(item);
 
@@ -47,7 +47,7 @@ public class OrderTests
         var order = Order.Create(Guid.NewGuid(), _address).Value!;
         order.Pay();
 
-        var item = OrderItem.Create(1, "Phone", 100m, "RUB", 1, null).Value!;
+        var item = OrderItem.Create(1, "Phone", 100m, 1, null).Value!;
         var result = order.AddItem(item);
 
         result.IsFailure.Should().BeTrue();
@@ -58,8 +58,8 @@ public class OrderTests
     public void RemoveItem_ExistingItem_RemovesAndRecalculatesTotal()
     {
         var order = Order.Create(Guid.NewGuid(), _address).Value!;
-        order.AddItem(OrderItem.Create(1, "Phone", 100m, "RUB", 2, null).Value!);
-        order.AddItem(OrderItem.Create(2, "Case", 50m, "RUB", 1, null).Value!);
+        order.AddItem(OrderItem.Create(1, "Phone", 100m, 2, null).Value!);
+        order.AddItem(OrderItem.Create(2, "Case", 50m, 1, null).Value!);
 
         var result = order.RemoveItem(1);
 
@@ -83,7 +83,7 @@ public class OrderTests
     public void RemoveItem_WhenNotPending_ReturnsFailure()
     {
         var order = Order.Create(Guid.NewGuid(), _address).Value!;
-        order.AddItem(OrderItem.Create(1, "Phone", 100m, "RUB", 1, null).Value!);
+        order.AddItem(OrderItem.Create(1, "Phone", 100m, 1, null).Value!);
         order.Pay();
 
         var result = order.RemoveItem(1);

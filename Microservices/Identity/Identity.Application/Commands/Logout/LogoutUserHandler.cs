@@ -32,7 +32,13 @@ public class LogoutUserHandler : IRequestHandler<LogoutUserCommand, Result>
             await _context.SaveChangesAsync(cancellationToken);
         }
 
-        _httpContextAccessor.HttpContext.Response.Cookies.Delete("refreshToken");
+        _httpContextAccessor.HttpContext!.Response.Cookies.Delete("refreshToken", new CookieOptions
+        {
+            HttpOnly = true,
+            Secure = true,
+            SameSite = SameSiteMode.Strict,
+            Path = "/"
+        });
 
         return Result.Success();
     }

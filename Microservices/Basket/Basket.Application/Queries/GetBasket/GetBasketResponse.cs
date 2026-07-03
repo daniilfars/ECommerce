@@ -2,4 +2,4 @@
 
 public sealed record GetBasketResponse(Guid UserId, List<BasketItemDto> Items, decimal TotalAmount);
 
-public sealed record BasketItemDto(int ProductId, string ProductName, decimal PriceAmount,string PriceCurrency, int Quantity, decimal TotalPrice, string? imageUrl);
+public sealed record BasketItemDto(int ProductId, string ProductName, decimal Price, int Quantity, decimal TotalPrice, string? imageUrl);

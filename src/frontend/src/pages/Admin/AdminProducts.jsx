@@ -5,7 +5,7 @@ import "./AdminProducts.css";
 export default function AdminProducts() {
   const [products, setProducts] = useState([]);
   const [loading, setLoading] = useState(true);
-  const [form, setForm] = useState({ name: "", priceAmount: "", priceCurrency: "RUB" });
+  const [form, setForm] = useState({ name: "", price: "" });
   const [editId, setEditId] = useState(null);
   const [message, setMessage] = useState("");
   const [page, setPage] = useState(1);
@@ -34,13 +34,13 @@ export default function AdminProducts() {
     setMessage("");
     try {
       if (editId) {
-        await catalogAPI.update(editId, form.name, +form.priceAmount, form.priceCurrency);
+        await catalogAPI.update(editId, form.name, +form.price);
         setMessage("Товар обновлён");
       } else {
-        await catalogAPI.create(form.name, +form.priceAmount, form.priceCurrency);
+        await catalogAPI.create(form.name, +form.price);
         setMessage("Товар добавлен");
       }
-      setForm({ name: "", priceAmount: "", priceCurrency: "RUB" });
+      setForm({ name: "", price: "" });
       setEditId(null);
       loadProducts();
     } catch (err) {
@@ -50,7 +50,7 @@ export default function AdminProducts() {
 
   const handleEdit = (p) => {
     setEditId(p.id);
-    setForm({ name: p.name, priceAmount: p.priceAmount, priceCurrency: p.priceCurrency });
+    setForm({ name: p.name, price: p.price.toString() });
   };
 
   const handleDelete = async (id) => {
@@ -83,22 +83,15 @@ export default function AdminProducts() {
           type="number"
           step="0.01"
           placeholder="Цена"
-          value={form.priceAmount}
-          onChange={(e) => setForm({ ...form, priceAmount: e.target.value })}
-          required
-        />
-        <input
-          className="admin-input"
-          placeholder="Валюта"
-          value={form.priceCurrency}
-          onChange={(e) => setForm({ ...form, priceCurrency: e.target.value })}
+          value={form.price}
+          onChange={(e) => setForm({ ...form, price: e.target.value })}
           required
         />
         <button type="submit" className="admin-btn">
           {editId ? "Обновить" : "Добавить товар"}
         </button>
         {editId && (
-          <button type="button" className="admin-btn admin-btn-cancel" onClick={() => { setEditId(null); setForm({ name: "", priceAmount: "", priceCurrency: "RUB" }); }}>
+          <button type="button" className="admin-btn admin-btn-cancel" onClick={() => { setEditId(null); setForm({ name: "", price: "" }); }}>
             Отмена
           </button>
         )}
@@ -111,7 +104,7 @@ export default function AdminProducts() {
           <div key={p.id} className="admin-product-row">
             <img src={p.imageUrl || "https://via.placeholder.com/40"} alt="" className="admin-product-img" />
             <span className="admin-product-name">{p.name}</span>
-            <span className="admin-product-price">{p.priceAmount} {p.priceCurrency}</span>
+            <span className="admin-product-price">{p.price} ₽</span>
             <div className="admin-product-actions">
               <label className="admin-file-label">
                 📷

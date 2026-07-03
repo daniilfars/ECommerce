@@ -56,9 +56,9 @@ public class IdentityController : ControllerBase
 
     // POST: api/identity/logout
     [HttpPost("logout")]
-    public async Task<IActionResult> Logout(LogoutUserCommand logout)
+    public async Task<IActionResult> Logout()
     {
-        var res = await mediator.Send(logout);
+        var res = await mediator.Send(new LogoutUserCommand());
 
         if (res.IsFailure)
             return BadRequest(res.Error);

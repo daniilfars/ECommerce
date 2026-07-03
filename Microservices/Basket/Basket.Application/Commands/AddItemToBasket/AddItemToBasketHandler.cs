@@ -31,7 +31,7 @@ public class AddItemToBasketHandler : IRequestHandler<AddItemToBasketCommand, Re
         if (product is null)
             return Result<GetBasketResponse>.Failure("Товар не найден");
 
-        var itemResult = BasketItem.Create(product!.Id, product.Name, product.PriceAmount, product.PriceCurrency, request.Quantity, product.ImageUrl);
+        var itemResult = BasketItem.Create(product!.Id, product.Name, product.Price, request.Quantity, product.ImageUrl);
         if (itemResult.IsFailure)
             return Result<GetBasketResponse>.Failure(itemResult.Error!);
 
@@ -45,6 +45,6 @@ public class AddItemToBasketHandler : IRequestHandler<AddItemToBasketCommand, Re
 
         await _basketRepository.SaveBasketAsync(basket);
 
-        return Result<GetBasketResponse>.Success(new GetBasketResponse(request.UserId, basket.Items.Select(i => new BasketItemDto(i.ProductId, i.ProductName, i.PriceAmount, i.PriceCurrency, i.Quantity, i.TotalPrice, i.ImageUrl)).ToList(), basket.TotalAmount));
+        return Result<GetBasketResponse>.Success(new GetBasketResponse(request.UserId, basket.Items.Select(i => new BasketItemDto(i.ProductId, i.ProductName, i.Price, i.Quantity, i.TotalPrice, i.ImageUrl)).ToList(), basket.TotalAmount));
     }
 }

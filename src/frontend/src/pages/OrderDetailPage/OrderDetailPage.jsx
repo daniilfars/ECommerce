@@ -126,7 +126,7 @@ export default function OrderDetailPage() {
                   <p className="order-detail-item-qty">{item.quantity} шт.</p>
                 </div>
                 <p className="order-detail-item-price">
-                  {item.totalPrice} {item.priceCurrency}
+                  {item.totalPrice} ₽
                 </p>
               </div>
             ))}

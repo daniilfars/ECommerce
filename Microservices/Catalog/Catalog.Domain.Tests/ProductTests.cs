@@ -5,32 +5,46 @@ namespace Catalog.Domain.Tests;
 public class ProductTests
 {
     [Fact]
-    public void Create_ValidName_ReturnsSuccess()
+    public void Create_ValidData_ReturnsSuccess()
     {
-        var money = Money.Create(100, "RUB");
-        var result = Product.Create("Bear", money.Value!);
+        var result = Product.Create("Bear", 100.50m);
 
         result.IsSuccess.Should().BeTrue();
         result.Value!.Name.Should().Be("Bear");
-        result.Value!.Price.Amount.Should().Be(money.Value!.Amount);
-        result.Value!.Price.Currency.Should().Be(money.Value!.Currency);
+        result.Value!.Price.Should().Be(100.50m);
     }
 
     [Fact]
     public void Create_EmptyName_ReturnsFailure()
     {
-        var money = Money.Create(100, "RUB");
-        var result = Product.Create("", money.Value!);
+        var result = Product.Create("", 100m);
 
         result.IsFailure.Should().BeTrue();
         result.Error.Should().Be("Название товара не может быть пустым");
     }
 
     [Fact]
+    public void Create_NegativePrice_ReturnsFailure()
+    {
+        var result = Product.Create("Bear", -5m);
+
+        result.IsFailure.Should().BeTrue();
+        result.Error.Should().Be("Цена не может быть меньше 0");
+    }
+
+    [Fact]
+    public void Create_TooManyDecimals_ReturnsFailure()
+    {
+        var result = Product.Create("Bear", 100.999m);
+
+        result.IsFailure.Should().BeTrue();
+        result.Error.Should().Be("Цена не может содержать более двух знаков после запятой");
+    }
+
+    [Fact]
     public void UpdateName_ValidName_ReturnsSuccess()
     {
-        var money = Money.Create(100, "RUB");
-        var product = Product.Create("Bear", money.Value!).Value!;
+        var product = Product.Create("Bear", 100m).Value!;
 
         var result = product.UpdateName("Ball");
 
@@ -41,8 +55,7 @@ public class ProductTests
     [Fact]
     public void UpdateName_EmptyName_ReturnsFailure()
     {
-        var money = Money.Create(100, "RUB");
-        var product = Product.Create("Bear", money.Value!).Value!;
+        var product = Product.Create("Bear", 100m).Value!;
 
         var result = product.UpdateName("");
 
@@ -53,22 +66,29 @@ public class ProductTests
     [Fact]
     public void UpdatePrice_ValidPrice_ReturnsSuccess()
     {
-        var money1 = Money.Create(100, "RUB").Value!;
-        var product = Product.Create("Bear", money1).Value!;
+        var product = Product.Create("Bear", 100m).Value!;
 
-        var money2 = Money.Create(111, "DOL").Value!;
-        var result = product.UpdatePrice(money2);
+        var result = product.UpdatePrice(200m);
 
         result.IsSuccess.Should().BeTrue();
-        product.Price.Currency.Should().Be(money2.Currency);
-        product.Price.Amount.Should().Be(money2.Amount);
+        product.Price.Should().Be(200m);
+    }
+
+    [Fact]
+    public void UpdatePrice_NegativePrice_ReturnsFailure()
+    {
+        var product = Product.Create("Bear", 100m).Value!;
+
+        var result = product.UpdatePrice(-10m);
+
+        result.IsFailure.Should().BeTrue();
+        result.Error.Should().Be("Цена не может быть меньше 0");
     }
 
     [Fact]
     public void SetImageUrl_ValidUrl_SetUrl()
     {
-        var money = Money.Create(100, "RUB").Value!;
-        var product = Product.Create("Bear", money).Value!;
+        var product = Product.Create("Bear", 100m).Value!;
 
         product.SetImageUrl("urlImage");
 
@@ -78,8 +98,7 @@ public class ProductTests
     [Fact]
     public void SetImageUrl_NullUrl_SetsNull()
     {
-        var money = Money.Create(100, "RUB").Value!;
-        var product = Product.Create("Bear", money).Value!;
+        var product = Product.Create("Bear", 100m).Value!;
 
         product.SetImageUrl(null!);
 
