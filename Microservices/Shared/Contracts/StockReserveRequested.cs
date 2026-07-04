@@ -2,7 +2,7 @@
 
 public interface StockReserveRequested
 {
-    int OrderId { get; }
+    Guid OrderId { get; }
     ProductQuantity[] Items { get; }
 }
 

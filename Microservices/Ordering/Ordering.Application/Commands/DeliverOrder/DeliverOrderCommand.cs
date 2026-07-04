@@ -3,4 +3,4 @@ using Shared.Domain;
 
 namespace Ordering.Application.Commands.DeliverOrder;
 
-public sealed record DeliverOrderCommand(int OrderId) : IRequest<Result>;
+public sealed record DeliverOrderCommand(Guid OrderId) : IRequest<Result>;

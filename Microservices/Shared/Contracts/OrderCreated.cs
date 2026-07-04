@@ -2,7 +2,7 @@
 
 public interface OrderCreated
 {
-    int OrderId { get; }
+    Guid OrderId { get; }
     Guid UserId { get; }
     string ShippingAddress { get; }
     decimal TotalAmount { get; }

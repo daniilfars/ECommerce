@@ -3,7 +3,7 @@ using Ordering.Domain.Events;
 
 namespace Ordering.Domain;
 
-public class Order : AggregateRoot<int>
+public class Order : AggregateRoot<Guid>
 {
     private readonly List<OrderItem> _items = [];
     public IReadOnlyCollection<OrderItem> Items => _items.AsReadOnly();
@@ -16,6 +16,7 @@ public class Order : AggregateRoot<int>
     private Order() { }// Для EF Core
     private Order(Guid userId, string shippingAddress)
     {
+        Id = Guid.NewGuid();
         UserId = userId;
         ShippingAddress = shippingAddress;
         Status = OrderStatus.Pending;
@@ -29,6 +30,18 @@ public class Order : AggregateRoot<int>
             return Result<Order>.Failure("Адрес не может быть пустым");
 
         var order = new Order(userId, shippingAddress);
+        order.RaiseDomainEvent(new OrderCreatedDomainEvent(order.Id, userId));
+
+        return Result<Order>.Success(order);
+    }
+
+    // Этот метод будет вызывать консьюмер(createOrderHandler), который получает OrderId от продюсера(CheckoutBasketHandler)
+    public static Result<Order> Create(Guid orderId, Guid userId, string shippingAddress)
+    {
+        if (string.IsNullOrWhiteSpace(shippingAddress))
+            return Result<Order>.Failure("Адрес не может быть пустым");
+
+        var order = new Order(userId, shippingAddress) { Id = orderId };
         order.RaiseDomainEvent(new OrderCreatedDomainEvent(order.Id, userId));
 
         return Result<Order>.Success(order);

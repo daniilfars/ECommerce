@@ -60,7 +60,7 @@ public class OrderingController : ControllerBase
 
     // GET: api/ordering/{orderId}
     [HttpGet("{orderId}")]
-    public async Task<ActionResult<GetOrderByIdResponse>> GetOrderById(int orderId)
+    public async Task<ActionResult<GetOrderByIdResponse>> GetOrderById(Guid orderId)
     {
         var isAdmin = User.IsInRole("Admin");
         var result = await _mediator.Send(new GetOrderByIdQuery(orderId, isAdmin ? Guid.Empty : UserId, isAdmin));
@@ -73,7 +73,7 @@ public class OrderingController : ControllerBase
 
     // POST: /api/ordering/{orderId}/confirm-payment
     [HttpPost("{orderId}/confirm-payment")]
-    public async Task<IActionResult> ConfirmPayment(int orderId)
+    public async Task<IActionResult> ConfirmPayment(Guid orderId)
     {
         var isAdmin = User.IsInRole("Admin");
         var result = await _mediator.Send(new ConfirmPaymentCommand(orderId, UserId, isAdmin));
@@ -86,7 +86,7 @@ public class OrderingController : ControllerBase
 
     // POST: /api/ordering/{orderId}/cancel
     [HttpPost("{orderId}/cancel")]
-    public async Task<IActionResult> CancelOrder(int orderId)
+    public async Task<IActionResult> CancelOrder(Guid orderId)
     {
         var isAdmin = User.IsInRole("Admin");
         var result = await _mediator.Send(new CancelOrderCommand(orderId, isAdmin ? Guid.Empty : UserId, isAdmin));
@@ -98,7 +98,7 @@ public class OrderingController : ControllerBase
 
     // POST: /api/ordering/{orderId}/pay
     [HttpPost("{orderId}/pay")]
-    public async Task<ActionResult<PayOrderResponse>> PayOrder(int orderId)
+    public async Task<ActionResult<PayOrderResponse>> PayOrder(Guid orderId)
     {
         var isAdmin = User.IsInRole("Admin");
         var result = await _mediator.Send(new PayOrderCommand(orderId, isAdmin ? Guid.Empty : UserId, isAdmin));
@@ -111,7 +111,7 @@ public class OrderingController : ControllerBase
     // POST: /api/ordering/{orderId}/ship
     [HttpPost("{orderId}/ship")]
     [Authorize(Roles = "Admin")]
-    public async Task<IActionResult> ShipOrder(int orderId)
+    public async Task<IActionResult> ShipOrder(Guid orderId)
     {
         var result = await _mediator.Send(new ShipOrderCommand(orderId));
         if (result.IsFailure)
@@ -123,7 +123,7 @@ public class OrderingController : ControllerBase
     // POST: /api/ordering/{orderId}/deliver
     [HttpPost("{orderId}/deliver")]
     [Authorize(Roles = "Admin")]
-    public async Task<IActionResult> DeliverOrder(int orderId)
+    public async Task<IActionResult> DeliverOrder(Guid orderId)
     {
         var result = await _mediator.Send(new DeliverOrderCommand(orderId));
         if (result.IsFailure)
