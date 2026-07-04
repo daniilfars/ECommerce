@@ -1,4 +1,5 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿using MassTransit;
+using Microsoft.EntityFrameworkCore;
 using Ordering.Application.Interfaces;
 using Ordering.Domain;
 using Ordering.Infrastructure.Configurations;
@@ -18,5 +19,6 @@ public class OrderingDbContext : DbContext, IOrderingDbContext
         builder.HasPostgresEnum<OrderStatus>();
         builder.ApplyConfiguration(new OrderConfiguration());
         builder.ApplyConfiguration(new OrderItemConfiguration());
+        builder.AddTransactionalOutboxEntities();
     }
 }

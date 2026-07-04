@@ -14,4 +14,5 @@ public interface OrderItemData
     string ProductName { get; }
     decimal Price { get; }
     int Quantity { get; }
+    string? ImageUrl { get; }
 }

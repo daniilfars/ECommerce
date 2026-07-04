@@ -13,15 +13,11 @@ namespace Basket.Application.Commands.CheckoutBasket;
 public class CheckoutBasketHandler : IRequestHandler<CheckoutBasketCommand, Result>
 {
     private readonly IBasketRepository _basketRepository;
-    private readonly IHttpClientFactory _httpClientFactory;
-    private readonly IHttpContextAccessor _httpContextAccessor;
     private readonly IPublishEndpoint _publishEndpoint;
 
-    public CheckoutBasketHandler(IBasketRepository basketRepository, IHttpClientFactory httpClientFactory, IHttpContextAccessor httpContextAccessor, IPublishEndpoint publishEndpoint)
+    public CheckoutBasketHandler(IBasketRepository basketRepository, IPublishEndpoint publishEndpoint)
     {
         _basketRepository = basketRepository;
-        _httpClientFactory = httpClientFactory;
-        _httpContextAccessor = httpContextAccessor;
         _publishEndpoint = publishEndpoint;
     }
 
@@ -31,30 +27,21 @@ public class CheckoutBasketHandler : IRequestHandler<CheckoutBasketCommand, Resu
         if (basket == null)
             return Result.Failure("Нельзя сделать заказ пустой корзины");
 
-        var createOrderCommand = new CreateOrderCommand(basket.UserId, request.ShippingAddress,
-            basket.Items.Select(i => new OrderItemDto(
+        await _publishEndpoint.Publish<OrderCreated>(new
+        {
+            OrderId = Guid.NewGuid(),
+            UserId = request.UserId,
+            ShippingAddress = request.ShippingAddress,
+            TotalAmount = basket.TotalAmount,
+            Items = basket.Items.Select(i => new
+            {
                 i.ProductId,
                 i.ProductName,
                 i.Price,
                 i.Quantity,
                 i.ImageUrl
-            )).ToList()
-        );
-
-        //await _publishEndpoint.Publish<OrderCreated>(new {});
-
-        var token = _httpContextAccessor.HttpContext!.Request.Headers["Authorization"].ToString();
-
-        var client = _httpClientFactory.CreateClient();
-        client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", token.Replace("Bearer ", ""));
-
-        var response = await client.PostAsJsonAsync("http://ordering-api:8080/api/Ordering/create", createOrderCommand, cancellationToken);
-
-        if (!response.IsSuccessStatusCode)
-        {
-            var error = await response.Content.ReadAsStringAsync();
-            return Result.Failure(error);
-        }
+            }).ToArray()
+        });
 
         await _basketRepository.DeleteAsync(request.UserId);
         return Result.Success();
