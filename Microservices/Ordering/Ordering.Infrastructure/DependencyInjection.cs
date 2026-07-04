@@ -2,6 +2,7 @@
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using Ordering.Application.Consumers;
 using Ordering.Application.Interfaces;
 using Ordering.Infrastructure.Data;
 
@@ -19,7 +20,13 @@ public static class DependencyInjection
 
         services.AddMassTransit(x =>
         {
-            // x.AddConsumer<>(); добавить позже
+            x.AddConsumer<OrderCreatedConsumer>();
+
+            x.AddEntityFrameworkOutbox<OrderingDbContext>(o =>
+            {
+                o.UsePostgres();
+                o.UseBusOutbox();
+            });
 
             x.UsingRabbitMq((context, cfg) =>
             {
@@ -35,6 +42,8 @@ public static class DependencyInjection
                     TimeSpan.FromSeconds(30),
                     TimeSpan.FromSeconds(3)
                 ));
+
+                cfg.ConfigureEndpoints(context);
             });
         });
 
