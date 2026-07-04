@@ -5,6 +5,8 @@ using Shared.Domain;
 using System.Net.Http.Headers;
 using System.Net.Http.Json;
 using Microsoft.AspNetCore.Http;
+using MassTransit;
+using Shared.Contracts;
 
 namespace Basket.Application.Commands.CheckoutBasket;
 
@@ -13,12 +15,14 @@ public class CheckoutBasketHandler : IRequestHandler<CheckoutBasketCommand, Resu
     private readonly IBasketRepository _basketRepository;
     private readonly IHttpClientFactory _httpClientFactory;
     private readonly IHttpContextAccessor _httpContextAccessor;
+    private readonly IPublishEndpoint _publishEndpoint;
 
-    public CheckoutBasketHandler(IBasketRepository basketRepository, IHttpClientFactory httpClientFactory, IHttpContextAccessor httpContextAccessor)
+    public CheckoutBasketHandler(IBasketRepository basketRepository, IHttpClientFactory httpClientFactory, IHttpContextAccessor httpContextAccessor, IPublishEndpoint publishEndpoint)
     {
         _basketRepository = basketRepository;
         _httpClientFactory = httpClientFactory;
         _httpContextAccessor = httpContextAccessor;
+        _publishEndpoint = publishEndpoint;
     }
 
     public async Task<Result> Handle(CheckoutBasketCommand request, CancellationToken cancellationToken)
@@ -36,6 +40,8 @@ public class CheckoutBasketHandler : IRequestHandler<CheckoutBasketCommand, Resu
                 i.ImageUrl
             )).ToList()
         );
+
+        //await _publishEndpoint.Publish<OrderCreated>(new {});
 
         var token = _httpContextAccessor.HttpContext!.Request.Headers["Authorization"].ToString();
 

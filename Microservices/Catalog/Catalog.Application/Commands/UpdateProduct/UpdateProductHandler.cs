@@ -34,8 +34,15 @@ public class UpdateProductHandler : IRequestHandler<UpdateProductCommand, Result
                 return Result<UpdateProductResponse>.Failure(updateResult.Error!);
         }
 
+        if (request.StockQuantity.HasValue)
+        {
+            var updateResult = product.UpdateStockQuantity(request.StockQuantity.Value);
+            if (updateResult.IsFailure)
+                return Result<UpdateProductResponse>.Failure(updateResult.Error!);
+        }
+
         await _context.SaveChangesAsync(cancellationToken);
 
-        return Result<UpdateProductResponse>.Success(new UpdateProductResponse(product.Id, product.Name, product.Price, product.ImageUrl));
+        return Result<UpdateProductResponse>.Success(new UpdateProductResponse(product.Id, product.Name, product.Price, product.StockQuantity, product.ImageUrl));
     }
 }

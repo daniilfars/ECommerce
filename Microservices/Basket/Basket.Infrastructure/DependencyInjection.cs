@@ -1,6 +1,7 @@
 ﻿using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Basket.Domain;
+using MassTransit;
 
 namespace Basket.Infrastructure;
 
@@ -14,6 +15,18 @@ public static class DependencyInjection
         });
 
         services.AddScoped<IBasketRepository, RedisBasketRepository>();
+
+        services.AddMassTransit(x =>
+        {
+            x.UsingRabbitMq((context, cfg) =>
+            {
+                cfg.Host(configuration["RabbitMQ:Host"] ?? "rabbitmq", "/", h =>
+                {
+                    h.Username(configuration["RabbitMQ:Username"] ?? "guest");
+                    h.Password(configuration["RabbitMQ:Password"] ?? "guest");
+                });
+            });
+        });
 
         return services;
     }

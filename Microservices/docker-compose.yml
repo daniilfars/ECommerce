@@ -15,11 +15,14 @@ services:
       - Minio__AccessKey=${MINIO_ROOT_USER}
       - Minio__SecretKey=${MINIO_ROOT_PASSWORD}
       - Minio__BucketName=shop-images
+      - RabbitMQ__Host=rabbitmq
     depends_on:
       catalog-db:
         condition: service_healthy
       minio:
         condition: service_started
+      rabbitmq:
+        condition: service_healthy
 
   catalog-db:
     image: postgres:15
@@ -81,9 +84,12 @@ services:
       - JwtSettings__SecretKey=${JWT_SECRET_KEY}
       - JwtSettings__Issuer=Shop.Api
       - JwtSettings__Audience=Shop.Client
+      - RabbitMQ__Host=rabbitmq
     depends_on:
       redis:
         condition: service_started
+      rabbitmq:
+        condition: service_healthy
 
   ordering-api:
     build:
@@ -99,8 +105,11 @@ services:
       - JwtSettings__Audience=Shop.Client
       - Yookassa__ShopId=${YOOKASSA_SHOP_ID}
       - Yookassa__SecretKey=${YOOKASSA_SECRET_KEY}
+      - RabbitMQ__Host=rabbitmq
     depends_on:
       ordering-db:
+        condition: service_healthy
+      rabbitmq:
         condition: service_healthy
 
   ordering-db:
@@ -151,9 +160,29 @@ services:
     volumes:
       - minio_data:/data
 
+  rabbitmq:
+    image: rabbitmq:3-management
+    container_name: rabbitmq-broker
+    hostname: rabbitmq-host
+    ports:
+      - "5672:5672"
+      - "15672:15672"
+    environment:
+      RABBITMQ_DEFAULT_USER: guest
+      RABBITMQ_DEFAULT_PASS: guest
+    volumes:
+      - rabbitmq_data:/var/lib/rabbitmq
+    restart: always
+    healthcheck:
+      test: ["CMD", "rabbitmq-diagnostics", "check_port_connectivity"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
 volumes:
   catalog_db_data:
   identity_db_data:
   ordering_db_data:
   new_shop_redis_data:
   minio_data:
+  rabbitmq_data:

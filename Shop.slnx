@@ -39,11 +39,4 @@
       <Deploy />
     </Project>
   </Folder>
-  <Folder Name="/Элементы решения/">
-    <File Path=".env" />
-    <File Path=".env.example" />
-  </Folder>
-  <Project Path="docker-compose.dcproj">
-    <Build />
-  </Project>
 </Solution>

@@ -16,7 +16,7 @@ public sealed class CreateProductHandler : IRequestHandler<CreateProductCommand,
 
     public async Task<Result<CreateProductResponse>> Handle(CreateProductCommand request, CancellationToken cancellationToken)
     {
-        var productResult = Product.Create(request.Name, request.Price);
+        var productResult = Product.Create(request.Name, request.Price, request.StockQuantity);
         if(productResult.IsFailure)
             return Result<CreateProductResponse>.Failure(productResult.Error!);
 
@@ -25,6 +25,6 @@ public sealed class CreateProductHandler : IRequestHandler<CreateProductCommand,
         _context.Products.Add(product);
         await _context.SaveChangesAsync(cancellationToken);
 
-        return Result<CreateProductResponse>.Success(new CreateProductResponse(product.Id, product.Name, product.Price, product.ImageUrl));
+        return Result<CreateProductResponse>.Success(new CreateProductResponse(product.Id, product.Name, product.Price, product.StockQuantity, product.ImageUrl));
     }
 }
