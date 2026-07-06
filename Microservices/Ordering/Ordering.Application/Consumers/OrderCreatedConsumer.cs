@@ -1,9 +1,7 @@
 ﻿using MassTransit;
-using Ordering.Application.Commands.CreateOrder;
 using Ordering.Application.Interfaces;
 using Ordering.Domain;
 using Shared.Contracts;
-using Shared.Domain;
 
 namespace Ordering.Application.Consumers;
 
@@ -48,5 +46,4 @@ public class OrderCreatedConsumer : IConsumer<OrderCreated>
         await _context.SaveChangesAsync(context.CancellationToken);
         await transaction.CommitAsync(context.CancellationToken);
     }
-
 }
