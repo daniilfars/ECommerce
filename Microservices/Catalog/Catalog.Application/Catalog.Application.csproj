@@ -11,6 +11,7 @@
     <PackageReference Include="MediatR" Version="14.1.0" />
     <PackageReference Include="Microsoft.EntityFrameworkCore" Version="10.0.9" />
     <PackageReference Include="Microsoft.Extensions.DependencyInjection.Abstractions" Version="10.0.9" />
+    <PackageReference Include="Pandatech.EFCore.PostgresExtensions" Version="7.0.1" />
   </ItemGroup>
 
   <ItemGroup>

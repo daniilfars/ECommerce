@@ -1,4 +1,5 @@
-﻿using Catalog.Application.Interfaces;
+﻿using Catalog.Application.Consumers;
+using Catalog.Application.Interfaces;
 using Catalog.Infrastructure.Data;
 using Catalog.Infrastructure.Services;
 using MassTransit;
@@ -39,7 +40,7 @@ public static class DependencyInjection
 
         services.AddMassTransit(x =>
         {
-            // x.AddConsumer<>(); добавить позже
+            x.AddConsumer<StockReserveRequestedConsumer>();
 
             x.UsingRabbitMq((context, cfg) =>
             {
@@ -55,6 +56,8 @@ public static class DependencyInjection
                     TimeSpan.FromSeconds(30),
                     TimeSpan.FromSeconds(3)
                 ));
+
+                cfg.ConfigureEndpoints(context);
             });
         });
 

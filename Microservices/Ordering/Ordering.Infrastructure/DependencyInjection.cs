@@ -21,6 +21,7 @@ public static class DependencyInjection
         services.AddMassTransit(x =>
         {
             x.AddConsumer<OrderCreatedConsumer>();
+            x.AddConsumer<StockReserveFailedConsumer>();
 
             x.AddEntityFrameworkOutbox<OrderingDbContext>(o =>
             {

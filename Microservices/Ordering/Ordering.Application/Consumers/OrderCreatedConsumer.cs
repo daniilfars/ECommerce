@@ -35,7 +35,18 @@ public class OrderCreatedConsumer : IConsumer<OrderCreated>
             order.AddItem(itemResult.Value!);
         }
 
+        await using var transaction = await _context.Database.BeginTransactionAsync(context.CancellationToken);
+
         _context.Orders.Add(order);
+
+        await context.Publish<StockReserveRequested>(new
+        {
+            OrderId = order.Id,
+            Items = message.Items.Select(i => new { i.ProductId, i.Quantity }).ToArray()
+        }, context.CancellationToken);
+
         await _context.SaveChangesAsync(context.CancellationToken);
+        await transaction.CommitAsync(context.CancellationToken);
     }
+
 }
