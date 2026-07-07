@@ -55,6 +55,8 @@ public class StockReserveRequestedConsumer : IConsumer<StockReserveRequested>
             product.ReserveStock(item.Quantity);
         }
 
+        await context.Publish<StockReserved>(new {message.OrderId});
+
         await _context.SaveChangesAsync(context.CancellationToken);
         await transaction.CommitAsync(context.CancellationToken);
     }

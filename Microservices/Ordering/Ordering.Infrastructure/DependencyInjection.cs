@@ -22,6 +22,7 @@ public static class DependencyInjection
         {
             x.AddConsumer<OrderCreatedConsumer>();
             x.AddConsumer<StockReserveFailedConsumer>();
+            x.AddConsumer<StockReservedConsumer>();
 
             x.AddEntityFrameworkOutbox<OrderingDbContext>(o =>
             {

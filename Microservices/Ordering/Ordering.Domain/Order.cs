@@ -14,9 +14,9 @@ public class Order : AggregateRoot<Guid>
     public string? PaymentId { get; private set; }
 
     private Order() { }// Для EF Core
-    private Order(Guid userId, string shippingAddress)
+    private Order(Guid id, Guid userId, string shippingAddress)
     {
-        Id = Guid.NewGuid();
+        Id = id;
         UserId = userId;
         ShippingAddress = shippingAddress;
         Status = OrderStatus.Pending;
@@ -29,7 +29,7 @@ public class Order : AggregateRoot<Guid>
         if (string.IsNullOrWhiteSpace(shippingAddress))
             return Result<Order>.Failure("Адрес не может быть пустым");
 
-        var order = new Order(userId, shippingAddress);
+        var order = new Order(Guid.NewGuid(), userId, shippingAddress);
         order.RaiseDomainEvent(new OrderCreatedDomainEvent(order.Id, userId));
 
         return Result<Order>.Success(order);
@@ -41,7 +41,7 @@ public class Order : AggregateRoot<Guid>
         if (string.IsNullOrWhiteSpace(shippingAddress))
             return Result<Order>.Failure("Адрес не может быть пустым");
 
-        var order = new Order(userId, shippingAddress) { Id = orderId };
+        var order = new Order(orderId, userId, shippingAddress);
         order.RaiseDomainEvent(new OrderCreatedDomainEvent(order.Id, userId));
 
         return Result<Order>.Success(order);
@@ -79,6 +79,9 @@ public class Order : AggregateRoot<Guid>
 
     public Result Cancel()
     {
+        if (Status == OrderStatus.Pending)
+            return Result.Failure("Нельзя отменить заказ, пока он проверяется на складе");
+
         if (Status == OrderStatus.Cancelled)
             return Result.Failure("Заказ уже отменён");
 
@@ -89,10 +92,22 @@ public class Order : AggregateRoot<Guid>
         return Result.Success();
     }
 
+    public void RejectDueToNoStock()
+    {
+        if (Status == OrderStatus.Pending)
+            Status = OrderStatus.Cancelled;
+    }
+
+    public void Confirm()
+    {
+        if (Status == OrderStatus.Pending)
+            Status = OrderStatus.Confirmed;
+    }
+
     public Result Pay()
     {
-        if (Status != OrderStatus.Pending)
-            return Result.Failure("Только ожидающий заказ можно оплатить");
+        if (Status != OrderStatus.Confirmed)
+            return Result.Failure("Только подтвержденный заказ можно оплатить");
 
         Status = OrderStatus.Paid;
         return Result.Success();

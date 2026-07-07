@@ -24,7 +24,7 @@ public class CheckoutBasketHandler : IRequestHandler<CheckoutBasketCommand, Resu
     public async Task<Result> Handle(CheckoutBasketCommand request, CancellationToken cancellationToken)
     {
         var basket = await _basketRepository.GetBasketAsync(request.UserId);
-        if (basket == null)
+        if (basket == null || !basket.Items.Any())
             return Result.Failure("Нельзя сделать заказ пустой корзины");
 
         await _publishEndpoint.Publish<OrderCreated>(new
@@ -41,7 +41,7 @@ public class CheckoutBasketHandler : IRequestHandler<CheckoutBasketCommand, Resu
                 i.Quantity,
                 i.ImageUrl
             }).ToArray()
-        });
+        }, cancellationToken);
 
         await _basketRepository.DeleteAsync(request.UserId);
         return Result.Success();

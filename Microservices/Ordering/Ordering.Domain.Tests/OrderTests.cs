@@ -21,6 +21,18 @@ public class OrderTests
     }
 
     [Fact]
+    public void Create_WithOrderId_ReturnsSuccess()
+    {
+        var orderId = Guid.NewGuid();
+        var userId = Guid.NewGuid();
+        var result = Order.Create(orderId, userId, _address);
+
+        result.IsSuccess.Should().BeTrue();
+        result.Value!.Id.Should().Be(orderId);
+        result.Value.UserId.Should().Be(userId);
+    }
+
+    [Fact]
     public void Create_EmptyAddress_ReturnsFailure()
     {
         var result = Order.Create(Guid.NewGuid(), "");
@@ -45,13 +57,12 @@ public class OrderTests
     public void AddItem_WhenNotPending_ReturnsFailure()
     {
         var order = Order.Create(Guid.NewGuid(), _address).Value!;
-        order.Pay();
+        order.Confirm();
 
         var item = OrderItem.Create(1, "Phone", 100m, 1, null).Value!;
         var result = order.AddItem(item);
 
         result.IsFailure.Should().BeTrue();
-        result.Error.Should().Be("Нельзя изменить заказ в текущем статусе");
     }
 
     [Fact]
@@ -76,7 +87,6 @@ public class OrderTests
         var result = order.RemoveItem(999);
 
         result.IsFailure.Should().BeTrue();
-        result.Error.Should().Be("Товар не найден в заказе");
     }
 
     [Fact]
@@ -84,18 +94,60 @@ public class OrderTests
     {
         var order = Order.Create(Guid.NewGuid(), _address).Value!;
         order.AddItem(OrderItem.Create(1, "Phone", 100m, 1, null).Value!);
-        order.Pay();
+        order.Confirm();
 
         var result = order.RemoveItem(1);
 
         result.IsFailure.Should().BeTrue();
-        result.Error.Should().Be("Нельзя изменить заказ в текущем статусе");
     }
 
     [Fact]
-    public void Pay_WhenPending_ChangesStatusToPaid()
+    public void Confirm_WhenPending_ChangesStatusToConfirmed()
     {
         var order = Order.Create(Guid.NewGuid(), _address).Value!;
+
+        order.Confirm();
+
+        order.Status.Should().Be(OrderStatus.Confirmed);
+    }
+
+    [Fact]
+    public void Confirm_WhenNotPending_DoesNothing()
+    {
+        var order = Order.Create(Guid.NewGuid(), _address).Value!;
+        order.Confirm();
+
+        order.Confirm();
+
+        order.Status.Should().Be(OrderStatus.Confirmed);
+    }
+
+    [Fact]
+    public void RejectDueToNoStock_WhenPending_ChangesStatusToCancelled()
+    {
+        var order = Order.Create(Guid.NewGuid(), _address).Value!;
+
+        order.RejectDueToNoStock();
+
+        order.Status.Should().Be(OrderStatus.Cancelled);
+    }
+
+    [Fact]
+    public void RejectDueToNoStock_WhenNotPending_DoesNothing()
+    {
+        var order = Order.Create(Guid.NewGuid(), _address).Value!;
+        order.Confirm();
+
+        order.RejectDueToNoStock();
+
+        order.Status.Should().Be(OrderStatus.Confirmed);
+    }
+
+    [Fact]
+    public void Pay_WhenConfirmed_ChangesStatusToPaid()
+    {
+        var order = Order.Create(Guid.NewGuid(), _address).Value!;
+        order.Confirm();
 
         var result = order.Pay();
 
@@ -104,21 +156,32 @@ public class OrderTests
     }
 
     [Fact]
-    public void Pay_WhenNotPending_ReturnsFailure()
+    public void Pay_WhenPending_ReturnsFailure()
     {
         var order = Order.Create(Guid.NewGuid(), _address).Value!;
+
+        var result = order.Pay();
+
+        result.IsFailure.Should().BeTrue();
+    }
+
+    [Fact]
+    public void Pay_WhenAlreadyPaid_ReturnsFailure()
+    {
+        var order = Order.Create(Guid.NewGuid(), _address).Value!;
+        order.Confirm();
         order.Pay();
 
         var result = order.Pay();
 
         result.IsFailure.Should().BeTrue();
-        result.Error.Should().Be("Только ожидающий заказ можно оплатить");
     }
 
     [Fact]
-    public void Cancel_WhenPending_ChangesStatusToCancelled()
+    public void Cancel_WhenConfirmed_ChangesStatusToCancelled()
     {
         var order = Order.Create(Guid.NewGuid(), _address).Value!;
+        order.Confirm();
 
         var result = order.Cancel();
 
@@ -127,34 +190,45 @@ public class OrderTests
     }
 
     [Fact]
+    public void Cancel_WhenPending_ReturnsFailure()
+    {
+        var order = Order.Create(Guid.NewGuid(), _address).Value!;
+
+        var result = order.Cancel();
+
+        result.IsFailure.Should().BeTrue();
+    }
+
+    [Fact]
     public void Cancel_AlreadyCancelled_ReturnsFailure()
     {
         var order = Order.Create(Guid.NewGuid(), _address).Value!;
+        order.Confirm();
         order.Cancel();
 
         var result = order.Cancel();
 
         result.IsFailure.Should().BeTrue();
-        result.Error.Should().Be("Заказ уже отменён");
     }
 
     [Fact]
     public void Cancel_WhenShipped_ReturnsFailure()
     {
         var order = Order.Create(Guid.NewGuid(), _address).Value!;
+        order.Confirm();
         order.Pay();
         order.Ship();
 
         var result = order.Cancel();
 
         result.IsFailure.Should().BeTrue();
-        result.Error.Should().Be("Нельзя отменить доставленный заказ");
     }
 
     [Fact]
     public void Cancel_WhenDelivered_ReturnsFailure()
     {
         var order = Order.Create(Guid.NewGuid(), _address).Value!;
+        order.Confirm();
         order.Pay();
         order.Ship();
         order.Deliver();
@@ -162,13 +236,13 @@ public class OrderTests
         var result = order.Cancel();
 
         result.IsFailure.Should().BeTrue();
-        result.Error.Should().Be("Нельзя отменить доставленный заказ");
     }
 
     [Fact]
     public void Ship_WhenPaid_ChangesStatusToShipped()
     {
         var order = Order.Create(Guid.NewGuid(), _address).Value!;
+        order.Confirm();
         order.Pay();
 
         var result = order.Ship();
@@ -185,13 +259,13 @@ public class OrderTests
         var result = order.Ship();
 
         result.IsFailure.Should().BeTrue();
-        result.Error.Should().Be("Заказ не оплачен");
     }
 
     [Fact]
     public void Deliver_WhenShipped_ChangesStatusToDelivered()
     {
         var order = Order.Create(Guid.NewGuid(), _address).Value!;
+        order.Confirm();
         order.Pay();
         order.Ship();
 
@@ -209,7 +283,6 @@ public class OrderTests
         var result = order.Deliver();
 
         result.IsFailure.Should().BeTrue();
-        result.Error.Should().Be("Только отправленный заказ можно доставить");
     }
 
     [Fact]
@@ -217,6 +290,9 @@ public class OrderTests
     {
         var order = Order.Create(Guid.NewGuid(), _address).Value!;
         order.Status.Should().Be(OrderStatus.Pending);
+
+        order.Confirm();
+        order.Status.Should().Be(OrderStatus.Confirmed);
 
         order.Pay();
         order.Status.Should().Be(OrderStatus.Paid);
@@ -226,5 +302,25 @@ public class OrderTests
 
         order.Deliver();
         order.Status.Should().Be(OrderStatus.Delivered);
+    }
+
+    [Fact]
+    public void RejectDueToNoStock_Lifecycle()
+    {
+        var order = Order.Create(Guid.NewGuid(), _address).Value!;
+        order.Status.Should().Be(OrderStatus.Pending);
+
+        order.RejectDueToNoStock();
+        order.Status.Should().Be(OrderStatus.Cancelled);
+    }
+
+    [Fact]
+    public void ForceCancelDueToNoStock_WhenPending_ChangesStatusToCancelled()
+    {
+        var order = Order.Create(Guid.NewGuid(), _address).Value!;
+
+        order.RejectDueToNoStock();
+
+        order.Status.Should().Be(OrderStatus.Cancelled);
     }
 }

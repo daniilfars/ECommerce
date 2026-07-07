@@ -24,15 +24,7 @@ public class StockReserveFailedConsumer : IConsumer<StockReserveFailed>
         if (order is null)
             return;
 
-        if (order.Status == OrderStatus.Cancelled)
-            return;
-
-        var result = order.Cancel();
-        if (result.IsFailure)
-        {
-
-            throw new InvalidOperationException($"Ошибка отмены заказа {order.Id}: {result.Error}");
-        }
+        order.RejectDueToNoStock();
 
         await _context.SaveChangesAsync(context.CancellationToken);
     }

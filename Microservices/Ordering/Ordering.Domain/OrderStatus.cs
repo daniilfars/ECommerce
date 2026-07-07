@@ -1,4 +1,4 @@
 ﻿namespace Ordering.Domain;
 
-                    // Ожидание, оплачено, отправлено, доставлено, отменено
-public enum OrderStatus { Pending, Paid, Shipped, Delivered, Cancelled };
+                    // Ожидание, подтверждено, оплачено, отправлено, доставлено, отменено
+public enum OrderStatus { Pending, Confirmed, Paid, Shipped, Delivered, Cancelled };
