@@ -31,7 +31,7 @@ public class PayOrderHandler : IRequestHandler<PayOrderCommand, Result<PayOrderR
         if (!request.IsAdmin && order.UserId != request.UserId)
             return Result<PayOrderResponse>.Failure("Нет доступа к заказу");
 
-        if (order.Status != Domain.OrderStatus.Pending)
+        if (order.Status != Domain.OrderStatus.Confirmed)
             return Result<PayOrderResponse>.Failure("Заказ нельзя оплатить");
 
         var shopId = _configuration["Yookassa:ShopId"]!;
