@@ -192,6 +192,31 @@
     font-weight: 400;
 }
 
+.product-stock {
+    font-family: 'Outfit', sans-serif;
+    font-size: 16px;
+    margin-bottom: 16px;
+}
+
+.product-stock.in-stock {
+    color: #10b981;
+}
+
+.product-stock.out-of-stock {
+    color: #ef4444;
+}
+
+.product-button-disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+}
+
+.out-of-stock {
+    font-family: 'Outfit', sans-serif;
+    font-size: 13px;
+    color: #ef4444;
+}
+
 @media screen and (max-width: 1345px)
 {
     .product-button-add {

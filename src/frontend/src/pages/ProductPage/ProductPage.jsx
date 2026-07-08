@@ -41,7 +41,7 @@ export default function ProductPage() {
     };
 
     const handleIncrement = () => {
-        setQuantity(prev => prev + 1);
+        setQuantity(prev => Math.min(prev + 1, product?.stockQuantity || 1));
     };
 
     const handleDecrement = () => {
@@ -83,25 +83,34 @@ export default function ProductPage() {
                     <section className="product-info" aria-label="Информация о товаре">
                         <h1 className="product-title">{product.name}</h1>
                         <h3 className="product-price">{product.price} ₽</h3>
+                        <p className={`product-stock ${product.stockQuantity > 0 ? 'in-stock' : 'out-of-stock'}`}>
+                            {product.stockQuantity > 0 ? `В наличии: ${product.stockQuantity} шт.` : 'Нет в наличии'}
+                        </p>
 
-                        <div className="product-button-container">
-                            <div className="product-quantity-controls">
-                                <button onClick={handleDecrement} disabled={quantity <= 1} aria-label="Уменьшить количество">-</button>
-                                <span className="product-quantity-value">{quantity}</span>
-                                <button onClick={handleIncrement} aria-label="Увеличить количество">+</button>
+                        {product.stockQuantity > 0 ? (
+                            <div className="product-button-container">
+                                <div className="product-quantity-controls">
+                                    <button onClick={handleDecrement} disabled={quantity <= 1} aria-label="Уменьшить количество">-</button>
+                                    <span className="product-quantity-value">{quantity}</span>
+                                    <button onClick={handleIncrement} disabled={quantity >= product.stockQuantity} aria-label="Увеличить количество">+</button>
+                                </div>
+
+                                <button className={`product-button-add${isAdded ? " added" : ""}`} onClick={handlerAdd} disabled={isAdded}>
+                                    {isAdded ? (
+                                        <span>✓ Добавлено</span>
+                                    ) : (
+                                        <>
+                                            <img src={cartIcon} alt="" className="product-cartIcon" aria-hidden="true" />
+                                            <span>Добавить в корзину</span>
+                                        </>
+                                    )}
+                                </button>
                             </div>
-
-                            <button className={`product-button-add${isAdded ? " added" : ""}`} onClick={handlerAdd} disabled={isAdded}>
-                                {isAdded ? (
-                                    <span>✓ Добавлено</span>
-                                ) : (
-                                    <>
-                                        <img src={cartIcon} alt="" className="product-cartIcon" aria-hidden="true" />
-                                        <span>Добавить в корзину</span>
-                                    </>
-                                )}
+                        ) : (
+                            <button className="product-button-add product-button-disabled" disabled>
+                                <span>Нет в наличии</span>
                             </button>
-                        </div>
+                        )}
 
                         <div className="product-info-container">
                             <div className="product-info-item">

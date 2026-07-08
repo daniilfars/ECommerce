@@ -8,7 +8,8 @@ export default function OrdersPage() {
   const [loading, setLoading] = useState(true);
 
   const statusMap = {
-    Pending: "Ожидает оплаты",
+    Pending: "Проверка склада",
+    Confirmed: "Подтверждён",
     Paid: "Оплачен",
     Shipped: "В пути",
     Delivered: "Доставлен",
@@ -16,11 +17,12 @@ export default function OrdersPage() {
   };
 
   const statusColor = {
-    Pending: "#f59e0b",
-    Paid: "#3b82f6",
-    Shipped: "#8b5cf6",
-    Delivered: "#10b981",
-    Cancelled: "#ef4444",
+      Pending: "#f59e0b",
+      Confirmed: "#6366f1",
+      Paid: "#3b82f6",
+      Shipped: "#8b5cf6",
+      Delivered: "#10b981",
+      Cancelled: "#ef4444",
   };
 
   const loadOrders = async () => {

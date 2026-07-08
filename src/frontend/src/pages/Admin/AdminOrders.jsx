@@ -12,7 +12,8 @@ export default function AdminOrders() {
     const totalPages = Math.ceil(totalCount / pageSize);
 
     const statusMap = {
-      Pending: "Ожидает оплаты",
+      Pending: "Проверка склада",
+      Confirmed: "Подтверждён",
       Paid: "Оплачен",
       Shipped: "В пути",
       Delivered: "Доставлен",
@@ -21,6 +22,7 @@ export default function AdminOrders() {
 
     const statusColor = {
       Pending: "#f59e0b",
+      Confirmed: "#6366f1",
       Paid: "#3b82f6",
       Shipped: "#8b5cf6",
       Delivered: "#10b981",
@@ -104,12 +106,21 @@ export default function AdminOrders() {
 
                     <div className="admin-order-actions">
                       {order.status === "Pending" && (
+                        <p className="admin-pending-text">Ожидает подтверждения со склада...</p>
+                      )}
+                      {order.status === "Confirmed" && (
                         <>
                           <button
                             className="admin-btn admin-btn-sm"
                             onClick={() => handleAction(order.id, "pay")}
                           >
                             💰 Оплатить
+                          </button>
+                          <button
+                            className="admin-btn admin-btn-sm"
+                            onClick={() => handleAction(order.id, "ship")}
+                          >
+                            🚚 Отправить
                           </button>
                           <button
                             className="admin-btn admin-btn-sm admin-btn-cancel"

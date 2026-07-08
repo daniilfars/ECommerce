@@ -101,16 +101,16 @@ export const catalogAPI = {
             method: 'GET',
         }),
 
-    create: (name, price) =>
+    create: (name, price, stockQuantity) =>
         request('/Catalog', {
             method: 'POST',
-            body: JSON.stringify({name, price})
+            body: JSON.stringify({name, price, stockQuantity})
         }),
     
-    update: (id, name = null, price = null) =>
+    update: (id, name = null, price = null, stockQuantity = null) =>
         request(`/Catalog/${id}`, {
             method: 'PUT',
-            body: JSON.stringify({id, name, price})
+            body: JSON.stringify({id, name, price, stockQuantity})
         }),
 
     delete: (id) =>
@@ -177,7 +177,7 @@ export const orderingAPI = {
 
     cancel: (orderId) =>
         request(`/Ordering/${orderId}/cancel`, {
-            method: 'POST',
+        method: 'POST',
         }),
 
     pay: (orderId) =>

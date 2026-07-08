@@ -22,7 +22,11 @@ export default function ProductCard({ product }) {
                     
                     <div className="product-price-container">
                         <p className="product-price-p">{product.price} ₽</p>
-                        <button onClick={handleButtonClick}><span>+</span></button>
+                        {product.stockQuantity > 0 ? (
+                            <button onClick={handleButtonClick}><span>+</span></button>
+                        ) : (
+                            <span className="out-of-stock">Нет в наличии</span>
+                        )}
                     </div>
                 </div>
             </Link>

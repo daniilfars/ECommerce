@@ -134,3 +134,10 @@
 .order-pay-button:active {
   transform: scale(0.98);
 }
+
+.order-status-pending {
+  font-family: 'Outfit', sans-serif;
+  font-size: 16px;
+  color: #71717a;
+  margin: 16px 0;
+}

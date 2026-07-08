@@ -9,7 +9,8 @@ export default function OrderDetailPage() {
     const [loading, setLoading] = useState(true);
     
     const statusMap = {
-      Pending: "Ожидает оплаты",
+      Pending: "Проверка склада",
+      Confirmed: "Подтверждён",
       Paid: "Оплачен",
       Shipped: "В пути",
       Delivered: "Доставлен",
@@ -18,6 +19,7 @@ export default function OrderDetailPage() {
   
     const statusColor = {
       Pending: "#f59e0b",
+      Confirmed: "#6366f1",
       Paid: "#3b82f6",
       Shipped: "#8b5cf6",
       Delivered: "#10b981",
@@ -54,7 +56,7 @@ export default function OrderDetailPage() {
     }, [id]);
 
     useEffect(() => {
-        if (order && order.status === 'Pending' && order.paymentId) {
+        if (order && order.status === 'Confirmed' && order.paymentId) {
             handleConfirmPayment();
         }
     }, [order]);
@@ -133,13 +135,17 @@ export default function OrderDetailPage() {
           </div>
 
           {order.status === 'Pending' && (
+            <p className="order-status-pending">⏳ Заказ проверяется на складе...</p>
+          )}
+
+          {order.status === 'Confirmed' && (
             <button onClick={handlePay} className="order-pay-button">
               💰 Оплатить {order.totalAmount} ₽
             </button>
           )}
 
           <NavLink to="/orders" className="order-detail-back">
-            ← Назад к заказам
+            Назад к заказам
           </NavLink>
         </div>
     </>);
