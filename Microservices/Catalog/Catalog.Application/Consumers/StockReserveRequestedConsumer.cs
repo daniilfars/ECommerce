@@ -19,13 +19,22 @@ public class StockReserveRequestedConsumer : IConsumer<StockReserveRequested>
     {
         var message = context.Message;
 
-        var groupedItems = message.Items.GroupBy(i => i.ProductId).Select(g => new { ProductId = g.Key, Quantity = g.Sum(x => x.Quantity) }).ToList();
+        var groupedItems = message.Items
+            .GroupBy(i => i.ProductId)
+            .Select(g => new { ProductId = g.Key, Quantity = g.Sum(x => x.Quantity) })
+            .OrderBy(x => x.ProductId)
+            .ToList();
 
         var ids = groupedItems.Select(p => p.ProductId).ToList();
 
         await using var transaction = await _context.Database.BeginTransactionAsync(context.CancellationToken);
 
-        var products = await _context.Products.Where(p => ids.Contains(p.Id)).ForUpdate().ToListAsync(context.CancellationToken);
+        var products = await _context.Products
+            .Where(p => ids.Contains(p.Id))
+            .OrderBy(p => p.Id)
+            .ForUpdate()
+            .ToListAsync(context.CancellationToken);
+
         // Вначале валидацию делаем
         foreach (var item in groupedItems)
         {
@@ -37,13 +46,14 @@ public class StockReserveRequestedConsumer : IConsumer<StockReserveRequested>
                     ? $"Товар с ID {item.ProductId} не найден"
                     : $"Недостаточно товара с ID {item.ProductId} на складе";
 
+                await transaction.RollbackAsync(context.CancellationToken);
+
                 await context.Publish<StockReserveFailed>(new
                 {
                     OrderId = message.OrderId,
                     Reason = reason
                 }, context.CancellationToken);
 
-                await transaction.RollbackAsync(context.CancellationToken);
                 return;
             }
         }
@@ -55,7 +65,13 @@ public class StockReserveRequestedConsumer : IConsumer<StockReserveRequested>
             product.ReserveStock(item.Quantity);
         }
 
-        await context.Publish<StockReserved>(new {message.OrderId});
+        await context.Publish<StockReserved>(new {message.OrderId}, context.CancellationToken);
+        await context.Publish<ProductsStockChanged>(new {
+            Products = products.Select(p => new {
+                ProductId = p.Id, 
+                StockQuantity = p.StockQuantity}
+            ).ToArray()
+        }, context.CancellationToken);
 
         await _context.SaveChangesAsync(context.CancellationToken);
         await transaction.CommitAsync(context.CancellationToken);

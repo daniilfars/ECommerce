@@ -86,6 +86,13 @@
     opacity: 1;
 }
 
+.basket-item-stock {
+    font-family: 'Outfit', sans-serif;
+    font-size: 13px;
+    color: #71717a;
+    margin-top: 4px;
+}
+
 @media screen and (max-width: 600px) {
     .basket-item {
         flex-wrap: wrap;

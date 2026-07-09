@@ -4,6 +4,7 @@ import icon from "../../assets/мусорка.png";
 
 export default function BasketItemCard({basketItem, onUpdate}) {
     const handleIncrement = async () => {
+        if (basketItem.quantity >= basketItem.stockQuantity) return;
         await basketAPI.updateQuantity(basketItem.productId, basketItem.quantity + 1);
         if (onUpdate)
             await onUpdate();
@@ -36,6 +37,7 @@ export default function BasketItemCard({basketItem, onUpdate}) {
             <div className="basket-item-info">
                 <h4 className="basket-item-title">{basketItem.productName}</h4>
                 <p className="basket-item-price">{basketItem.totalPrice} ₽</p>
+                <p className="basket-item-stock">В наличии: {basketItem.stockQuantity} шт.</p>
             </div>
 
             <div className="basket-item-actions">
@@ -45,7 +47,7 @@ export default function BasketItemCard({basketItem, onUpdate}) {
                 <div className="product-quantity-controls">
                     <button onClick={handleDecrement} disabled={basketItem.quantity <= 1} aria-label="Уменьшить количество">-</button>
                     <span className="product-quantity-value">{basketItem.quantity}</span>
-                    <button onClick={handleIncrement} aria-label="Увеличить количество">+</button>
+                    <button onClick={handleIncrement} disabled={basketItem.quantity >= basketItem.stockQuantity} aria-label="Увеличить количество">+</button>
                 </div>
             </div>
         </li>

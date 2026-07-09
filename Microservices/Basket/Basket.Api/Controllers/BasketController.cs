@@ -26,7 +26,7 @@ public class BasketController : ControllerBase
 
     // GET: api/basket
     [HttpGet]
-    public async Task<ActionResult<GetBasketResponse>> GetBasket()
+    public async Task<ActionResult<BasketResponse>> GetBasket()
     {
         var result = await _mediator.Send(new GetBasketQuery(UserId));
         if(result.IsFailure)

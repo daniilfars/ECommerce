@@ -4,6 +4,7 @@ using Basket.Domain;
 using Shared.Domain;
 using Basket.Application.Models;
 using System.Net.Http.Json;
+using StackExchange.Redis;
 
 namespace Basket.Application.Commands.AddItemToBasket;
 
@@ -11,25 +12,34 @@ public class AddItemToBasketHandler : IRequestHandler<AddItemToBasketCommand, Re
 {
     private readonly IBasketRepository _basketRepository;
     private readonly IHttpClientFactory _httpClientFactory;
+    private readonly IDatabase _redisDb;
 
-    public AddItemToBasketHandler(IBasketRepository basketRepository, IHttpClientFactory httpClientFactory)
+    public AddItemToBasketHandler(IBasketRepository basketRepository, IHttpClientFactory httpClientFactory, IDatabase redisDb)
     {
         _basketRepository = basketRepository;
         _httpClientFactory = httpClientFactory;
+        _redisDb = redisDb;
     }
 
     public async Task<Result<GetBasketResponse>> Handle(AddItemToBasketCommand request, CancellationToken cancellationToken)
     {
         var client = _httpClientFactory.CreateClient();
-        var response = await client.GetAsync($"http://catalog-api:8080/api/Catalog/{request.ProductId}");
+        var response = await client.GetAsync($"http://catalog-api:8080/api/Catalog/{request.ProductId}", cancellationToken);
 
         if (!response.IsSuccessStatusCode)
             return Result<GetBasketResponse>.Failure("Товар не найден");
 
-        var product = await response.Content.ReadFromJsonAsync<ProductDto>();
+        var product = await response.Content.ReadFromJsonAsync<ProductDto>(cancellationToken);
 
         if (product is null)
             return Result<GetBasketResponse>.Failure("Товар не найден");
+
+        var key = $"product:{product.Id}:stock";
+
+        _ = _redisDb.StringSetAsync(key, product.StockQuantity, TimeSpan.FromDays(2));
+
+        if (product.StockQuantity < request.Quantity)
+            return Result<GetBasketResponse>.Failure("Недостаточно товара на складе");
 
         var itemResult = BasketItem.Create(product!.Id, product.Name, product.Price, request.Quantity, product.ImageUrl);
         if (itemResult.IsFailure)
