@@ -43,6 +43,12 @@ public static class DependencyInjection
             x.AddConsumer<StockReserveRequestedConsumer>();
             x.AddConsumer<OrderCancelledConsumer>();
 
+            x.AddEntityFrameworkOutbox<CatalogDbContext>(o =>
+            {
+                o.UsePostgres();
+                o.UseBusOutbox();
+            });
+
             x.UsingRabbitMq((context, cfg) =>
             {
                 cfg.Host(configuration["RabbitMQ:Host"] ?? "rabbitmq", "/", h =>

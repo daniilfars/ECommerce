@@ -1,7 +1,8 @@
-﻿using Microsoft.EntityFrameworkCore;
-using Catalog.Application.Interfaces;
+﻿using Catalog.Application.Interfaces;
 using Catalog.Domain;
 using Catalog.Infrastructure.Configurations;
+using MassTransit;
+using Microsoft.EntityFrameworkCore;
 
 namespace Catalog.Infrastructure.Data;
 
@@ -16,5 +17,6 @@ public class CatalogDbContext : DbContext, ICatalogDbContext
     {
         base.OnModelCreating(builder);
         builder.ApplyConfiguration(new ProductConfiguration());
+        builder.AddTransactionalOutboxEntities();
     }
 }
