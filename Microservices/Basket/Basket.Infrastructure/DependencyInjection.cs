@@ -28,6 +28,7 @@ public static class DependencyInjection
         services.AddMassTransit(x =>
         {
             x.AddConsumer<ProductsStockChangedConsumer>();
+            x.AddConsumer<ProductDeletedConsumer>();
 
             x.UsingRabbitMq((context, cfg) =>
             {
