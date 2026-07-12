@@ -1,12 +1,18 @@
-using System.Security.Claims;
-using System.Text;
-using Catalog.Infrastructure;
+using Catalog.Api.Services;
 using Catalog.Application;
+using Catalog.Infrastructure;
+using Catalog.Infrastructure.Data;
+using Microsoft.AspNetCore.Server.Kestrel.Core;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
-using Catalog.Infrastructure.Data;
+using System.Security.Claims;
+using System.Text;
 
 var builder = WebApplication.CreateBuilder(args);
+
+AppContext.SetSwitch("System.Net.SocketsHttpHandler.Http2UnencryptedSupport", true);
+
+builder.Services.AddGrpc();
 
 builder.Services.AddMediatR(cfg => cfg.RegisterServicesFromAssemblies(
     typeof(Catalog.Application.Commands.CreateProduct.CreateProductHandler).Assembly));
@@ -65,5 +71,7 @@ using (var scope = app.Services.CreateScope())
     var context = scope.ServiceProvider.GetRequiredService<CatalogDbContext>();
     context.Database.Migrate();
 }
+
+app.MapGrpcService<ProductGrpcService>();
 
 app.Run();

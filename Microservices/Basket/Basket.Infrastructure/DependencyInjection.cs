@@ -4,6 +4,7 @@ using MassTransit;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using StackExchange.Redis;
+using CatalogGrpc;
 
 namespace Basket.Infrastructure;
 
@@ -24,6 +25,17 @@ public static class DependencyInjection
         });
 
         services.AddScoped<IBasketRepository, RedisBasketRepository>();
+
+        AppContext.SetSwitch("System.Net.Http.SocketsHttpHandler.Http2UnencryptedSupport", true);
+
+        services.AddGrpcClient<ProductService.ProductServiceClient>(options =>
+        {
+            options.Address = new Uri(configuration["GrpcSettings:CatalogUrl"] ?? "http://catalog-api:5001");
+        })
+        .ConfigurePrimaryHttpMessageHandler(() => new SocketsHttpHandler
+        {
+            EnableMultipleHttp2Connections = true
+        });
 
         services.AddMassTransit(x =>
         {

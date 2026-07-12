@@ -1,0 +1,23 @@
+syntax = "proto3";
+
+option csharp_namespace = "CatalogGrpc";
+ 
+package catalog;
+
+import "google/protobuf/wrappers.proto";
+
+service ProductService{
+	rpc GetProduct(GetProductRequest) returns (ProductReply);
+}
+
+message GetProductRequest{
+	int32 id = 1;
+}
+
+message ProductReply{
+	int32 id = 1;
+	string name = 2;
+	int64 price_in_cents = 3; // цена, умноженная на 100 (копейки)
+	int32 stock_quantity = 4;
+	google.protobuf.StringValue image_url = 5;
+}

@@ -5,8 +5,14 @@ services:
       dockerfile: Catalog/Catalog.Api/Dockerfile
     ports:
       - "8081:8080"
+      - "5001:5001"
     environment:
       - ASPNETCORE_ENVIRONMENT=Development
+      - ASPNETCORE_URLS=http://+:8080;http://+:5001
+      - ASPNETCORE_KESTREL__ENDPOINTS__HTTP1__URL=http://+:8080
+      - ASPNETCORE_KESTREL__ENDPOINTS__HTTP1__PROTOCOLS=Http1
+      - ASPNETCORE_KESTREL__ENDPOINTS__GRPC__URL=http://+:5001
+      - ASPNETCORE_KESTREL__ENDPOINTS__GRPC__PROTOCOLS=Http2
       - ConnectionStrings__DefaultConnection=Host=catalog-db;Port=5432;Database=CatalogDb;Username=postgres;Password=${POSTGRES_PASSWORD}
       - JwtSettings__SecretKey=${JWT_SECRET_KEY}
       - JwtSettings__Issuer=Shop.Api
@@ -85,6 +91,7 @@ services:
       - JwtSettings__Issuer=Shop.Api
       - JwtSettings__Audience=Shop.Client
       - RabbitMQ__Host=rabbitmq
+      - GrpcSettings__CatalogUrl=http://catalog-api:5001
     depends_on:
       redis:
         condition: service_started
