@@ -9,10 +9,12 @@ namespace Catalog.Application.Consumers;
 public class StockReserveRequestedConsumer : IConsumer<StockReserveRequested>
 {
     private readonly ICatalogDbContext _context;
+    private readonly ICatalogCacheService _cacheService;
 
-    public StockReserveRequestedConsumer(ICatalogDbContext context)
+    public StockReserveRequestedConsumer(ICatalogDbContext context, ICatalogCacheService cacheService)
     {
         _context = context;
+        _cacheService = cacheService;
     }
 
     public async Task Consume(ConsumeContext<StockReserveRequested> context)
@@ -75,5 +77,10 @@ public class StockReserveRequestedConsumer : IConsumer<StockReserveRequested>
 
         await _context.SaveChangesAsync(context.CancellationToken);
         await transaction.CommitAsync(context.CancellationToken);
+
+        var cacheTasks = products.Select(p => _cacheService.ClearProductByIdAsync(p.Id));
+        await Task.WhenAll(cacheTasks);
+
+        await _cacheService.ClearCatalogPagesAsync();
     }
 }

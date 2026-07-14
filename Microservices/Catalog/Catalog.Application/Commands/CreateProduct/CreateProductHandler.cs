@@ -8,10 +8,12 @@ namespace Catalog.Application.Commands.CreateProduct;
 public sealed class CreateProductHandler : IRequestHandler<CreateProductCommand, Result<CreateProductResponse>>
 {
     private readonly ICatalogDbContext _context;
+    private readonly ICatalogCacheService _cacheService;
 
-    public CreateProductHandler(ICatalogDbContext context)
+    public CreateProductHandler(ICatalogDbContext context, ICatalogCacheService cacheService)
     {
         _context = context;
+        _cacheService = cacheService;
     }
 
     public async Task<Result<CreateProductResponse>> Handle(CreateProductCommand request, CancellationToken cancellationToken)
@@ -24,6 +26,8 @@ public sealed class CreateProductHandler : IRequestHandler<CreateProductCommand,
 
         _context.Products.Add(product);
         await _context.SaveChangesAsync(cancellationToken);
+
+        await _cacheService.ClearCatalogPagesAsync();
 
         return Result<CreateProductResponse>.Success(new CreateProductResponse(product.Id, product.Name, product.Price, product.StockQuantity, product.ImageUrl));
     }

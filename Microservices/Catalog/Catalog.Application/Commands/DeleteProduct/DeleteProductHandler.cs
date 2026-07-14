@@ -11,12 +11,14 @@ public class DeleteProductHandler : IRequestHandler<DeleteProductCommand, Result
 {
     private readonly IImageStorageService _service;
     private readonly ICatalogDbContext _context;
+    private readonly ICatalogCacheService _cacheService;
     private readonly IPublishEndpoint _publishEndpoint;
 
-    public DeleteProductHandler(IImageStorageService service, ICatalogDbContext context, IPublishEndpoint publishEndpoint)
+    public DeleteProductHandler(IImageStorageService service, ICatalogDbContext context, ICatalogCacheService cacheService, IPublishEndpoint publishEndpoint)
     {
         _service = service;
         _context = context;
+        _cacheService = cacheService;
         _publishEndpoint = publishEndpoint;
     }
 
@@ -41,6 +43,9 @@ public class DeleteProductHandler : IRequestHandler<DeleteProductCommand, Result
 
         await _context.SaveChangesAsync(cancellationToken);
         await transaction.CommitAsync(cancellationToken);
+
+        await _cacheService.ClearProductByIdAsync(product.Id);
+        await _cacheService.ClearCatalogPagesAsync();
 
         return Result.Success();
     }

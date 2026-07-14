@@ -9,10 +9,12 @@ namespace Catalog.Application.Consumers;
 public class OrderCancelledConsumer : IConsumer<OrderCancelled>
 {
     private readonly ICatalogDbContext _context;
+    private readonly ICatalogCacheService _cacheService;
 
-    public OrderCancelledConsumer(ICatalogDbContext context)
+    public OrderCancelledConsumer(ICatalogDbContext context, ICatalogCacheService cacheService)
     {
         _context = context;
+        _cacheService = cacheService;
     }
 
     public async Task Consume(ConsumeContext<OrderCancelled> context)
@@ -37,5 +39,10 @@ public class OrderCancelledConsumer : IConsumer<OrderCancelled>
 
         await _context.SaveChangesAsync(context.CancellationToken);
         await transaction.CommitAsync(context.CancellationToken);
+
+        var cacheTasks = products.Select(p => _cacheService.ClearProductByIdAsync(p.Id));
+        await Task.WhenAll(cacheTasks);
+
+        await _cacheService.ClearCatalogPagesAsync();
     }
 }

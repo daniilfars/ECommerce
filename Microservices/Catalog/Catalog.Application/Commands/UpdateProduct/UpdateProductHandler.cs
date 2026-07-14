@@ -8,10 +8,12 @@ namespace Catalog.Application.Commands.UpdateProduct;
 public class UpdateProductHandler : IRequestHandler<UpdateProductCommand, Result<UpdateProductResponse>>
 {
     private readonly ICatalogDbContext _context;
+    private readonly ICatalogCacheService _cacheService;
 
-    public UpdateProductHandler(ICatalogDbContext context)
+    public UpdateProductHandler(ICatalogDbContext context, ICatalogCacheService cacheService)
     {
         _context = context;
+        _cacheService = cacheService;
     }
 
     public async Task<Result<UpdateProductResponse>> Handle(UpdateProductCommand request, CancellationToken cancellationToken)
@@ -42,6 +44,9 @@ public class UpdateProductHandler : IRequestHandler<UpdateProductCommand, Result
         }
 
         await _context.SaveChangesAsync(cancellationToken);
+
+        await _cacheService.ClearProductByIdAsync(request.Id);
+        await _cacheService.ClearCatalogPagesAsync();
 
         return Result<UpdateProductResponse>.Success(new UpdateProductResponse(product.Id, product.Name, product.Price, product.StockQuantity, product.ImageUrl));
     }

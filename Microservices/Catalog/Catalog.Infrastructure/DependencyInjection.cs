@@ -7,6 +7,7 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Minio;
+using StackExchange.Redis;
 
 namespace Catalog.Infrastructure;
 
@@ -14,11 +15,25 @@ public static class DependencyInjection
 {
     public static IServiceCollection AddCatalogInfrastructure(this IServiceCollection services, IConfiguration configuration)
     {
+        var redisConnectionString = configuration.GetConnectionString("Redis")!;
+
+        var multiplexer = ConnectionMultiplexer.Connect(redisConnectionString);
+        services.AddSingleton<IConnectionMultiplexer>(multiplexer);
+
+        services.AddSingleton<IDatabase>(sp => multiplexer.GetDatabase());
+
+        services.AddStackExchangeRedisCache(options =>
+        {
+            options.ConnectionMultiplexerFactory = () => Task.FromResult<IConnectionMultiplexer>(multiplexer);
+        });
+
         services.AddDbContext<CatalogDbContext>(options =>
             options.UseNpgsql(configuration.GetConnectionString("DefaultConnection")));
 
         services.AddScoped<ICatalogDbContext>(sp =>
             sp.GetRequiredService<CatalogDbContext>());
+
+        services.AddSingleton<ICatalogCacheService, CatalogCacheService>();
 
         var minioSettings = configuration.GetSection("Minio");
         var endpoint = minioSettings["Endpoint"]!;

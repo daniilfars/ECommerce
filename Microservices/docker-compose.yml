@@ -22,7 +22,10 @@ services:
       - Minio__SecretKey=${MINIO_ROOT_PASSWORD}
       - Minio__BucketName=shop-images
       - RabbitMQ__Host=rabbitmq
+      - ConnectionStrings__Redis=redis:6379
     depends_on:
+      redis:
+        condition: service_started
       catalog-db:
         condition: service_healthy
       minio:
