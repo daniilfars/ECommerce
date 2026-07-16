@@ -3,4 +3,7 @@ using Shared.Domain;
 
 namespace Catalog.Application.Queries.GetProducts;
 
-public sealed record GetProductsQuery(int Page = 1, int PageSize = 10) : IRequest<Result<GetProductsResponse>>;
+public sealed record GetProductsQuery(int Page = 1, int PageSize = 10, decimal? MinPrice = null, decimal? MaxPrice =  null) : IRequest<Result<GetProductsResponse>>
+{
+    internal bool HasFilter => MinPrice != null || MaxPrice != null;
+};

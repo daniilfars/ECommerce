@@ -17,10 +17,7 @@ public class StockReserveFailedConsumer : IConsumer<StockReserveFailed>
 
     public async Task Consume(ConsumeContext<StockReserveFailed> context)
     {
-        var message = context.Message;
-
-        var order = await _context.Orders.FirstOrDefaultAsync(o => o.Id == message.OrderId, context.CancellationToken);
-
+        var order = await _context.Orders.FirstOrDefaultAsync(o => o.Id == context.Message.OrderId, context.CancellationToken);
         if (order is null)
             return;
 

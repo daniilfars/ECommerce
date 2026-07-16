@@ -25,7 +25,9 @@ public class GetProductByIdHandler : IRequestHandler<GetProductByIdQuery, Result
         var cached = await _cache.StringGetAsync(key);
         if(cached.HasValue)
         {
-            var cachedResponse = JsonSerializer.Deserialize<GetProductByIdResponse>(cached.ToString());
+            ReadOnlyMemory<byte> memory = cached;
+
+            var cachedResponse = JsonSerializer.Deserialize<GetProductByIdResponse>(memory.Span);
             if (cachedResponse != null)
                 return Result<GetProductByIdResponse>.Success(cachedResponse);
         }
@@ -36,7 +38,7 @@ public class GetProductByIdHandler : IRequestHandler<GetProductByIdQuery, Result
 
         var response = new GetProductByIdResponse(product.Id, product.Name, product.Price, product.StockQuantity, product.ImageUrl);
 
-        await _cache.StringSetAsync(key, JsonSerializer.Serialize(response), TimeSpan.FromMinutes(60));
+        await _cache.StringSetAsync(key, JsonSerializer.SerializeToUtf8Bytes(response), TimeSpan.FromMinutes(60));
 
         return Result<GetProductByIdResponse>.Success(response);
     }

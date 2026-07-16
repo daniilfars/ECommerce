@@ -1,6 +1,7 @@
-﻿using MediatR;
+﻿using Catalog.Application.Interfaces;
+using MassTransit;
+using MediatR;
 using Microsoft.EntityFrameworkCore;
-using Catalog.Application.Interfaces;
 using Shared.Domain;
 using StackExchange.Redis;
 using System.Text.Json;
@@ -20,20 +21,26 @@ public class GetProductsHandler : IRequestHandler<GetProductsQuery, Result<GetPr
 
     public async Task<Result<GetProductsResponse>> Handle(GetProductsQuery request, CancellationToken cancellationToken)
     {
-        var key = $"catalog:page:{request.Page}:size:{request.PageSize}";
-
-        var cached = await _cache.StringGetAsync(key);
-        if(cached.HasValue)
+        if (!request.HasFilter)
         {
-            var cachedResponse = JsonSerializer.Deserialize<GetProductsResponse>(cached.ToString());
-            if(cachedResponse != null)
-                return Result<GetProductsResponse>.Success(cachedResponse);
+            var cached = await _cache.StringGetAsync($"catalog:page:{request.Page}:size:{request.PageSize}");
+            if (cached.HasValue)
+            {
+                ReadOnlyMemory<byte> memory = cached;
+
+                var cachedResponse = JsonSerializer.Deserialize<GetProductsResponse>(memory.Span);
+                if (cachedResponse != null)
+                    return Result<GetProductsResponse>.Success(cachedResponse);
+            }
         }
 
-        var totalCount = await _context.Products.CountAsync(cancellationToken);
+        var query = _context.Products.AsNoTracking();
 
-        var products = await _context.Products
-            .AsNoTracking()
+        if (request.MinPrice != null) query = query.Where(p => p.Price >= request.MinPrice);
+        if (request.MaxPrice != null) query = query.Where(p => p.Price <= request.MaxPrice);
+
+        var totalCount = await query.CountAsync(cancellationToken);
+        var products = await query
             .OrderBy(p => p.Id)
             .Skip((request.Page - 1) * request.PageSize)
             .Take(request.PageSize)
@@ -42,7 +49,8 @@ public class GetProductsHandler : IRequestHandler<GetProductsQuery, Result<GetPr
 
         var response = new GetProductsResponse(products, totalCount, request.Page, request.PageSize);
 
-        await _cache.StringSetAsync(key, JsonSerializer.Serialize(response), TimeSpan.FromMinutes(60));
+        if (!request.HasFilter)
+            await _cache.StringSetAsync($"catalog:page:{request.Page}:size:{request.PageSize}", JsonSerializer.SerializeToUtf8Bytes(response), TimeSpan.FromMinutes(60));
 
         return Result<GetProductsResponse>.Success(response);
     }
