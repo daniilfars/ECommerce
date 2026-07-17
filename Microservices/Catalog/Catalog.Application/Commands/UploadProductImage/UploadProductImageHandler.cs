@@ -1,6 +1,8 @@
 ﻿using MediatR;
 using Catalog.Application.Interfaces;
 using Shared.Domain;
+using MassTransit;
+using Shared.Contracts;
 
 namespace Catalog.Application.Commands.UploadProductImage;
 
@@ -9,19 +11,19 @@ public class UploadProductImageHandler : IRequestHandler<UploadProductImageComma
     private readonly IImageStorageService _service;
     private readonly ICatalogDbContext _context;
     private readonly ICatalogCacheService _cacheService;
+    private readonly IPublishEndpoint _publishEndpoint;
 
-    public UploadProductImageHandler(IImageStorageService service, ICatalogDbContext context, ICatalogCacheService cacheService)
+    public UploadProductImageHandler(IImageStorageService service, ICatalogDbContext context, ICatalogCacheService cacheService, IPublishEndpoint publishEndpoint)
     {
         _service = service;
         _context = context;
         _cacheService = cacheService;
+        _publishEndpoint = publishEndpoint;
     }
 
     public async Task<Result<UploadProductImageResponse>> Handle(UploadProductImageCommand request, CancellationToken cancellationToken)
     {
-        await using var fileStream = request.FileStream;
-
-        var product = await _context.Products.FindAsync(request.ProductId, cancellationToken);
+        var product = await _context.Products.FindAsync([request.ProductId], cancellationToken);
         if (product is null)
             return Result<UploadProductImageResponse>.Failure("Товар не найден");
 
@@ -36,21 +38,48 @@ public class UploadProductImageHandler : IRequestHandler<UploadProductImageComma
         if (extension is null)
             return Result<UploadProductImageResponse>.Failure("Неподдерживаемый формат изображения");
 
-        await using var transaction = await _context.Database.BeginTransactionAsync(cancellationToken);
-
         string? oldImageUrl = product.ImageUrl;
         var objectName = $"products/{request.ProductId}/{Guid.NewGuid()}{extension}";
 
-        var url = await _service.UploadAsync(objectName, fileStream, request.ContentType, cancellationToken);
-        product.SetImageUrl(url);
+        var url = await _service.UploadAsync(objectName, request.FileStream, request.ContentType, cancellationToken);
 
-        await _context.SaveChangesAsync(cancellationToken);
-        await transaction.CommitAsync(cancellationToken);
-
-        if (oldImageUrl != null)
+        try
         {
-            var deleteObjectName = _service.GetObjectNameFromUrl(oldImageUrl);
-            await _service.DeleteAsync(deleteObjectName, cancellationToken);
+            product.SetImageUrl(url);
+
+            await _publishEndpoint.Publish<ProductUpdated>(new
+            {
+                Id = product.Id,
+                Name = product.Name,
+                Price = product.Price,
+                ImageUrl = product.ImageUrl,
+                StockQuantity = product.StockQuantity
+            }, cancellationToken);
+
+            await _context.SaveChangesAsync(cancellationToken);
+        }
+        catch
+        {
+            try
+            {
+                await _service.DeleteAsync(objectName, cancellationToken);
+            }
+            catch
+            {
+            }
+            throw;
+        }
+
+        if (!string.IsNullOrEmpty(oldImageUrl))
+        {
+            try
+            {
+                var deleteObjectName = _service.GetObjectNameFromUrl(oldImageUrl);
+                await _service.DeleteAsync(deleteObjectName, cancellationToken);
+            }
+            catch
+            {
+            }
         }
 
         await _cacheService.ClearProductByIdAsync(request.ProductId);

@@ -1,13 +1,18 @@
-﻿using MediatR;
-using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Http;
-using Microsoft.AspNetCore.Mvc;
-using Catalog.Application.Commands.CreateProduct;
+﻿using Catalog.Application.Commands.CreateProduct;
 using Catalog.Application.Commands.DeleteProduct;
 using Catalog.Application.Commands.UpdateProduct;
 using Catalog.Application.Commands.UploadProductImage;
+using Catalog.Application.Models;
 using Catalog.Application.Queries.GetProductById;
 using Catalog.Application.Queries.GetProducts;
+using Catalog.Application.Queries.SearchProducts;
+using Catalog.Infrastructure.Data;
+using Elastic.Clients.Elasticsearch;
+using MediatR;
+using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 
 namespace Catalog.Api.Controllers;
 
@@ -109,4 +114,38 @@ public class CatalogController : ControllerBase
 
         return Ok(result.Value);
     }
+
+    [HttpGet("search")]
+    public async Task<ActionResult<SearchProductsResponse>> Search([FromQuery] SearchProductsQuery query)
+    {
+        var result = await _mediator.Send(query);
+
+        if (result.IsFailure)
+            return BadRequest(result.Error!);
+
+        return Ok(result.Value);
+    }
+
+    [HttpPost("sync-elastic")]
+    public async Task<IActionResult> SyncElastic([FromServices] ElasticsearchClient elasticClient, [FromServices] CatalogDbContext context)
+    {
+        var products = await context.Products.AsNoTracking().ToListAsync();
+
+        foreach (var product in products)
+        {
+            var document = new ProductSearchDocument
+            {
+                Id = product.Id,
+                Name = product.Name,
+                Price = product.Price,
+                StockQuantity = product.StockQuantity,
+                ImageUrl = product.ImageUrl
+            };
+
+            await elasticClient.IndexAsync(document, idx => idx.Index("products").Id(document.Id));
+        }
+
+        return Ok($"Успешно синхронизировано {products.Count} товаров с Elasticsearch");
+    }
+
 }

@@ -23,6 +23,7 @@ services:
       - Minio__BucketName=shop-images
       - RabbitMQ__Host=rabbitmq
       - ConnectionStrings__Redis=redis:6379
+      - ConnectionStrings__Elasticsearch=http://elasticsearch:9200
     depends_on:
       redis:
         condition: service_started
@@ -31,6 +32,8 @@ services:
       minio:
         condition: service_started
       rabbitmq:
+        condition: service_healthy
+      elasticsearch:
         condition: service_healthy
 
   catalog-db:
@@ -189,6 +192,23 @@ services:
       timeout: 5s
       retries: 5
 
+  elasticsearch:
+    image: docker.elastic.co/elasticsearch/elasticsearch:9.0.0
+    container_name: elasticsearch
+    environment:
+      - discovery.type=single-node
+      - xpack.security.enabled=false
+      - "ES_JAVA_OPTS=-Xms512m -Xmx512m"
+    ports:
+      - "9200:9200"
+    volumes:
+      - elasticsearch_data:/usr/share/elasticsearch/data
+    healthcheck:
+      test: ["CMD-SHELL", "curl -s http://localhost:9200/_cluster/health | grep -q '\"status\":\"green\"\\|\"status\":\"yellow\"'"]
+      interval: 5s
+      timeout: 5s
+      retries: 10
+
 volumes:
   catalog_db_data:
   identity_db_data:
@@ -196,3 +216,4 @@ volumes:
   new_shop_redis_data:
   minio_data:
   rabbitmq_data:
+  elasticsearch_data:

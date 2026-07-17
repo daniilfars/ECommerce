@@ -2,6 +2,8 @@
 using Microsoft.EntityFrameworkCore;
 using Catalog.Application.Interfaces;
 using Shared.Domain;
+using MassTransit;
+using Shared.Contracts;
 
 namespace Catalog.Application.Commands.UpdateProduct;
 
@@ -9,11 +11,13 @@ public class UpdateProductHandler : IRequestHandler<UpdateProductCommand, Result
 {
     private readonly ICatalogDbContext _context;
     private readonly ICatalogCacheService _cacheService;
+    private readonly IPublishEndpoint _publishEndpoint;
 
-    public UpdateProductHandler(ICatalogDbContext context, ICatalogCacheService cacheService)
+    public UpdateProductHandler(ICatalogDbContext context, ICatalogCacheService cacheService, IPublishEndpoint publishEndpoint)
     {
         _context = context;
         _cacheService = cacheService;
+        _publishEndpoint = publishEndpoint;
     }
 
     public async Task<Result<UpdateProductResponse>> Handle(UpdateProductCommand request, CancellationToken cancellationToken)
@@ -42,6 +46,15 @@ public class UpdateProductHandler : IRequestHandler<UpdateProductCommand, Result
             if (updateResult.IsFailure)
                 return Result<UpdateProductResponse>.Failure(updateResult.Error!);
         }
+
+        await _publishEndpoint.Publish<ProductUpdated>(new
+        {
+            Id = product.Id,
+            Name = product.Name,
+            Price = product.Price,
+            ImageUrl = product.ImageUrl,
+            StockQuantity = product.StockQuantity
+        }, cancellationToken);
 
         await _context.SaveChangesAsync(cancellationToken);
 

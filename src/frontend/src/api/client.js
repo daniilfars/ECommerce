@@ -91,10 +91,12 @@ export const authAPI = {
 };
 
 export const catalogAPI = {
-    getAll: (page = 1, pageSize = 10) =>
-        request(`/Catalog?page=${page}&pageSize=${pageSize}`, {
-           method: 'GET', 
-        }),
+    getAll: (page = 1, pageSize = 10, minPrice = null, maxPrice = null) => {
+        let params = `page=${page}&pageSize=${pageSize}`;
+        if (minPrice !== null && minPrice !== '') params += `&minPrice=${minPrice}`;
+        if (maxPrice !== null && maxPrice !== '') params += `&maxPrice=${maxPrice}`;
+        return request(`/Catalog?${params}`, { method: 'GET' });
+    },
     
     getById: (id) =>
         request(`/Catalog/${id}`, {
@@ -126,7 +128,14 @@ export const catalogAPI = {
             method: 'POST',
             body: formData,
         });
-    },  
+    },
+    
+    search: (searchTerm, minPrice = null, maxPrice = null) => {
+        let params = `searchTerm=${searchTerm}`;
+        if (minPrice !== null && minPrice !== '') params += `&minPrice=${minPrice}`;
+        if (maxPrice !== null && maxPrice !== '') params += `&maxPrice=${maxPrice}`;
+        return request(`/Catalog/search?${params}`, { method: 'GET' });
+    },
 }
 
 export const basketAPI = {

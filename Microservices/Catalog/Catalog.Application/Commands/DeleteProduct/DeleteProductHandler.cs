@@ -24,8 +24,6 @@ public class DeleteProductHandler : IRequestHandler<DeleteProductCommand, Result
 
     public async Task<Result> Handle(DeleteProductCommand request, CancellationToken cancellationToken)
     {
-        await using var transaction = await _context.Database.BeginTransactionAsync(cancellationToken);
-
         var product = await _context.Products.FirstOrDefaultAsync(p => p.Id == request.Id, cancellationToken);
 
         if (product is null)
@@ -42,7 +40,6 @@ public class DeleteProductHandler : IRequestHandler<DeleteProductCommand, Result
         await _publishEndpoint.Publish<ProductDeleted>(new { ProductId = product.Id }, cancellationToken);
 
         await _context.SaveChangesAsync(cancellationToken);
-        await transaction.CommitAsync(cancellationToken);
 
         await _cacheService.ClearProductByIdAsync(product.Id);
         await _cacheService.ClearCatalogPagesAsync();
