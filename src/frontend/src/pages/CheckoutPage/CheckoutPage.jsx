@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { useNavigate } from "react-router-dom";
+import { NavLink } from "react-router-dom";
 import { basketAPI } from "../../api/client";
 import "./CheckoutPage.css";
 
@@ -9,7 +9,7 @@ export default function CheckoutPage() {
   const [loading, setLoading] = useState(true);
   const [submitting, setSubmitting] = useState(false);
   const [error, setError] = useState("");
-  const navigate = useNavigate();
+  const [success, setSuccess] = useState(false);
 
   const loadBasket = async () => {
     try {
@@ -36,7 +36,7 @@ export default function CheckoutPage() {
     setSubmitting(true);
     try {
       await basketAPI.checkout(address);
-      navigate("/orders");
+      setSuccess(true);
     } catch (err) {
       setError(err.message || "Ошибка оформления заказа");
     } finally {
@@ -45,6 +45,17 @@ export default function CheckoutPage() {
   };
 
   if (loading) return <div className="checkout-loading">Загрузка...</div>;
+  
+  if (success) {
+    return (
+      <div className="container checkout-success">
+        <h2>Заказ оформлен!</h2>
+        <p>Заказ появится в списке через несколько секунд.</p>
+        <NavLink to="/orders" className="checkout-success-link">Перейти к заказам</NavLink>
+      </div>
+    );
+  }
+
   if (!basket || !basket.items?.length) {
     return (
       <div className="container checkout-empty">

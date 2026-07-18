@@ -27,8 +27,6 @@ public class OrderCancelledConsumer : IConsumer<OrderCancelled>
 
         var ids = groupedItems.Select(g => g.ProductId).ToList();
 
-        await using var transaction = await _context.Database.BeginTransactionAsync(context.CancellationToken);
-
         var products = await _context.Products.Where(p => ids.Contains(p.Id)).ForUpdate().ToListAsync(context.CancellationToken);
 
         foreach(var product in products)
@@ -38,7 +36,6 @@ public class OrderCancelledConsumer : IConsumer<OrderCancelled>
         }
 
         await _context.SaveChangesAsync(context.CancellationToken);
-        await transaction.CommitAsync(context.CancellationToken);
 
         var cacheTasks = products.Select(p => _cacheService.ClearProductByIdAsync(p.Id));
         await Task.WhenAll(cacheTasks);

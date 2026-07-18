@@ -32,7 +32,7 @@ public class SearchProductsHandler : IRequestHandler<SearchProductsQuery, Result
             ), cancellationToken);
 
         if (!response.IsValidResponse)
-            return Result<SearchProductsResponse>.Failure($"Elastic Error: {response.DebugInformation}");
+            return Result<SearchProductsResponse>.Failure("Поиск временно не работает");
 
         var products = response.Documents.ToList();
         var totalCount = response.Total;

@@ -157,6 +157,35 @@
   color: #71717a;
 }
 
+.checkout-success {
+    text-align: center;
+    padding: 80px 20px;
+    font-family: 'Outfit', sans-serif;
+}
+
+.checkout-success h2 {
+    font-size: 28px;
+    font-weight: 700;
+    color: #10b981;
+    margin-bottom: 12px;
+}
+
+.checkout-success p {
+    font-size: 16px;
+    color: #71717a;
+    margin-bottom: 24px;
+}
+
+.checkout-success-link {
+    display: inline-block;
+    padding: 14px 32px;
+    background: linear-gradient(0deg, #6c63ff 0%, #c084fc 100%);
+    color: #fff;
+    border-radius: 26px;
+    text-decoration: none;
+    font-weight: 600;
+}
+
 @media screen and (max-width: 768px) {
   .checkout-layout {
     grid-template-columns: 1fr;

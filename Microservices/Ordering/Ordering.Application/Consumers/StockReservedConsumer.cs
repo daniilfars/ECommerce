@@ -17,8 +17,11 @@ public class StockReservedConsumer : IConsumer<StockReserved>
     public async Task Consume(ConsumeContext<StockReserved> context)
     {
         var order = await _context.Orders.FirstOrDefaultAsync(o => o.Id == context.Message.OrderId, context.CancellationToken);
-        if (order is null)
-            return;
+        if (order is null) //Тут при гонки данных может быть такое, MassTransit сделает ретраи
+        {
+            Console.WriteLine("Гонка данных!!!");
+            throw new InvalidOperationException($"Заказ {context.Message.OrderId} еще не добавлен в БД");
+        }
 
         order.Confirm();
 
