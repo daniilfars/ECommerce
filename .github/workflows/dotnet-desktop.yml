@@ -34,4 +34,8 @@ jobs:
         dotnet build Microservices/Ordering/Ordering.slnx --no-restore -c Release
 
     - name: Run tests
-      run: dotnet test --no-build -c Release --verbosity normal
+      run: |
+        dotnet test Microservices/Catalog/Catalog.Domain.Tests/Catalog.Domain.Tests.csproj --no-build -c Release --verbosity normal
+        dotnet test Microservices/Identity/Identity.Domain.Tests/Identity.Domain.Tests.csproj --no-build -c Release --verbosity normal
+        dotnet test Microservices/Basket/Basket.Domain.Tests/Basket.Domain.Tests.csproj --no-build -c Release --verbosity normal
+        dotnet test Microservices/Ordering/Ordering.Domain.Tests/Ordering.Domain.Tests.csproj --no-build -c Release --verbosity normal

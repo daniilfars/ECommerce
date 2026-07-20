@@ -39,4 +39,7 @@
       <Deploy />
     </Project>
   </Folder>
+  <Folder Name="/Элементы решения/">
+    <File Path=".github/workflows/dotnet-desktop.yml" />
+  </Folder>
 </Solution>
