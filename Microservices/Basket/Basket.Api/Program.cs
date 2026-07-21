@@ -1,8 +1,9 @@
+using Basket.Application;
+using Basket.Infrastructure;
+using Microsoft.IdentityModel.Tokens;
+using Prometheus;
 using System.Security.Claims;
 using System.Text;
-using Basket.Infrastructure;
-using Basket.Application;
-using Microsoft.IdentityModel.Tokens;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -37,6 +38,8 @@ builder.Services.AddAuthentication().AddJwtBearer(options =>
 
 builder.Services.AddAuthorization();
 
+builder.Services.AddMetricServer(options => { options.Port = 1234; });
+
 builder.Services.AddCors(options =>
 {
     options.AddPolicy("AllowFrontend", policy =>
@@ -59,6 +62,8 @@ if (app.Environment.IsDevelopment())
 app.UseCors("AllowFrontend");
 app.UseAuthentication();
 app.UseAuthorization();
+app.UseHttpMetrics();
 app.MapControllers();
+app.MapMetrics();
 
 app.Run();

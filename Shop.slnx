@@ -2,6 +2,7 @@
   <Folder Name="/Microservices/">
     <File Path="Microservices/.env" />
     <File Path="Microservices/docker-compose.yml" />
+    <File Path="prometheus.yml" />
     <Project Path="Microservices/Gateway/Gateway.csproj" />
     <Project Path="Microservices/Shared/Shared.csproj" />
   </Folder>

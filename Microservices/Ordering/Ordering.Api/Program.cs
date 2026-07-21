@@ -1,10 +1,11 @@
-using System.Security.Claims;
-using System.Text;
-using Ordering.Infrastructure;
-using Ordering.Application;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
+using Ordering.Application;
+using Ordering.Infrastructure;
 using Ordering.Infrastructure.Data;
+using Prometheus;
+using System.Security.Claims;
+using System.Text;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -36,6 +37,8 @@ builder.Services.AddAuthentication().AddJwtBearer(options =>
 
 builder.Services.AddAuthorization();
 
+builder.Services.AddMetricServer(options => { options.Port = 1234; });
+
 builder.Services.AddCors(options =>
 {
     options.AddPolicy("AllowFrontend", policy =>
@@ -60,7 +63,9 @@ if (app.Environment.IsDevelopment())
 app.UseCors("AllowFrontend");
 app.UseAuthentication();
 app.UseAuthorization();
+app.UseHttpMetrics();
 app.MapControllers();
+app.MapMetrics();
 
 using (var scope = app.Services.CreateScope())
 {
