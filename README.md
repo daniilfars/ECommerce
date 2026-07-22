@@ -211,3 +211,5 @@ npm run dev
 | `MINIO_ROOT_PASSWORD` | Пароль MinIO |
 | `YOOKASSA_SHOP_ID` | ID магазина ЮKassa |
 | `YOOKASSA_SECRET_KEY` | Секретный ключ ЮKassa |
+
+admin/admin - логин/пароль в Grafana
