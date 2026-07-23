@@ -1,15 +1,32 @@
-# ECommerce - Интернет-магазин на ASP.NET Core (микросервисы)
+# ECommerce - Интернет-магазин на ASP.NET Core
 
-Микросервисная архитектура на ASP.NET Core с React-фронтендом. 4 независимых сервиса, API Gateway, своя БД у каждого, корзина на Redis, изображения в MinIO, оплата через ЮKassa.
+<details>
+  <summary><strong>Нажмите</strong>, чтобы посмотреть скриншоты проекта</summary>
+  <br>
+  <img src="https://github.com/user-attachments/assets/35ab9f00-a7e8-4032-acd5-341dadeccc67" alt="Регистрация" style="margin: 20px;" />
+  <img src="https://github.com/user-attachments/assets/2a45959e-aac9-457f-af8a-745728f6cef5" alt="Главная страница" style="margin: 20px;" />
+  <img src="https://github.com/user-attachments/assets/8ed8fe9d-2ea9-414d-a265-211f47721fed" alt="Каталог" style="margin: 20px;" />
+  <img src="https://github.com/user-attachments/assets/a8126fb8-71bc-4b74-bc04-8ec1c5ccc055" alt="Страница товара" style="margin: 20px;" />
+  <img src="https://github.com/user-attachments/assets/961a5f67-005b-456b-9c51-2528f0bfd051" alt="Корзина" style="margin: 20px;" />
+  <img src="https://github.com/user-attachments/assets/a876613f-7f4e-46fd-abfc-26a3d48b5462" alt="Оформление заказа" style="margin: 20px;" />
+  <img src="https://github.com/user-attachments/assets/2653a91e-c0c6-4efa-8e1c-f54fbe205ceb" alt="Оплата" style="margin: 20px;" />
+  <img src="https://github.com/user-attachments/assets/179dc794-0407-460a-8d5a-456a44a29560" alt="Страница заказов" style="margin: 20px;" />
+  <img src="https://github.com/user-attachments/assets/c7cdcd42-8eee-42d2-8b26-7deb3b617fb3" alt="Админ-панель" style="margin: 20px;" />
+  <img src="https://github.com/user-attachments/assets/55abdfc3-70f1-4ee4-b39b-646fe35ae72f" alt="Мониторинг" style="margin: 20px;" />
+</details>
+
+<hr>
+
+Микросервисная архитектура на ASP.NET Core с фронтендом на React. 4 независимых сервиса, API Gateway, своя БД у каждого, корзина на Redis, изображения в MinIO, оплата через ЮKassa, взаимодействие между микросервисами через MassTransit и gRPC.
 
 ## Стек
 
-**Backend:** C# 14, ASP.NET Core 10, Entity Framework Core, MediatR, JWT, YARP  
-**Database:** PostgreSQL (отдельная БД на сервис), Redis  
-**Storage:** MinIO (S3-совместимое)  
+**Backend:** C# 14, ASP.NET Core 10, Entity Framework Core, MediatR, JWT, YARP, MassTransit, ElasticSearch
+**Database:** PostgreSQL, Redis  
+**Storage:** MinIO
 **Payments:** ЮKassa  
 **Frontend:** React  
-**DevOps:** Docker Compose, Serilog  
+**DevOps:** Docker Compose, Serilog, Grafana + Prometheus  
 
 ## Архитектура
 
@@ -27,8 +44,6 @@ Microservices/
 src/
 └── frontend/                   # React SPA
 ```
-
-Взаимодействие между сервисами через MassTransit и gRPC
 
 ## Быстрый старт
 
@@ -77,7 +92,6 @@ npm run dev
 5. Открыть в браузере:
 
 - Frontend: `http://localhost:5173` (Vite выведет актуальный порт в консоли при запуске)
-- API Gateway: `http://localhost:5000`
 - Swagger Catalog: `http://localhost:8081/swagger`
 - Swagger Identity: `http://localhost:8082/swagger`
 - Swagger Basket: `http://localhost:8083/swagger`
@@ -116,70 +130,35 @@ npm run dev
 - Обнаружение повторного использования refresh-токена (защита от replay-атак)
 - Роли: `User`, `Admin`
 
-Эндпоинты:
-
-- `POST /api/Identity/register` — регистрация
-- `POST /api/Identity/login` — вход
-- `POST /api/Identity/refresh` — обновление токена
-- `POST /api/Identity/logout` — выход
-
 ### Catalog
 
 Управление товарами интернет-магазина.
 
-- CRUD с пагинацией
+- CRUD с пагинацией и фильтрами
 - Загрузка изображений в MinIO
 - Публичный просмотр для всех
 - Создание, редактирование, удаление только для `Admin`
 - При загрузке нового изображения старое удаляется из MinIO
-
-Эндпоинты:
-
-- `GET /api/Catalog?page=1&pageSize=12` — список товаров
-- `GET /api/Catalog/{id}` — товар по ID
-- `POST /api/Catalog` — создать товар (Admin)
-- `PUT /api/Catalog/{id}` — обновить товар (Admin)
-- `DELETE /api/Catalog/{id}` — удалить товар (Admin)
-- `POST /api/Catalog/{id}/upload-image` — загрузить изображение (Admin)
+- Полнотекстовый поиск через ElasticSearch
 
 ### Basket
 
 Корзина на Redis с TTL 7 дней.
 
-- Добавление товара (цена и название подтягиваются из Catalog через HTTP)
+- Добавление товара (цена и название подтягиваются через gRPC)
 - Изменение количества
 - Удаление товара
 - Очистка после оформления заказа
-
-Эндпоинты:
-
-- `GET /api/Basket` — получить корзину
-- `POST /api/Basket` — добавить товар
-- `PATCH /api/Basket/{productId}` — изменить количество
-- `DELETE /api/Basket/{productId}` — удалить товар
-- `POST /api/Basket/checkout` — оформить заказ
 
 ### Ordering
 
 Управление заказами с отслеживанием статусов и оплатой через ЮKassa.
 
-- Создание заказа из корзины (Checkout, через HTTP от Basket)
+- Создание заказа из корзины (через MassTransit)
 - Жизненный цикл: `Pending` -> `Confirmed` -> `Paid` -> `Shipped` -> `Delivered`
-- Оплата через ЮKassa: создание платежа, автоматическое подтверждение
-- Отмена заказа пользователем (до отправки)
+- Оплата через ЮKassa
+- Отмена заказа пользователем
 - Управление статусами администратором
-- Цена и название товара копируются в заказ на момент оформления
-
-Эндпоинты:
-
-- `GET /api/Ordering?page=1&pageSize=10` — заказы пользователя
-- `GET /api/Ordering/all?page=1&pageSize=50` — все заказы (Admin)
-- `GET /api/Ordering/{id}` — заказ по ID
-- `POST /api/Ordering/{id}/pay` — создать платёж в ЮKassa
-- `POST /api/Ordering/{id}/confirm-payment` — подтвердить оплату
-- `POST /api/Ordering/{id}/cancel` — отменить
-- `POST /api/Ordering/{id}/ship` — отправить (Admin)
-- `POST /api/Ordering/{id}/deliver` — доставить (Admin)
 
 ### Admin Panel
 
@@ -213,18 +192,3 @@ npm run dev
 | `YOOKASSA_SECRET_KEY` | Секретный ключ ЮKassa |
 
 admin/admin - логин/пароль в Grafana
-
-<details>
-  <summary>Нажмите, чтобы посмотреть скриншоты проекта</summary>
-  <br>
-  <img src="https://github.com/user-attachments/assets/35ab9f00-a7e8-4032-acd5-341dadeccc67" alt="Регистрация" style="margin: 20px;" />
-  <img src="https://github.com/user-attachments/assets/2a45959e-aac9-457f-af8a-745728f6cef5" alt="Главная страница" style="margin: 20px;" />
-  <img src="https://github.com/user-attachments/assets/8ed8fe9d-2ea9-414d-a265-211f47721fed" alt="Каталог" style="margin: 20px;" />
-  <img src="https://github.com/user-attachments/assets/a8126fb8-71bc-4b74-bc04-8ec1c5ccc055" alt="Страница товара" style="margin: 20px;" />
-  <img src="https://github.com/user-attachments/assets/961a5f67-005b-456b-9c51-2528f0bfd051" alt="Корзина" style="margin: 20px;" />
-  <img src="https://github.com/user-attachments/assets/a876613f-7f4e-46fd-abfc-26a3d48b5462" alt="Оформление заказа" style="margin: 20px;" />
-  <img src="https://github.com/user-attachments/assets/2653a91e-c0c6-4efa-8e1c-f54fbe205ceb" alt="Оплата" style="margin: 20px;" />
-  <img src="https://github.com/user-attachments/assets/179dc794-0407-460a-8d5a-456a44a29560" alt="Страница заказов" style="margin: 20px;" />
-  <img src="https://github.com/user-attachments/assets/c7cdcd42-8eee-42d2-8b26-7deb3b617fb3" alt="Админ-панель" style="margin: 20px;" />
-  <img src="https://github.com/user-attachments/assets/55abdfc3-70f1-4ee4-b39b-646fe35ae72f" alt="Мониторинг" style="margin: 20px;" />
-</details>
