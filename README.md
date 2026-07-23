@@ -216,14 +216,15 @@ admin/admin - логин/пароль в Grafana
 
 <details>
   <summary>Нажмите, чтобы посмотреть скриншоты проекта</summary>
-  
-  <img src="https://github.com/user-attachments/assets/c7cdcd42-8eee-42d2-8b26-7deb3b617fb3" alt="Image 1" />
-  <img src="https://github.com/user-attachments/assets/2a45959e-aac9-457f-af8a-745728f6cef5" alt="Image 2" />
-  <img src="https://github.com/user-attachments/assets/35ab9f00-a7e8-4032-acd5-341dadeccc67" alt="Image 3" />
-  <img src="https://github.com/user-attachments/assets/55abdfc3-70f1-4ee4-b39b-646fe35ae72f" alt="Image 4" />
-  <img src="https://github.com/user-attachments/assets/a8126fb8-71bc-4b74-bc04-8ec1c5ccc055" alt="Image 5" />
-  <img src="https://github.com/user-attachments/assets/a876613f-7f4e-46fd-abfc-26a3d48b5462" alt="Image 6" />
-  <img src="https://github.com/user-attachments/assets/179dc794-0407-460a-8d5a-456a44a29560" alt="Image 7" />
-  <img src="https://github.com/user-attachments/assets/2653a91e-c0c6-4efa-8e1c-f54fbe205ceb" alt="Image 8" />
-  <img src="https://github.com/user-attachments/assets/8ed8fe9d-2ea9-414d-a265-211f47721fed" alt="Image 9" />
+  <br>
+  <img src="https://github.com/user-attachments/assets/35ab9f00-a7e8-4032-acd5-341dadeccc67" alt="Регистрация" style="margin: 10px;" />
+  <img src="https://github.com/user-attachments/assets/2a45959e-aac9-457f-af8a-745728f6cef5" alt="Главная страница" style="margin: 10px;" />
+  <img src="https://github.com/user-attachments/assets/8ed8fe9d-2ea9-414d-a265-211f47721fed" alt="Каталог" style="margin: 10px;" />
+  <img src="https://github.com/user-attachments/assets/a8126fb8-71bc-4b74-bc04-8ec1c5ccc055" alt="Страница товара" style="margin: 10px;" />
+  <img src="https://github.com/user-attachments/assets/961a5f67-005b-456b-9c51-2528f0bfd051" alt="Корзина" style="margin: 10px;" />
+  <img src="https://github.com/user-attachments/assets/a876613f-7f4e-46fd-abfc-26a3d48b5462" alt="Оформление заказа" style="margin: 10px;" />
+  <img src="https://github.com/user-attachments/assets/2653a91e-c0c6-4efa-8e1c-f54fbe205ceb" alt="Оплата" style="margin: 10px;" />
+  <img src="https://github.com/user-attachments/assets/179dc794-0407-460a-8d5a-456a44a29560" alt="Страница заказов" style="margin: 10px;" />
+  <img src="https://github.com/user-attachments/assets/c7cdcd42-8eee-42d2-8b26-7deb3b617fb3" alt="Админ-панель" style="margin: 10px;" />
+  <img src="https://github.com/user-attachments/assets/55abdfc3-70f1-4ee4-b39b-646fe35ae72f" alt="Мониторинг" style="margin: 10px;" />
 </details>
