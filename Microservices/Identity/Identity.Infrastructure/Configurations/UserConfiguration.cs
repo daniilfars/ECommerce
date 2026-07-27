@@ -13,6 +13,5 @@ public class UserConfiguration : IEntityTypeConfiguration<User>
         builder.Property(u => u.CreatedAt).IsRequired();
         builder.Property(u => u.RefreshToken).HasMaxLength(512);
         builder.Property(u => u.PreviousRefreshToken).HasMaxLength(512);
-        builder.Ignore(u => u.DomainEvents);
     }
 }

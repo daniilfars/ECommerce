@@ -14,7 +14,5 @@ public class ProductConfiguration : IEntityTypeConfiguration<Product>
         builder.Property(p => p.Price).HasPrecision(18, 2).IsRequired();
         builder.Property(p => p.StockQuantity).IsRequired();
         builder.Property(p => p.ImageUrl).HasMaxLength(500);
-
-        builder.Ignore(p => p.DomainEvents);
     }
 }

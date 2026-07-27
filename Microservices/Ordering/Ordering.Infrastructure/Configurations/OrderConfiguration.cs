@@ -15,11 +15,6 @@ public class OrderConfiguration : IEntityTypeConfiguration<Order>
         builder.Property(o => o.ShippingAddress).IsRequired().HasMaxLength(500);
         builder.Property(o => o.TotalAmount).HasPrecision(18, 2).IsRequired();
 
-        builder.HasMany(o => o.Items)
-            .WithOne()
-            .HasForeignKey("OrderId")
-            .OnDelete(DeleteBehavior.Cascade);
-
-        builder.Ignore(o => o.DomainEvents);
+        builder.HasMany(o => o.Items).WithOne().HasForeignKey("OrderId").OnDelete(DeleteBehavior.Cascade);
     }
 }

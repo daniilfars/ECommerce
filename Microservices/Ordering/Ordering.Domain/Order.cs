@@ -1,5 +1,4 @@
 ﻿using Shared.Domain;
-using Ordering.Domain.Events;
 
 namespace Ordering.Domain;
 
@@ -30,7 +29,6 @@ public class Order : AggregateRoot<Guid>
             return Result<Order>.Failure("Адрес не может быть пустым");
 
         var order = new Order(Guid.NewGuid(), userId, shippingAddress);
-        order.RaiseDomainEvent(new OrderCreatedDomainEvent(order.Id, userId));
 
         return Result<Order>.Success(order);
     }
@@ -42,7 +40,6 @@ public class Order : AggregateRoot<Guid>
             return Result<Order>.Failure("Адрес не может быть пустым");
 
         var order = new Order(orderId, userId, shippingAddress);
-        order.RaiseDomainEvent(new OrderCreatedDomainEvent(order.Id, userId));
 
         return Result<Order>.Success(order);
     }

@@ -1,5 +1,4 @@
-﻿using Catalog.Domain.Events;
-using Shared.Domain;
+﻿using Shared.Domain;
 
 namespace Catalog.Domain;
 
@@ -32,7 +31,6 @@ public class Product : AggregateRoot<int>
             return Result<Product>.Failure(priceResult.Error!);
 
         var product = new Product(name, price, stockQuantity);
-        product.RaiseDomainEvent(new ProductCreatedDomainEvent(product.Id, name));
 
         return Result<Product>.Success(product);
     }
@@ -96,7 +94,7 @@ public class Product : AggregateRoot<int>
 
         if (Math.Round(price, 2) != price)
             return Result.Failure("Цена не может содержать более двух знаков после запятой");
-        
+
         return Result.Success();
     }
 }

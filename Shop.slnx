@@ -2,7 +2,7 @@
   <Folder Name="/Microservices/">
     <File Path="Microservices/.env" />
     <File Path="Microservices/docker-compose.yml" />
-    <File Path="prometheus.yml" />
+    <File Path="Microservices/prometheus.yml" />
     <Project Path="Microservices/Gateway/Gateway.csproj" />
     <Project Path="Microservices/Shared/Shared.csproj" />
   </Folder>
@@ -33,6 +33,12 @@
     <Project Path="Microservices/Ordering/Ordering.Domain.Tests/Ordering.Domain.Tests.csproj" Id="65d7a71b-16c6-4bcb-8fce-ebeb02b67ed2" />
     <Project Path="Microservices/Ordering/Ordering.Domain/Ordering.Domain.csproj" Id="87d560ff-bb08-4a4d-9834-05d7ad26a8c9" />
     <Project Path="Microservices/Ordering/Ordering.Infrastructure/Ordering.Infrastructure.csproj" Id="ad796315-f439-4b35-a178-b8b97f4df928" />
+  </Folder>
+  <Folder Name="/Microservices/Reviews/">
+    <Project Path="Microservices/Reviews/Reviews.Api/Reviews.Api.csproj" Id="224d1343-18f9-49d3-9f27-f4cc1604151b" />
+    <Project Path="Microservices/Reviews/Reviews.Application/Reviews.Application.csproj" Id="1a23ab85-8892-4693-afcb-87263bdc9772" />
+    <Project Path="Microservices/Reviews/Reviews.Domain/Reviews.Domain.csproj" Id="2137891e-1a33-4256-9a17-8e39eaca86b4" />
+    <Project Path="Microservices/Reviews/Reviews.Infrastructure/Reviews.Infrastructure.csproj" Id="490e011a-eab5-4e41-ba26-e489b5f2605f" />
   </Folder>
   <Folder Name="/src/">
     <Project Path="src/frontend/frontend.esproj">

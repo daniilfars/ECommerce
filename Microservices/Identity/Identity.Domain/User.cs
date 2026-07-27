@@ -1,5 +1,4 @@
 ﻿using Microsoft.AspNetCore.Identity;
-using Identity.Domain.Events;
 using Shared.Domain;
 
 namespace Identity.Domain;
@@ -13,10 +12,6 @@ public class User : IdentityUser<Guid>
     public DateTime? RefreshTokenExpiresAt { get; private set; }
     public string? PreviousRefreshToken { get; private set; }
     public DateTime? PreviousRefreshTokenExpiresAt { get; private set; }
-
-
-    private readonly List<IDomainEvent> _domainEvents = [];
-    public IReadOnlyCollection<IDomainEvent> DomainEvents => _domainEvents.AsReadOnly();
 
     private User() { } // Для EF Core
 
@@ -45,7 +40,6 @@ public class User : IdentityUser<Guid>
             return Result<User>.Failure("Некорректный формат Email");
 
         var user = new User(firstName, lastName, email);
-        user.RaiseDomainEvent(new UserCreatedDomainEvent(user.Id, user.Email!));
 
         return Result<User>.Success(user);
     }
@@ -86,15 +80,5 @@ public class User : IdentityUser<Guid>
         {
             return false;
         }
-    }
-
-    private void RaiseDomainEvent(IDomainEvent domainEvent)
-    {
-        _domainEvents.Add(domainEvent);
-    }
-
-    public void ClearDomainEvents()
-    {
-        _domainEvents.Clear();
     }
 }
