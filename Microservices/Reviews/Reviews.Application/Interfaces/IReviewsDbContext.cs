@@ -6,7 +6,7 @@ namespace Reviews.Application.Interfaces;
 
 public interface IReviewsDbContext
 {
-    DbSet<Review> Products { get; }
+    DbSet<Review> Reviews { get; }
     DatabaseFacade Database { get; }
 
     Task<int> SaveChangesAsync(CancellationToken cancellationToken = default);

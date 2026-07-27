@@ -8,7 +8,7 @@ namespace Reviews.Infrastructure.Data;
 
 public class ReviewsDbContext : DbContext, IReviewsDbContext
 {
-    public DbSet<Review> Products { get; set; }
+    public DbSet<Review> Reviews { get; set; }
 
     public ReviewsDbContext() { }
     public ReviewsDbContext(DbContextOptions<ReviewsDbContext> options) : base(options) { }

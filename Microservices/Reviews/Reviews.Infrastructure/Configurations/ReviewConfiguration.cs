@@ -11,6 +11,6 @@ public class ReviewConfiguration : IEntityTypeConfiguration<Review>
         builder.HasKey(r => r.Id);
 
         builder.Property(r => r.Text).IsRequired().HasMaxLength(2000);
-        builder.Property(r => r.Stars);
+        builder.ToTable(t => t.HasCheckConstraint("CK_Review_Stars_Range", "\"Stars\" >= 1 AND \"Stars\" <= 5"));
     }
 }
