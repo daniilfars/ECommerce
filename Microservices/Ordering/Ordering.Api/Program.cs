@@ -1,6 +1,7 @@
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
 using Ordering.Application;
+using Ordering.Application.Services;
 using Ordering.Infrastructure;
 using Ordering.Infrastructure.Data;
 using Prometheus;
@@ -8,6 +9,8 @@ using System.Security.Claims;
 using System.Text;
 
 var builder = WebApplication.CreateBuilder(args);
+
+builder.Services.AddGrpc();
 
 builder.Services.AddMediatR(cfg => cfg.RegisterServicesFromAssemblies(
     typeof(Ordering.Application.Commands.CreateOrder.CreateOrderHandler).Assembly));
@@ -66,6 +69,7 @@ app.UseAuthorization();
 app.UseHttpMetrics();
 app.MapControllers();
 app.MapMetrics();
+app.MapGrpcService<OrderingGrpcService>();
 
 using (var scope = app.Services.CreateScope())
 {

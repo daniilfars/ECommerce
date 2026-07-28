@@ -4,20 +4,22 @@ namespace Reviews.Domain;
 
 public class Review : AggregateRoot<int>
 {
+    public Guid UserId { get; private set; }
     public int ProductId { get; private set; }
     public string Text { get; private set; }
     public int Stars { get; private set; }
 
     private Review() { }
 
-    private Review(int productId, string text, int stars)
+    private Review(Guid userId, int productId, string text, int stars)
     {
+        UserId = userId;
         ProductId = productId;
         Text = text;
         Stars = stars;
     }
 
-    public static Result<Review> Create(int productId, string text, int stars)
+    public static Result<Review> Create(Guid userId, int productId, string text, int stars)
     {
         if (string.IsNullOrWhiteSpace(text))
             return Result<Review>.Failure("Текст отзыва не может быть пустым");
@@ -25,7 +27,7 @@ public class Review : AggregateRoot<int>
         if (stars <= 0 || stars > 5)
             return Result<Review>.Failure("Количество звезд не может быть равно нулю");
 
-        var review = new Review(productId, text, stars);
+        var review = new Review(userId, productId, text, stars);
         return Result<Review>.Success(review);
     }
 

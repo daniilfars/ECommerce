@@ -10,7 +10,6 @@ using Catalog.Infrastructure.Data;
 using Elastic.Clients.Elasticsearch;
 using MediatR;
 using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 

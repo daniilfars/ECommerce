@@ -110,8 +110,14 @@ services:
       dockerfile: Ordering/Ordering.Api/Dockerfile
     ports:
       - "8084:8080"
+      - "5004:5001"
     environment:
       - ASPNETCORE_ENVIRONMENT=Development
+      - ASPNETCORE_URLS=http://+:8080;http://+:5001
+      - ASPNETCORE_KESTREL__ENDPOINTS__HTTP1__URL=http://+:8080
+      - ASPNETCORE_KESTREL__ENDPOINTS__HTTP1__PROTOCOLS=Http1
+      - ASPNETCORE_KESTREL__ENDPOINTS__GRPC__URL=http://+:5001
+      - ASPNETCORE_KESTREL__ENDPOINTS__GRPC__PROTOCOLS=Http2
       - ConnectionStrings__DefaultConnection=Host=ordering-db;Port=5432;Database=OrderingDb;Username=postgres;Password=${POSTGRES_PASSWORD}
       - JwtSettings__SecretKey=${JWT_SECRET_KEY}
       - JwtSettings__Issuer=Shop.Api
@@ -140,6 +146,42 @@ services:
       interval: 5s
       timeout: 5s
       retries: 5
+
+  reviews-api:
+    build:
+      context: .
+      dockerfile: Reviews/Reviews.Api/Dockerfile
+    ports:
+      - "8085:8080"
+    environment:
+      - ASPNETCORE_ENVIRONMENT=Development
+      - ConnectionStrings__DefaultConnection=Host=reviews-db;Port=5432;Database=ReviewsDb;Username=postgres;Password=${POSTGRES_PASSWORD}
+      - JwtSettings__SecretKey=${JWT_SECRET_KEY}
+      - JwtSettings__Issuer=Shop.Api
+      - JwtSettings__Audience=Shop.Client
+      - RabbitMQ__Host=rabbitmq
+      - GrpcSettings__OrderingUrl=http://ordering-api:5001
+    depends_on:
+      reviews-db:
+        condition: service_healthy
+      rabbitmq:
+        condition: service_healthy
+
+  reviews-db:
+    image: postgres:15
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
+      POSTGRES_DB: ReviewsDb
+    ports:
+      - "5437:5432"
+    volumes:
+      - reviews_db_data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U postgres"]
+      interval: 5s
+      timeout: 5s
+      retries: 5
   
   gateway:
     build:
@@ -152,6 +194,7 @@ services:
       - identity-api
       - basket-api
       - ordering-api
+      - reviews-api
 
   redis:
     image: redis:7-alpine
@@ -227,6 +270,7 @@ volumes:
   catalog_db_data:
   identity_db_data:
   ordering_db_data:
+  reviews_db_data:
   new_shop_redis_data:
   minio_data:
   rabbitmq_data:

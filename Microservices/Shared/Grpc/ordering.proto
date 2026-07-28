@@ -1,0 +1,17 @@
+syntax = "proto3";
+
+option csharp_namespace = "OrderingGrpc";
+ 
+package ordering;
+
+service OrderingService{
+	rpc CheckPurchase(CheckPurchaseRequest) returns (CheckPurchaseReply);
+}
+
+message CheckPurchaseRequest{
+	int32 product_id = 1;
+}
+
+message CheckPurchaseReply{
+	bool has_purchased = 1;
+}
