@@ -55,8 +55,7 @@ public class CatalogController : ControllerBase
     [HttpGet("{id}")]
     public async Task<ActionResult<GetProductByIdResponse>> GetById(int id)
     {
-        var query = new GetProductByIdQuery(id);
-        var result = await _mediator.Send(query);
+        var result = await _mediator.Send(new GetProductByIdQuery(id));
 
         if (result.IsFailure)
             return NotFound(result.Error);
@@ -85,8 +84,7 @@ public class CatalogController : ControllerBase
     [HttpDelete("{id}")]
     public async Task<ActionResult> Delete(int id)
     {
-        var command = new DeleteProductCommand(id);
-        var result = await _mediator.Send(command);
+        var result = await _mediator.Send(new DeleteProductCommand(id));
 
         if (result.IsFailure)
             return NotFound(result.Error);
