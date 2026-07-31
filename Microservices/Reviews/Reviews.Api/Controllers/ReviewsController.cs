@@ -24,9 +24,9 @@ public class ReviewsController : ControllerBase
         _mediator = mediator;
     }
 
-    // POST: api/reviews/create
+    // POST: api/reviews
     [Authorize]
-    [HttpPost("create")]
+    [HttpPost]
     public async Task<ActionResult<CreateReviewResponse>> Create(CreateReviewDto command)
     {
         var result = await _mediator.Send(new CreateReviewCommand(UserId, command.ProductId, command.Text, command.Stars));

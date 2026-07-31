@@ -1,5 +1,6 @@
 ﻿using Grpc.Core;
 using MediatR;
+using Microsoft.EntityFrameworkCore;
 using OrderingGrpc;
 using Reviews.Application.Interfaces;
 using Reviews.Domain;
@@ -26,6 +27,10 @@ public sealed class CreateReviewHandler : IRequestHandler<CreateReviewCommand, R
 
             if (!checkPurchaseReply.HasPurchased)
                 return Result<CreateReviewResponse>.Failure("Нету прав на отзыв");
+
+            var hasReview = await _context.Reviews.AnyAsync(r => r.UserId == request.UserId && r.ProductId == request.ProductId, cancellationToken);
+            if(hasReview)
+                return Result<CreateReviewResponse>.Failure("У вас уже есть отзыв на данный товар");
 
             var reviewResult = Review.Create(request.UserId, request.ProductId, request.Text, request.Stars);
             if(reviewResult.IsFailure)
