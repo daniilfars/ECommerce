@@ -1,9 +1,11 @@
 ﻿using Grpc.Core;
+using MassTransit;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
 using OrderingGrpc;
 using Reviews.Application.Interfaces;
 using Reviews.Domain;
+using Shared.Contracts;
 using Shared.Domain;
 
 namespace Reviews.Application.Commands.CreateReview;
@@ -12,11 +14,13 @@ public sealed class CreateReviewHandler : IRequestHandler<CreateReviewCommand, R
 {
     private readonly IReviewsDbContext _context;
     private readonly OrderingService.OrderingServiceClient _orderingServiceClient;
+    private readonly IPublishEndpoint _publishEndpoint;
 
-    public CreateReviewHandler(IReviewsDbContext context, OrderingService.OrderingServiceClient orderingServiceClient)
+    public CreateReviewHandler(IReviewsDbContext context, OrderingService.OrderingServiceClient orderingServiceClient, IPublishEndpoint publishEndpoint)
     {
         _context = context;
         _orderingServiceClient = orderingServiceClient;
+        _publishEndpoint = publishEndpoint;
     }
 
     public async Task<Result<CreateReviewResponse>> Handle(CreateReviewCommand request, CancellationToken cancellationToken)
@@ -39,6 +43,8 @@ public sealed class CreateReviewHandler : IRequestHandler<CreateReviewCommand, R
             var review = reviewResult.Value!;
 
             _context.Reviews.Add(review);
+
+            await _publishEndpoint.Publish<ReviewCreated>(new { ProductId = review.ProductId, Stars = review.Stars });
 
             await _context.SaveChangesAsync(cancellationToken);
 

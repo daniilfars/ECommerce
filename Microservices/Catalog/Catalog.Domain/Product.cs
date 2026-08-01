@@ -8,6 +8,8 @@ public class Product : AggregateRoot<int>
     public string? ImageUrl { get; private set; }
     public decimal Price { get; private set; }
     public int StockQuantity { get; private set; }
+    public int TotalStars { get; private set; }
+    public int ReviewCount { get; private set; }
 
     private Product() { }
 
@@ -16,6 +18,8 @@ public class Product : AggregateRoot<int>
         Name = name;
         Price = price;
         StockQuantity = stockQuantity;
+        TotalStars = 0;
+        ReviewCount = 0;
     }
 
     public static Result<Product> Create(string name, decimal price, int stockQuantity)
@@ -85,6 +89,23 @@ public class Product : AggregateRoot<int>
     public void SetImageUrl(string url)
     {
         ImageUrl = url;
+    }
+
+    public void ReviewCreated(int reviewStars)
+    {
+        TotalStars += reviewStars;
+        ReviewCount++;
+    }
+
+    public void ReviewUpdated(int differenceStars)
+    {
+        TotalStars += differenceStars;
+    }
+
+    public void ReviewDeleted(int reviewStars)
+    {
+        TotalStars -= reviewStars;
+        ReviewCount--;
     }
 
     private static Result ValidatePrice(decimal price)

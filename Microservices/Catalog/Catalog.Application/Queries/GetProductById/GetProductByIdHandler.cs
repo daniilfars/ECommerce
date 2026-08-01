@@ -36,7 +36,7 @@ public class GetProductByIdHandler : IRequestHandler<GetProductByIdQuery, Result
         if (product is null)
             return Result<GetProductByIdResponse>.Failure("Товар не найден");
 
-        var response = new GetProductByIdResponse(product.Id, product.Name, product.Price, product.StockQuantity, product.ImageUrl);
+        var response = new GetProductByIdResponse(product.Id, product.Name, product.Price, product.StockQuantity, product.ImageUrl, product.ReviewCount > 0 ? (decimal)product.TotalStars / product.ReviewCount : 0, product.ReviewCount);
 
         await _cache.StringSetAsync(key, JsonSerializer.SerializeToUtf8Bytes(response), TimeSpan.FromMinutes(60));
 

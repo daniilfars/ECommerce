@@ -1,6 +1,8 @@
-﻿using MediatR;
+﻿using MassTransit;
+using MediatR;
 using Microsoft.EntityFrameworkCore;
 using Reviews.Application.Interfaces;
+using Shared.Contracts;
 using Shared.Domain;
 
 namespace Reviews.Application.Commands.UpdateReview;
@@ -8,10 +10,12 @@ namespace Reviews.Application.Commands.UpdateReview;
 public sealed class UpdateReviewHandler : IRequestHandler<UpdateReviewCommand, Result<UpdateReviewResponse>>
 {
     private readonly IReviewsDbContext _context;
+    private readonly IPublishEndpoint _publishEndpoint;
 
-    public UpdateReviewHandler(IReviewsDbContext context)
+    public UpdateReviewHandler(IReviewsDbContext context, IPublishEndpoint publishEndpoint)
     {
         _context = context;
+        _publishEndpoint = publishEndpoint;
     }
 
     public async Task<Result<UpdateReviewResponse>> Handle(UpdateReviewCommand request, CancellationToken cancellationToken)
@@ -23,11 +27,15 @@ public sealed class UpdateReviewHandler : IRequestHandler<UpdateReviewCommand, R
         if (review.UserId != request.UserId)
             return Result<UpdateReviewResponse>.Failure("Нет доступа к отзыву");
 
+        var oldStars = review.Stars;
+
         if (request.Text != null)
             review.UpdateText(request.Text);
 
         if (request.Stars != null)
             review.UpdateStars((int)request.Stars);
+
+        await _publishEndpoint.Publish<ReviewUpdated>(new { ProductId = review.ProductId, DifferenceStars = request.Stars - oldStars }, cancellationToken);
 
         await _context.SaveChangesAsync(cancellationToken);
 

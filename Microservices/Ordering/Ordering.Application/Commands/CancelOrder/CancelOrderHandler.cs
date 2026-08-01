@@ -1,5 +1,4 @@
 ﻿using MassTransit;
-using MassTransit.Transports;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
 using Ordering.Application.Interfaces;
@@ -21,8 +20,6 @@ public class CancelOrderHandler : IRequestHandler<CancelOrderCommand, Result>
 
     public async Task<Result> Handle(CancelOrderCommand request, CancellationToken cancellationToken)
     {
-        await using var transaction = await _context.Database.BeginTransactionAsync(cancellationToken);
-
         var order = await _context.Orders.Include(o => o.Items).FirstOrDefaultAsync(o => o.Id == request.OrderId, cancellationToken);
         if (order is null)
             return Result.Failure("Заказ не найден");
@@ -34,10 +31,9 @@ public class CancelOrderHandler : IRequestHandler<CancelOrderCommand, Result>
         if (result.IsFailure)
             return Result.Failure(result.Error!);
 
-        await _publishEndpoint.Publish<OrderCancelled>(new { Items = order.Items.Select(i => new { i.ProductId, i.Quantity }) });
+        await _publishEndpoint.Publish<OrderCancelled>(new { Items = order.Items.Select(i => new { i.ProductId, i.Quantity }) }, cancellationToken);
 
         await _context.SaveChangesAsync(cancellationToken);
-        await transaction.CommitAsync(cancellationToken);
 
         return Result.Success();
     }

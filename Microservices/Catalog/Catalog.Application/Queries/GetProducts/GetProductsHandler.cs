@@ -1,4 +1,5 @@
 ﻿using Catalog.Application.Interfaces;
+using Catalog.Domain;
 using MassTransit;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
@@ -44,7 +45,7 @@ public class GetProductsHandler : IRequestHandler<GetProductsQuery, Result<GetPr
             .OrderBy(p => p.Id)
             .Skip((request.Page - 1) * request.PageSize)
             .Take(request.PageSize)
-            .Select(p => new ProductDto(p.Id, p.Name, p.Price, p.StockQuantity, p.ImageUrl))
+            .Select(p => new ProductDto(p.Id, p.Name, p.Price, p.StockQuantity, p.ImageUrl, p.ReviewCount > 0 ? (decimal)p.TotalStars / p.ReviewCount : 0, p.ReviewCount))
             .ToListAsync(cancellationToken);
 
         var response = new GetProductsResponse(products, totalCount, request.Page, request.PageSize);

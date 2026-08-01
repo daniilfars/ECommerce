@@ -101,6 +101,9 @@ public static class DependencyInjection
             x.AddConsumer<ProductCreatedConsumer>();
             x.AddConsumer<ProductUpdatedConsumer>();
             x.AddConsumer<ProductDeletedConsumer>();
+            x.AddConsumer<ReviewCreatedConsumer>();
+            x.AddConsumer<ReviewUpdatedConsumer>();
+            x.AddConsumer<ReviewDeletedConsumer>();
 
             x.AddEntityFrameworkOutbox<CatalogDbContext>(o =>
             {
