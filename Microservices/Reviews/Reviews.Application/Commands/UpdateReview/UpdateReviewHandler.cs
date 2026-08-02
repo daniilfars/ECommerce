@@ -33,9 +33,10 @@ public sealed class UpdateReviewHandler : IRequestHandler<UpdateReviewCommand, R
             review.UpdateText(request.Text);
 
         if (request.Stars != null)
-            review.UpdateStars((int)request.Stars);
-
-        await _publishEndpoint.Publish<ReviewUpdated>(new { ProductId = review.ProductId, DifferenceStars = request.Stars - oldStars }, cancellationToken);
+        {
+            review.UpdateStars(request.Stars.Value);
+            await _publishEndpoint.Publish<ReviewUpdated>(new { ProductId = review.ProductId, DifferenceStars = request.Stars.Value - oldStars }, cancellationToken);
+        }
 
         await _context.SaveChangesAsync(cancellationToken);
 

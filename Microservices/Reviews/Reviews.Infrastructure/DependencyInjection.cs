@@ -4,6 +4,7 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using OrderingGrpc;
+using Reviews.Application.Consumers;
 using Reviews.Application.Interfaces;
 using Reviews.Infrastructure.Data;
 
@@ -21,6 +22,8 @@ public static class DependencyInjection
 
         services.AddMassTransit(x =>
         {
+            x.AddConsumer<ProductDeletedConsumer>();
+
             x.AddEntityFrameworkOutbox<ReviewsDbContext>(o =>
             {
                 o.UsePostgres();
