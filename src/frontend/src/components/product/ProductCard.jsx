@@ -9,6 +9,11 @@ export default function ProductCard({ product }) {
         await basketAPI.addProduct(product.id, 1);
     };
 
+    const renderStars = (average) => {
+        const full = Math.round(average);
+        return '★'.repeat(full) + '☆'.repeat(5 - full);
+    };
+
     return (
         <div className="product-card-wrapper">
             <Link to={`/catalog/${product.id}`}>
@@ -20,6 +25,15 @@ export default function ProductCard({ product }) {
                     )}
                     <p className="product-name">{product.name}</p>
                     
+                    <div className="product-rating">
+                        <span className="product-stars" aria-label={`Рейтинг ${product.averageStars || 0} из 5`}>
+                            {renderStars(product.averageStars || 0)}
+                        </span>
+                        <span className="product-review-count">
+                            {product.reviewCount || 0} отзывов
+                        </span>
+                    </div>
+
                     <div className="product-price-container">
                         <p className="product-price-p">{product.price} ₽</p>
                         {product.stockQuantity > 0 ? (

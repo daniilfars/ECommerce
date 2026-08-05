@@ -140,7 +140,7 @@ export default function OrderDetailPage() {
 
           {order.status === 'Confirmed' && (
             <button onClick={handlePay} className="order-pay-button">
-              💰 Оплатить {order.totalAmount} ₽
+              Оплатить {order.totalAmount} ₽
             </button>
           )}
 

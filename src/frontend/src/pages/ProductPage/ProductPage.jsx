@@ -4,6 +4,8 @@ import { basketAPI, catalogAPI } from "../../api/client";
 import cartIcon from "../../assets/shopping-cart.svg";
 import truck from "../../assets/truck.svg";
 import check from "../../assets/shield-check.svg";
+import ReviewForm from "../../components/reviews/ReviewForm";
+import ReviewsList from "../../components/reviews/ReviewsList";
 import "./ProductPage.css";
 
 export default function ProductPage() {
@@ -11,6 +13,7 @@ export default function ProductPage() {
     const { id } = useParams();
     const [quantity, setQuantity] = useState(1);
     const [isAdded, setIsAdded] = useState(false);
+    const [reviewRefresh, setReviewRefresh] = useState(0);
 
     const loadProduct = async () => {
         try {
@@ -30,6 +33,8 @@ export default function ProductPage() {
         const timer = setTimeout(() => setIsAdded(false), 2000);
         return () => clearTimeout(timer);
     }, [isAdded]);
+
+    const handleReviewSuccess = () => setReviewRefresh(prev => prev + 1);
 
     const handlerAdd = async () => {
         try {
@@ -82,6 +87,20 @@ export default function ProductPage() {
 
                     <section className="product-info" aria-label="Информация о товаре">
                         <h1 className="product-title">{product.name}</h1>
+                        
+                        {/* Рейтинг и количество отзывов */}
+                        <div className="product-rating">
+                            <span className="product-stars" aria-label={`Рейтинг ${product.averageStars || 0} из 5`}>
+                                {'★'.repeat(Math.round(product.averageStars || 0)) + '☆'.repeat(5 - Math.round(product.averageStars || 0))}
+                            </span>
+                            <span className="product-rating-value">
+                                {product.averageStars?.toFixed(1) || '0.0'}
+                            </span>
+                            <span className="product-review-count">
+                                ({product.reviewCount || 0} отзывов)
+                            </span>
+                        </div>
+
                         <h3 className="product-price">{product.price} ₽</h3>
                         <p className={`product-stock ${product.stockQuantity > 0 ? 'in-stock' : 'out-of-stock'}`}>
                             {product.stockQuantity > 0 ? `В наличии: ${product.stockQuantity} шт.` : 'Нет в наличии'}
@@ -131,6 +150,11 @@ export default function ProductPage() {
                         </div>
                     </section>
                 </div>
+
+                <section className="product-reviews container">
+                    <ReviewForm productId={product.id} onSuccess={handleReviewSuccess} />
+                    <ReviewsList productId={product.id} refreshTrigger={reviewRefresh} />
+                </section>
             </main>
         </>
     );

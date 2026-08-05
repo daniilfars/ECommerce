@@ -204,3 +204,32 @@ export const orderingAPI = {
             method: 'POST',
         }),
 }
+
+export const reviewsAPI = {
+    getByProduct: (productId, page = 1, pageSize = 10) =>
+        request(`/Reviews/getbyproductid?productId=${productId}&page=${page}&pageSize=${pageSize}`, {
+            method: 'GET',
+        }),
+
+    getByUser: (page = 1, pageSize = 10) =>
+        request(`/Reviews?page=${page}&pageSize=${pageSize}`, {
+            method: 'GET',
+        }),
+
+    create: (productId, text, stars) =>
+        request('/Reviews', {
+            method: 'POST',
+            body: JSON.stringify({ productId, text, stars }),
+        }),
+
+    update: (id, text, stars) =>
+        request('/Reviews', {
+            method: 'PUT',
+            body: JSON.stringify({ id, text, stars }),
+        }),
+
+    delete: (id) =>
+        request(`/Reviews/${id}`, {
+            method: 'DELETE',
+        }),
+};

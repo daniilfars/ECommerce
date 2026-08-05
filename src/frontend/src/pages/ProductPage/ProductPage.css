@@ -217,6 +217,28 @@
     color: #ef4444;
 }
 
+.product-rating {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    margin: 4px 0;
+}
+
+.product-stars {
+    color: #f59e0b;
+    letter-spacing: 1px;
+}
+
+.product-rating-value {
+    font-weight: 700;
+    font-size: 0.9rem;
+}
+
+.product-review-count {
+    color: #71717a;
+    font-size: 0.8rem;
+}
+
 @media screen and (max-width: 1345px)
 {
     .product-button-add {
