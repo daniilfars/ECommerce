@@ -17,7 +17,7 @@
 
 <hr>
 
-Микросервисная архитектура на ASP.NET Core с фронтендом на React. 4 независимых сервиса, API Gateway, своя БД у каждого, корзина на Redis, изображения в MinIO, оплата через ЮKassa, взаимодействие между микросервисами через MassTransit и gRPC.
+Микросервисная архитектура на ASP.NET Core с фронтендом на React. 5 независимых сервисов, API Gateway, своя БД у каждого, корзина на Redis, изображения в MinIO, оплата через ЮKassa, взаимодействие между микросервисами через MassTransit и gRPC.
 
 ## Стек
 
@@ -30,7 +30,7 @@
 
 ## Архитектура
 
-4 микросервиса + API Gateway:
+5 микросервисов + API Gateway:
 ```
 Microservices/
 ├── Gateway/                    # YARP API Gateway (порт 5000)
@@ -38,6 +38,7 @@ Microservices/
 ├── Identity/                   # Пользователи, JWT-токены
 ├── Basket/                     # Корзина на Redis
 ├── Ordering/                   # Заказы, статусы, оплата через ЮKassa
+├── Reviews/                    # Отзывы о купленных товаров
 ├── Shared/                     # Общие абстракции
 ├── docker-compose.yml
 └── .env
@@ -96,6 +97,7 @@ npm run dev
 - Swagger Identity: `http://localhost:8082/swagger`
 - Swagger Basket: `http://localhost:8083/swagger`
 - Swagger Ordering: `http://localhost:8084/swagger`
+- Swagger Reviews: `http://localhost:8085/swagger`
 
 ### Учетные данные по умолчанию
 
@@ -119,6 +121,7 @@ npm run dev
 | Catalog | 8081 | CatalogDb (PostgreSQL) + MinIO |
 | Basket | 8083 | Redis |
 | Ordering | 8084 | OrderingDb (PostgreSQL) + ЮKassa |
+| Reviews | 8085 | ReviewsDb (PostgreSQL) |
 
 ### Identity
 
@@ -160,6 +163,13 @@ npm run dev
 - Отмена заказа пользователем
 - Управление статусами администратором
 
+### Reviews
+
+Управление отзывами.
+
+- Создание отзыва после доставки товара
+- Возможность редактировать отзыв
+
 ### Admin Panel
 
 Веб-интерфейс для управления магазином.
@@ -177,6 +187,7 @@ npm run dev
 - `AspNetUsers`, `AspNetRoles`, `AspNetUserRoles` — IdentityDb
 - `Products` — CatalogDb
 - `Orders`, `OrderItems` — OrderingDb
+- `Reviews` - ReviewsDb
 
 ## Конфигурация
 
